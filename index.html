@@ -4,1398 +4,991 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Salaria Naturals — Pure from the Fields of Punjab</title>
+<meta name="description" content="Cold-pressed, unrefined, honest. Salaria Naturals brings you Kachi Ghani mustard oil direct from Punjab's fields to your family's kitchen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+/* ════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════ */
 :root {
-  --gold: #C8922A;
-  --gold-light: #E8B84B;
-  --gold-pale: #F5DFA0;
-  --cream: #FAF6EF;
-  --earth: #3D2B1F;
-  --earth-mid: #6B4226;
-  --earth-light: #A0673A;
-  --green-deep: #1A3A1F;
-  --green-mid: #2D5E35;
-  --green-light: #4A8C54;
-  --mustard: #D4A017;
-  --turmeric: #E8A020;
-  --chilli: #C0392B;
-  --white: #FFFDF8;
-  --text-dark: #1C1008;
-  --text-mid: #4A3520;
+  --gold:        #C8922A;
+  --gold-bright: #E8B84B;
+  --gold-pale:   #F5DFA0;
+  --gold-dim:    #8B6018;
+  --cream:       #FAF6EF;
+  --cream-dark:  #F0E8D8;
+  --earth:       #2C1A0E;
+  --earth-mid:   #5C3A20;
+  --earth-light: #9A6A3A;
+  --green-deep:  #0F2214;
+  --green-mid:   #1E4A24;
+  --green-light: #3A7A42;
+  --green-pale:  #5AA862;
+  --white:       #FFFDF8;
+  --text-dark:   #1A0E06;
+  --text-mid:    #4A3018;
+  --text-soft:   #7A5A38;
+  --red-chilli:  #C0392B;
+  --turmeric:    #E8A020;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden;cursor:none}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ════════════════════════════════════════
+   CUSTOM CURSOR
+════════════════════════════════════════ */
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;mix-blend-mode:multiply}
+#cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);opacity:.5;transition:width .3s,height .3s,opacity .3s}
+body:hover #cur,body:hover #cur-ring{opacity:1}
 
-html { scroll-behavior: smooth; }
+/* ════════════════════════════════════════
+   LOADER
+════════════════════════════════════════ */
+#loader{position:fixed;inset:0;background:var(--green-deep);z-index:100000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease,visibility .9s ease}
+#loader.out{opacity:0;visibility:hidden}
+.ld-drop{width:48px;height:48px;margin-bottom:2rem;animation:ldDrop 1.2s ease infinite}
+@keyframes ldDrop{0%{transform:translateY(-8px);opacity:.4}50%{transform:translateY(4px);opacity:1}100%{transform:translateY(-8px);opacity:.4}}
+.ld-name{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;color:var(--gold-pale);letter-spacing:.18em;opacity:0;animation:fadeUp .7s .3s forwards}
+.ld-tag{font-size:.65rem;letter-spacing:.42em;text-transform:uppercase;color:var(--green-pale);margin-top:.4rem;opacity:0;animation:fadeUp .7s .55s forwards}
+.ld-bar{margin-top:2.5rem;width:180px;height:1px;background:var(--green-mid);overflow:hidden}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold-bright));animation:ldBar 1.9s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes ldBar{from{width:0}to{width:100%}}
 
-body {
-  font-family: 'Outfit', sans-serif;
-  background: var(--cream);
-  color: var(--text-dark);
-  overflow-x: hidden;
-}
+/* ════════════════════════════════════════
+   FLOATING ORDER BUTTON
+════════════════════════════════════════ */
+#floatBtn{position:fixed;bottom:2rem;right:2rem;z-index:9000;background:var(--gold);color:var(--earth);font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:.8rem 1.6rem;border-radius:2px;border:none;cursor:none;box-shadow:0 8px 32px rgba(200,146,42,.35);transition:transform .25s,box-shadow .25s,opacity .4s;opacity:0;transform:translateY(20px) scale(.95)}
+#floatBtn.show{opacity:1;transform:none}
+#floatBtn:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(200,146,42,.5)}
 
-/* ── CURSOR ── */
-.cursor {
-  position: fixed;
-  width: 12px; height: 12px;
-  background: var(--gold);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-  mix-blend-mode: multiply;
-}
-.cursor-ring {
-  position: fixed;
-  width: 40px; height: 40px;
-  border: 1.5px solid var(--gold);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
-  opacity: 0.6;
-}
+/* ════════════════════════════════════════
+   NAV
+════════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:5000;padding:1.4rem 5rem;display:flex;align-items:center;justify-content:space-between;transition:padding .4s,background .4s,box-shadow .4s}
+nav.up{background:rgba(15,34,20,.92);backdrop-filter:blur(18px);padding:.9rem 5rem;box-shadow:0 1px 0 rgba(200,146,42,.12)}
+nav.light{background:rgba(250,246,239,.96);backdrop-filter:blur(16px);padding:.9rem 5rem;box-shadow:0 1px 0 rgba(200,146,42,.15)}
+.nav-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.nav-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:500;color:var(--white);letter-spacing:.08em;transition:color .4s}
+nav.light .nav-logo-text{color:var(--earth)}
+.nav-links{display:flex;gap:2.8rem;list-style:none}
+.nav-links a{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.78);text-decoration:none;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nav-links a:hover{color:var(--gold-bright)}
+.nav-links a:hover::after{width:100%}
+nav.light .nav-links a{color:var(--text-mid)}
+.nav-cta{padding:.52rem 1.5rem;border:1.5px solid rgba(255,255,255,.35) !important;color:white !important;border-radius:2px;font-size:.7rem !important;letter-spacing:.2em !important;text-transform:uppercase;text-decoration:none;transition:background .3s,border-color .3s !important}
+.nav-cta:hover{background:var(--gold) !important;border-color:var(--gold) !important;color:var(--earth) !important}
+nav.light .nav-cta{border-color:var(--gold) !important;color:var(--earth) !important}
+/* Hamburger */
+.nav-ham{display:none;flex-direction:column;gap:5px;cursor:none;padding:4px}
+.nav-ham span{display:block;width:24px;height:1.5px;background:white;transition:transform .3s,opacity .3s}
+nav.light .nav-ham span{background:var(--earth)}
+.nav-ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-ham.open span:nth-child(2){opacity:0}
+.nav-ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mob-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--green-deep);z-index:4999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;transform:translateX(100%);transition:transform .5s cubic-bezier(.77,0,.18,1)}
+.mob-menu.open{transform:none}
+.mob-menu a{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--gold-pale);text-decoration:none;letter-spacing:.08em;transition:color .3s}
+.mob-menu a:hover{color:var(--gold-bright)}
 
-/* ── LOADER ── */
-#loader {
-  position: fixed; inset: 0;
-  background: var(--green-deep);
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-#loader.hidden { opacity: 0; visibility: hidden; }
-.loader-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3rem;
-  color: var(--gold-pale);
-  letter-spacing: 0.15em;
-  opacity: 0;
-  animation: loaderFade 0.8s 0.3s forwards;
-}
-.loader-sub {
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--green-light);
-  margin-top: 0.5rem;
-  opacity: 0;
-  animation: loaderFade 0.8s 0.6s forwards;
-}
-.loader-bar {
-  margin-top: 2.5rem;
-  width: 200px;
-  height: 1px;
-  background: var(--green-mid);
-  overflow: hidden;
-}
-.loader-bar-fill {
-  height: 100%;
-  background: var(--gold);
-  animation: loaderBar 1.8s ease forwards;
-}
-@keyframes loaderFade { to { opacity: 1; } }
-@keyframes loaderBar { from { width: 0; } to { width: 100%; } }
+/* ════════════════════════════════════════
+   HERO
+════════════════════════════════════════ */
+#hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden;background:var(--green-deep);padding-bottom:8rem}
+/* Animated gradient sky */
+.hero-sky{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 65% 30%,rgba(200,146,42,.13),transparent 65%),radial-gradient(ellipse 50% 70% at 20% 80%,rgba(30,74,36,.6),transparent 70%),linear-gradient(160deg,#0A1A0D 0%,#122818 40%,#1A3A20 70%,#0F2214 100%)}
+.hero-stars{position:absolute;inset:0;overflow:hidden}
+/* Grain overlay */
+.hero-grain{position:absolute;inset:0;opacity:.35;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
+/* Particles canvas */
+#particleCanvas{position:absolute;inset:0;pointer-events:none}
+/* Hero bottom field */
+.hero-field{position:absolute;bottom:0;left:0;right:0}
+.hero-content{position:relative;z-index:10;padding:8rem 5rem 4rem;max-width:680px;opacity:0;transform:translateY(28px);animation:fadeUp .9s 2.1s ease forwards}
+.hero-eyebrow{display:flex;align-items:center;gap:.9rem;font-size:.68rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:1.6rem}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold);flex-shrink:0}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.8rem,8vw,6.5rem);font-weight:300;line-height:1.0;color:var(--white);margin-bottom:1.6rem}
+.hero-h1 em{font-style:italic;color:var(--gold-bright);display:block}
+.hero-sub{font-size:1.05rem;font-weight:300;color:rgba(250,246,239,.68);line-height:1.85;max-width:460px;margin-bottom:2.8rem}
+.hero-sub strong{color:var(--gold-pale);font-weight:500}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.btn-gold{padding:.95rem 2.6rem;background:var(--gold);color:var(--earth);font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .3s,transform .2s,box-shadow .3s;box-shadow:0 4px 20px rgba(200,146,42,.3);display:inline-block}
+.btn-gold:hover{background:var(--gold-bright);transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,146,42,.45)}
+.btn-outline{padding:.95rem 2rem;border:1.5px solid rgba(255,255,255,.22);color:rgba(255,255,255,.75);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:border-color .3s,color .3s;display:inline-block}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-pale)}
+/* Oil drop illustration right side */
+.hero-visual{position:absolute;right:0;bottom:0;width:52%;max-width:680px;z-index:5;pointer-events:none;opacity:0;transform:translateX(20px);animation:fadeUp 1.1s 2.4s ease forwards}
+/* Scroll hint */
+.scroll-hint{position:absolute;bottom:2.2rem;left:5rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:.5;animation:scrollBob 2.2s ease infinite;z-index:20}
+.scroll-hint span{font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.scroll-line{width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent)}
+@keyframes scrollBob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.4}50%{transform:translateX(-50%) translateY(7px);opacity:.75}}
 
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-  padding: 1.2rem 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background 0.4s ease, padding 0.4s ease;
-}
-nav.scrolled {
-  background: rgba(250, 246, 239, 0.95);
-  backdrop-filter: blur(12px);
-  padding: 0.8rem 4rem;
-  box-shadow: 0 1px 0 rgba(200,146,42,0.15);
-}
-.nav-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--white);
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  transition: color 0.4s;
-}
-nav.scrolled .nav-logo { color: var(--earth); }
-.nav-links {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-}
-.nav-links a {
-  font-size: 0.78rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.85);
-  text-decoration: none;
-  transition: color 0.3s;
-  position: relative;
-}
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 0;
-  width: 0; height: 1px;
-  background: var(--gold);
-  transition: width 0.3s ease;
-}
-.nav-links a:hover::after { width: 100%; }
-nav.scrolled .nav-links a { color: var(--text-mid); }
-.nav-cta {
-  padding: 0.55rem 1.5rem;
-  border: 1px solid rgba(255,255,255,0.5);
-  color: white !important;
-  border-radius: 2px;
-  font-size: 0.75rem !important;
-  letter-spacing: 0.2em !important;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.3s, color 0.3s, border-color 0.3s !important;
-}
-.nav-cta:hover { background: var(--gold); border-color: var(--gold) !important; }
-nav.scrolled .nav-cta { border-color: var(--gold) !important; color: var(--earth) !important; }
+/* ════════════════════════════════════════
+   MARQUEE
+════════════════════════════════════════ */
+.marquee-wrap{background:var(--gold);padding:.85rem 0;overflow:hidden;position:relative;z-index:2}
+.marquee-track{display:inline-flex;gap:0;white-space:nowrap;animation:mq 28s linear infinite}
+.marquee-item{font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--earth);font-weight:600;padding:0 2.5rem;display:flex;align-items:center;gap:2.5rem}
+.marquee-item::after{content:'✦';font-size:.45rem;opacity:.6}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ── HERO ── */
-#hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: var(--green-deep);
-}
-.hero-bg {
-  position: absolute; inset: 0;
-  overflow: hidden;
-}
-/* Animated field SVG background */
-.hero-bg svg {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  width: 100%;
-}
-.hero-grain {
-  position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.4;
-  pointer-events: none;
-}
-.hero-radial {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(200,146,42,0.12), transparent 70%);
-}
-.hero-content {
-  position: relative;
-  z-index: 2;
-  padding: 0 4rem;
-  max-width: 720px;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: heroReveal 1s 2.2s ease forwards;
-}
-@keyframes heroReveal { to { opacity: 1; transform: translateY(0); } }
-.hero-eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.hero-eyebrow::before {
-  content: '';
-  width: 40px; height: 1px;
-  background: var(--gold);
-  display: block;
-}
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(3.5rem, 7vw, 6rem);
-  font-weight: 300;
-  line-height: 1.05;
-  color: var(--white);
-  margin-bottom: 1.5rem;
-}
-.hero-title em {
-  font-style: italic;
-  color: var(--gold-light);
-}
-.hero-desc {
-  font-size: 1.05rem;
-  font-weight: 300;
-  color: rgba(250,246,239,0.7);
-  line-height: 1.8;
-  max-width: 480px;
-  margin-bottom: 2.5rem;
-}
-.hero-actions {
-  display: flex;
-  gap: 1.2rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.btn-primary {
-  padding: 0.9rem 2.5rem;
-  background: var(--gold);
-  color: var(--earth);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 2px;
-  transition: background 0.3s, transform 0.2s;
-  display: inline-block;
-}
-.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
-.btn-ghost {
-  padding: 0.9rem 2rem;
-  border: 1px solid rgba(255,255,255,0.25);
-  color: rgba(255,255,255,0.8);
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 2px;
-  transition: border-color 0.3s, color 0.3s;
-}
-.btn-ghost:hover { border-color: var(--gold); color: var(--gold-light); }
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  color: rgba(255,255,255,0.4);
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  animation: scrollPulse 2s infinite;
-}
-.scroll-line {
-  width: 1px; height: 40px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
-}
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
-  50% { opacity: 0.8; transform: translateX(-50%) translateY(6px); }
-}
-/* Floating mustard plant illustration in hero */
-.hero-illustration {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 55%;
-  max-width: 700px;
-  opacity: 0;
-  transform: translateX(30px);
-  animation: heroReveal 1.2s 2.5s ease forwards;
-  pointer-events: none;
-}
+/* ════════════════════════════════════════
+   SECTION COMMONS
+════════════════════════════════════════ */
+section{position:relative}
+.sec-label{font-size:.65rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.sec-label::before{content:'';width:28px;height:1px;background:var(--gold);flex-shrink:0}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:300;line-height:1.12;color:var(--earth);margin-bottom:1.5rem}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-title.light{color:var(--white)}
 
-/* ── MARQUEE ── */
-.marquee-section {
-  background: var(--gold);
-  padding: 0.9rem 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.marquee-track {
-  display: inline-flex;
-  gap: 3rem;
-  animation: marquee 25s linear infinite;
-}
-.marquee-item {
-  font-size: 0.72rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--earth);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.marquee-item::after {
-  content: '✦';
-  font-size: 0.5rem;
-}
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* ════════════════════════════════════════
+   PULL QUOTE DIVIDER
+════════════════════════════════════════ */
+.pull-quote{padding:5rem 5rem;background:var(--green-deep);text-align:center;overflow:hidden;position:relative}
+.pull-quote::before,.pull-quote::after{content:'"';font-family:'Cormorant Garamond',serif;font-size:12rem;line-height:1;color:rgba(200,146,42,.07);position:absolute;top:-1rem}
+.pull-quote::before{left:2rem}
+.pull-quote::after{right:2rem;content:'"'}
+.pq-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;font-style:italic;color:var(--gold-pale);line-height:1.45;max-width:860px;margin:0 auto;position:relative;z-index:1}
+.pq-attr{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--green-pale);margin-top:1.5rem;opacity:.7}
 
-/* ── SECTION COMMONS ── */
-section { position: relative; }
-.section-label {
-  font-size: 0.68rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-.section-label::before {
-  content: '';
-  width: 30px; height: 1px;
-  background: var(--gold);
-}
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.5rem, 4.5vw, 4rem);
-  font-weight: 300;
-  line-height: 1.15;
-  color: var(--earth);
-  margin-bottom: 1.5rem;
-}
-.section-title em { font-style: italic; color: var(--gold); }
+/* ════════════════════════════════════════
+   STORY
+════════════════════════════════════════ */
+#story{padding:9rem 5rem;background:var(--cream);display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:center}
+.story-visual{position:relative}
+.story-visual-inner{border-radius:6px;overflow:hidden;position:relative}
+.story-badge{position:absolute;bottom:-1.8rem;right:-1.8rem;width:110px;height:110px;background:var(--green-deep);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold-pale);font-family:'Cormorant Garamond',serif;text-align:center;line-height:1.2;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.story-badge b{font-size:1.9rem;font-weight:500}
+.story-badge small{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
+.story-text p{font-size:1rem;line-height:1.95;color:var(--text-mid);margin-bottom:1.4rem;font-weight:300}
+.story-text p strong{color:var(--earth);font-weight:500}
+.val-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2.5rem}
+.val-card{padding:1.4rem;border:1px solid rgba(200,146,42,.2);border-radius:5px;background:rgba(200,146,42,.025);transition:border-color .3s,transform .3s,box-shadow .3s}
+.val-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(200,146,42,.12)}
+.val-icon{font-size:1.4rem;margin-bottom:.6rem}
+.val-t{font-weight:600;font-size:.88rem;color:var(--earth);margin-bottom:.3rem}
+.val-d{font-size:.8rem;color:var(--text-soft);line-height:1.65}
 
-/* ── STORY ── */
-#story {
-  padding: 8rem 4rem;
-  background: var(--cream);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: center;
-}
-.story-visual {
-  position: relative;
-}
-.story-visual-main {
-  width: 100%;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.story-badge {
-  position: absolute;
-  bottom: -2rem;
-  right: -2rem;
-  width: 120px; height: 120px;
-  background: var(--green-deep);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--gold-pale);
-  font-family: 'Cormorant Garamond', serif;
-  text-align: center;
-  line-height: 1.2;
-}
-.story-badge span:first-child { font-size: 2rem; font-weight: 600; }
-.story-badge span:last-child { font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; }
-.story-text p {
-  font-size: 1.05rem;
-  line-height: 1.9;
-  color: var(--text-mid);
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-}
-.story-values {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-top: 2.5rem;
-}
-.value-card {
-  padding: 1.5rem;
-  border: 1px solid rgba(200,146,42,0.2);
-  border-radius: 4px;
-  background: rgba(200,146,42,0.03);
-  transition: border-color 0.3s, transform 0.3s;
-}
-.value-card:hover { border-color: var(--gold); transform: translateY(-3px); }
-.value-icon { font-size: 1.5rem; margin-bottom: 0.7rem; }
-.value-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--earth); }
-.value-desc { font-size: 0.82rem; color: var(--text-mid); line-height: 1.6; }
+/* ════════════════════════════════════════
+   PROCESS
+════════════════════════════════════════ */
+#process{padding:8rem 5rem;background:var(--white)}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:4.5rem;position:relative}
+.process-steps::before{content:'';position:absolute;top:60px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold),transparent)}
+.proc-step{text-align:center;padding:0 1.5rem;position:relative}
+.proc-circle{width:120px;height:120px;margin:0 auto 1.8rem;position:relative}
+.proc-num{position:absolute;top:-10px;right:-10px;width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--earth);z-index:2}
+.proc-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--earth);margin-bottom:.6rem}
+.proc-desc{font-size:.82rem;color:var(--text-soft);line-height:1.75;font-weight:300}
 
-/* ── ROADMAP / PRODUCTS ── */
-#roadmap {
-  padding: 8rem 4rem;
-  background: var(--green-deep);
-  overflow: hidden;
-}
-#roadmap .section-label { color: var(--gold); }
-#roadmap .section-label::before { background: var(--gold); }
-#roadmap .section-title { color: var(--white); }
-.roadmap-subtitle {
-  color: rgba(250,246,239,0.55);
-  font-size: 1rem;
-  font-weight: 300;
-  max-width: 520px;
-  line-height: 1.8;
-  margin-bottom: 4rem;
-}
-.roadmap-timeline {
-  position: relative;
-  padding-left: 2rem;
-}
-.roadmap-timeline::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--gold), rgba(200,146,42,0.1));
-}
-.roadmap-item {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 4rem;
-  margin-bottom: 5rem;
-  position: relative;
-  opacity: 0;
-  transform: translateX(-20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.roadmap-item.visible { opacity: 1; transform: translateX(0); }
-.roadmap-item::before {
-  content: '';
-  position: absolute;
-  left: -2rem;
-  top: 1.5rem;
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--gold);
-  border: 2px solid var(--green-deep);
-  box-shadow: 0 0 0 3px rgba(200,146,42,0.3);
-  transform: translateX(-4px);
-}
-.roadmap-year {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3.5rem;
-  font-weight: 300;
-  color: var(--gold);
-  opacity: 0.3;
-  line-height: 1;
-  align-self: start;
-  margin-top: 0.5rem;
-}
-.roadmap-item.active .roadmap-year { opacity: 1; }
-.product-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(200,146,42,0.15);
-  border-radius: 8px;
-  padding: 2.5rem;
-  display: flex;
-  gap: 2.5rem;
-  align-items: center;
-  transition: border-color 0.3s, background 0.3s;
-}
-.product-card:hover {
-  border-color: rgba(200,146,42,0.4);
-  background: rgba(255,255,255,0.07);
-}
-.roadmap-item.active .product-card {
-  border-color: var(--gold);
-  background: rgba(200,146,42,0.08);
-}
-.product-illustration {
-  flex-shrink: 0;
-  width: 120px; height: 120px;
-}
-.product-info { flex: 1; }
-.product-tag {
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.8rem;
-  border-radius: 2px;
-  display: inline-block;
-  margin-bottom: 0.8rem;
-}
-.tag-launch { background: rgba(200,146,42,0.2); color: var(--gold); }
-.tag-upcoming { background: rgba(45,94,53,0.4); color: var(--green-light); }
-.product-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2rem;
-  font-weight: 400;
-  color: var(--white);
-  margin-bottom: 0.5rem;
-}
-.product-desc {
-  font-size: 0.88rem;
-  color: rgba(250,246,239,0.55);
-  line-height: 1.8;
-  margin-bottom: 1.2rem;
-}
-.product-specs {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.spec {
-  font-size: 0.72rem;
-  color: rgba(250,246,239,0.4);
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.spec::before { content: '—'; color: var(--gold); opacity: 0.6; }
+/* ════════════════════════════════════════
+   PRODUCTS / ROADMAP
+════════════════════════════════════════ */
+#roadmap{padding:8rem 5rem;background:var(--green-deep);overflow:hidden}
+#roadmap .sec-title{color:var(--white)}
+.roadmap-sub{color:rgba(250,246,239,.5);font-size:.95rem;font-weight:300;max-width:500px;line-height:1.85;margin-bottom:5rem}
+.roadmap-line{position:relative;padding-left:2.5rem}
+.roadmap-line::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold) 0%,rgba(200,146,42,.2) 85%,transparent)}
+.rm-item{display:grid;grid-template-columns:180px 1fr;gap:4rem;margin-bottom:5.5rem;position:relative;opacity:0;transform:translateX(-18px);transition:opacity .65s ease,transform .65s ease}
+.rm-item.vis{opacity:1;transform:none}
+.rm-item::before{content:'';position:absolute;left:-2.5rem;top:1.6rem;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(200,146,42,.2),0 0 0 1px var(--green-deep);transform:translateX(-4.5px)}
+.rm-year{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;color:var(--gold);opacity:.28;line-height:1;padding-top:.4rem;transition:opacity .3s}
+.rm-item.active .rm-year{opacity:1}
+.rm-card{background:rgba(255,255,255,.035);border:1px solid rgba(200,146,42,.12);border-radius:10px;padding:2.5rem;display:flex;gap:2.5rem;align-items:center;transition:border-color .35s,background .35s,transform .35s;cursor:default}
+.rm-card:hover{border-color:rgba(200,146,42,.4);background:rgba(255,255,255,.065);transform:translateX(4px)}
+.rm-item.active .rm-card{border-color:var(--gold);background:rgba(200,146,42,.07)}
+.rm-illus{flex-shrink:0;width:110px;height:110px;transition:transform .4s}
+.rm-card:hover .rm-illus{transform:scale(1.06) rotate(-2deg)}
+.rm-info{flex:1}
+.rm-tag{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;padding:.28rem .8rem;border-radius:2px;display:inline-block;margin-bottom:.8rem;font-weight:600}
+.tag-now{background:rgba(200,146,42,.18);color:var(--gold)}
+.tag-next{background:rgba(58,122,66,.35);color:var(--green-pale)}
+.rm-name{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:var(--white);margin-bottom:.5rem;line-height:1.1}
+.rm-desc{font-size:.85rem;color:rgba(250,246,239,.5);line-height:1.85;margin-bottom:1.2rem}
+.rm-specs{display:flex;gap:1.5rem;flex-wrap:wrap}
+.rm-spec{font-size:.7rem;color:rgba(250,246,239,.35);letter-spacing:.1em;display:flex;align-items:center;gap:.4rem}
+.rm-spec::before{content:'—';color:var(--gold);opacity:.5}
 
-/* ── FIVE YEAR PLAN ── */
-#fiveyear {
-  padding: 8rem 4rem;
-  background: var(--cream);
-}
-.plan-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0;
-  margin-top: 4rem;
-  border: 1px solid rgba(200,146,42,0.2);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.plan-col {
-  padding: 2rem 1.5rem;
-  border-right: 1px solid rgba(200,146,42,0.15);
-  transition: background 0.3s;
-  cursor: default;
-}
-.plan-col:last-child { border-right: none; }
-.plan-col:hover { background: rgba(200,146,42,0.05); }
-.plan-year {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.2rem;
-  font-weight: 300;
-  color: var(--gold);
-  margin-bottom: 0.3rem;
-}
-.plan-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--earth);
-  margin-bottom: 1rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid rgba(200,146,42,0.2);
-}
-.plan-items { list-style: none; }
-.plan-items li {
-  font-size: 0.82rem;
-  color: var(--text-mid);
-  line-height: 1.6;
-  margin-bottom: 0.6rem;
-  padding-left: 0.8rem;
-  position: relative;
-  font-weight: 300;
-}
-.plan-items li::before {
-  content: '›';
-  position: absolute;
-  left: 0;
-  color: var(--gold);
-}
-.plan-highlight {
-  background: var(--green-deep) !important;
-}
-.plan-highlight .plan-year { color: var(--gold-light); }
-.plan-highlight .plan-title { color: var(--gold-pale); border-color: rgba(200,146,42,0.3); }
-.plan-highlight .plan-items li { color: rgba(250,246,239,0.65); }
-.plan-highlight .plan-items li::before { color: var(--gold); }
+/* ════════════════════════════════════════
+   STATS COUNTER
+════════════════════════════════════════ */
+#stats{padding:6rem 5rem;background:var(--earth);display:grid;grid-template-columns:repeat(4,1fr);gap:0;text-align:center}
+.stat-item{padding:2rem;border-right:1px solid rgba(200,146,42,.15);position:relative;overflow:hidden}
+.stat-item:last-child{border-right:none}
+.stat-item::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--gold);transition:width .5s ease}
+.stat-item:hover::after{width:60%}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:var(--gold);line-height:1;display:block}
+.stat-suffix{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-bright)}
+.stat-lbl{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(250,246,239,.38);margin-top:.5rem}
 
-/* ── WHY CHOOSE ── */
-#why {
-  padding: 8rem 4rem;
-  background: var(--white);
-}
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-  margin-top: 4rem;
-  background: rgba(200,146,42,0.1);
-}
-.why-card {
-  background: var(--white);
-  padding: 3rem 2.5rem;
-  transition: background 0.3s;
-}
-.why-card:hover { background: var(--cream); }
-.why-number {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3.5rem;
-  font-weight: 300;
-  color: rgba(200,146,42,0.15);
-  line-height: 1;
-  margin-bottom: 1.2rem;
-}
-.why-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--earth);
-  margin-bottom: 0.8rem;
-}
-.why-desc {
-  font-size: 0.88rem;
-  color: var(--text-mid);
-  line-height: 1.9;
-  font-weight: 300;
-}
+/* ════════════════════════════════════════
+   TRANSPARENCY / TRUST
+════════════════════════════════════════ */
+#trust{padding:8rem 5rem;background:var(--cream);display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:center}
+.trust-text .sec-title{margin-bottom:1rem}
+.trust-text p{font-size:1rem;line-height:1.9;color:var(--text-mid);font-weight:300;margin-bottom:1.4rem}
+.trust-steps{display:flex;flex-direction:column;gap:1.4rem;margin-top:2rem}
+.trust-step{display:flex;align-items:flex-start;gap:1.2rem}
+.trust-step-num{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--earth);flex-shrink:0;margin-top:.1rem}
+.trust-step-body strong{display:block;font-size:.9rem;font-weight:600;color:var(--earth);margin-bottom:.3rem}
+.trust-step-body span{font-size:.82rem;color:var(--text-soft);line-height:1.7}
+.qr-visual{display:flex;align-items:center;justify-content:center}
+.qr-card{background:var(--white);border:1px solid rgba(200,146,42,.2);border-radius:12px;padding:2.5rem;text-align:center;box-shadow:0 24px 64px rgba(44,26,14,.08);max-width:340px;width:100%}
+.qr-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--earth);margin-bottom:.4rem}
+.qr-sub{font-size:.78rem;color:var(--text-soft);margin-bottom:1.5rem;font-weight:300}
+.qr-box{width:160px;height:160px;margin:0 auto 1.5rem;border:2px solid rgba(200,146,42,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--cream);position:relative;overflow:hidden}
+.qr-info-row{display:flex;justify-content:space-between;margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(200,146,42,.12)}
+.qr-info-item{text-align:left}
+.qr-info-item strong{display:block;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin-bottom:.2rem}
+.qr-info-item span{font-size:.82rem;color:var(--earth);font-weight:500}
 
-/* ── HERITAGE ── */
-#heritage {
-  padding: 8rem 4rem;
-  background: var(--earth);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: center;
-}
-#heritage .section-label { color: var(--gold); }
-#heritage .section-label::before { background: var(--gold); }
-#heritage .section-title { color: var(--white); }
-.heritage-text p {
-  font-size: 1rem;
-  line-height: 1.9;
-  color: rgba(250,246,239,0.65);
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-}
-.heritage-stat-row {
-  display: flex;
-  gap: 3rem;
-  margin-top: 3rem;
-  padding-top: 2.5rem;
-  border-top: 1px solid rgba(200,146,42,0.2);
-}
-.heritage-stat .num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.8rem;
-  font-weight: 300;
-  color: var(--gold);
-  line-height: 1;
-}
-.heritage-stat .lbl {
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(250,246,239,0.4);
-  margin-top: 0.3rem;
-}
-.heritage-visual {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* ════════════════════════════════════════
+   FIVE YEAR PLAN
+════════════════════════════════════════ */
+#fiveyear{padding:8rem 5rem;background:var(--green-deep)}
+#fiveyear .sec-title{color:var(--white)}
+.plan-intro{font-size:.98rem;color:rgba(250,246,239,.5);font-weight:300;line-height:1.85;max-width:560px;margin-bottom:4rem}
+.plan-grid{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid rgba(200,146,42,.12);border-radius:8px;overflow:hidden}
+.plan-col{padding:2.2rem 1.6rem;border-right:1px solid rgba(200,146,42,.1);transition:background .35s;cursor:default;position:relative;overflow:hidden}
+.plan-col::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .4s}
+.plan-col:hover::after{transform:scaleX(1)}
+.plan-col:last-child{border-right:none}
+.plan-col:hover{background:rgba(255,255,255,.04)}
+.plan-yr{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--gold);opacity:.35;margin-bottom:.2rem;transition:opacity .3s}
+.plan-col:hover .plan-yr,.plan-col.now .plan-yr{opacity:1}
+.plan-head{font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,246,239,.4);margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid rgba(200,146,42,.12);transition:color .3s}
+.plan-col:hover .plan-head{color:var(--gold)}
+.plan-col.now{background:rgba(200,146,42,.07);border-color:rgba(200,146,42,.3) !important}
+.plan-col.now .plan-head{color:var(--gold-pale)}
+.plan-list{list-style:none}
+.plan-list li{font-size:.79rem;color:rgba(250,246,239,.45);line-height:1.65;margin-bottom:.55rem;padding-left:.85rem;position:relative;font-weight:300;transition:color .3s}
+.plan-col:hover .plan-list li{color:rgba(250,246,239,.65)}
+.plan-col.now .plan-list li{color:rgba(250,246,239,.65)}
+.plan-list li::before{content:'›';position:absolute;left:0;color:var(--gold);opacity:.7}
 
-/* ── CONTACT ── */
-#contact {
-  padding: 8rem 4rem;
-  background: var(--cream);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: start;
-}
-.contact-form-wrapper h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: var(--earth);
-  margin-bottom: 0.5rem;
-}
-.contact-form-wrapper p {
-  font-size: 0.9rem;
-  color: var(--text-mid);
-  margin-bottom: 2rem;
-  font-weight: 300;
-  line-height: 1.7;
-}
-.form-group {
-  margin-bottom: 1.2rem;
-}
-.form-group input,
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 0.9rem 1.2rem;
-  border: 1px solid rgba(200,146,42,0.25);
-  background: var(--white);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.88rem;
-  color: var(--text-dark);
-  border-radius: 3px;
-  outline: none;
-  transition: border-color 0.3s;
-  appearance: none;
-}
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  border-color: var(--gold);
-}
-.form-group textarea { min-height: 110px; resize: vertical; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.contact-info { padding-top: 0.5rem; }
-.contact-info h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.8rem;
-  font-weight: 300;
-  color: var(--earth);
-  margin-bottom: 0.5rem;
-}
-.contact-info p {
-  font-size: 0.9rem;
-  color: var(--text-mid);
-  line-height: 1.8;
-  font-weight: 300;
-  margin-bottom: 2rem;
-}
-.contact-detail {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.contact-detail-icon {
-  width: 40px; height: 40px;
-  background: rgba(200,146,42,0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-.contact-detail-text strong {
-  display: block;
-  font-size: 0.78rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--earth);
-  margin-bottom: 0.2rem;
-}
-.contact-detail-text span {
-  font-size: 0.88rem;
-  color: var(--text-mid);
-  font-weight: 300;
-}
-.social-links {
-  display: flex;
-  gap: 0.8rem;
-  margin-top: 2rem;
-}
-.social-link {
-  width: 42px; height: 42px;
-  border: 1px solid rgba(200,146,42,0.25);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-mid);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: border-color 0.3s, background 0.3s, color 0.3s;
-}
-.social-link:hover {
-  border-color: var(--gold);
-  background: var(--gold);
-  color: white;
-}
+/* ════════════════════════════════════════
+   WHY SALARIA
+════════════════════════════════════════ */
+#why{padding:8rem 5rem;background:var(--white)}
+.why-intro{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:end;margin-bottom:4rem}
+.why-intro-left .sec-title{margin-bottom:0}
+.why-intro-right p{font-size:1rem;color:var(--text-soft);line-height:1.9;font-weight:300}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(200,146,42,.08)}
+.why-card{background:var(--white);padding:3rem 2.5rem;transition:background .3s,transform .3s}
+.why-card:hover{background:var(--cream);transform:translateY(-2px)}
+.why-n{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;color:rgba(200,146,42,.12);line-height:1;margin-bottom:1.1rem;transition:color .3s}
+.why-card:hover .why-n{color:rgba(200,146,42,.22)}
+.why-t{font-size:1.05rem;font-weight:600;color:var(--earth);margin-bottom:.7rem}
+.why-d{font-size:.84rem;color:var(--text-soft);line-height:1.95;font-weight:300}
 
-/* ── FOOTER ── */
-footer {
-  background: var(--green-deep);
-  padding: 4rem 4rem 2rem;
-}
-.footer-top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 4rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid rgba(200,146,42,0.15);
-  margin-bottom: 2rem;
-}
-.footer-brand h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.8rem;
-  font-weight: 400;
-  color: var(--gold-pale);
-  margin-bottom: 0.5rem;
-}
-.footer-brand p {
-  font-size: 0.82rem;
-  color: rgba(250,246,239,0.4);
-  line-height: 1.7;
-  font-weight: 300;
-  max-width: 280px;
-}
-.footer-col h4 {
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1.2rem;
-}
-.footer-col a {
-  display: block;
-  font-size: 0.83rem;
-  color: rgba(250,246,239,0.45);
-  text-decoration: none;
-  margin-bottom: 0.6rem;
-  transition: color 0.3s;
-  font-weight: 300;
-}
-.footer-col a:hover { color: var(--gold-pale); }
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.75rem;
-  color: rgba(250,246,239,0.25);
-}
+/* ════════════════════════════════════════
+   TESTIMONIALS
+════════════════════════════════════════ */
+#testimonials{padding:8rem 5rem;background:var(--cream-dark);overflow:hidden}
+.testi-wrapper{display:flex;gap:2rem;margin-top:4rem;overflow-x:auto;padding-bottom:1.5rem;scrollbar-width:none}
+.testi-wrapper::-webkit-scrollbar{display:none}
+.testi-card{flex-shrink:0;width:340px;background:var(--white);border:1px solid rgba(200,146,42,.15);border-radius:8px;padding:2.2rem;transition:transform .3s,box-shadow .3s;cursor:default}
+.testi-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(44,26,14,.1)}
+.testi-stars{display:flex;gap:3px;margin-bottom:1rem}
+.testi-stars span{color:var(--gold);font-size:1rem}
+.testi-text{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:var(--earth);line-height:1.7;margin-bottom:1.2rem}
+.testi-author{font-size:.78rem;font-weight:600;color:var(--text-mid);letter-spacing:.1em}
+.testi-loc{font-size:.72rem;color:var(--text-soft);font-weight:300;margin-top:.15rem}
+.testi-nav{display:flex;gap:.8rem;margin-top:2rem}
+.testi-nav button{width:40px;height:40px;border:1.5px solid rgba(200,146,42,.3);background:transparent;border-radius:50%;cursor:none;color:var(--gold);font-size:1rem;transition:background .3s,border-color .3s;display:flex;align-items:center;justify-content:center}
+.testi-nav button:hover{background:var(--gold);border-color:var(--gold);color:var(--earth)}
 
-/* ── SCROLL ANIMATIONS ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal-left.visible { opacity: 1; transform: translateX(0); }
-.reveal-right {
-  opacity: 0;
-  transform: translateX(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal-right.visible { opacity: 1; transform: translateX(0); }
+/* ════════════════════════════════════════
+   HERITAGE
+════════════════════════════════════════ */
+#heritage{padding:8rem 5rem;background:var(--earth);display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:center}
+#heritage .sec-title{color:var(--white)}
+.heri-text p{font-size:.98rem;line-height:1.95;color:rgba(250,246,239,.6);margin-bottom:1.4rem;font-weight:300}
+.heri-stats{display:flex;gap:3.5rem;margin-top:3rem;padding-top:2.5rem;border-top:1px solid rgba(200,146,42,.18)}
+.heri-stat .num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1}
+.heri-stat .lbl{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,246,239,.35);margin-top:.3rem}
+.heri-visual{display:flex;align-items:center;justify-content:center}
 
-/* ── RESPONSIVE ── */
-@media (max-width: 1024px) {
-  nav { padding: 1.2rem 2rem; }
-  nav.scrolled { padding: 0.8rem 2rem; }
-  #story, #heritage, #contact { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2rem; }
-  #roadmap, #fiveyear, #why { padding: 5rem 2rem; }
-  .hero-content { padding: 0 2rem; }
-  .hero-illustration { display: none; }
-  .plan-grid { grid-template-columns: 1fr 1fr; }
-  .why-grid { grid-template-columns: 1fr 1fr; }
-  .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
-  .roadmap-item { grid-template-columns: 80px 1fr; gap: 1.5rem; }
+/* ════════════════════════════════════════
+   EARLY ACCESS / NEWSLETTER
+════════════════════════════════════════ */
+#early{padding:7rem 5rem;background:var(--gold);position:relative;overflow:hidden;text-align:center}
+#early::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233D2B1F' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.early-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.early-eyebrow{font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--earth);opacity:.7;margin-bottom:1rem}
+.early-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--earth);line-height:1.2;margin-bottom:.8rem}
+.early-sub{font-size:.95rem;color:var(--earth);opacity:.7;font-weight:300;margin-bottom:2.5rem;line-height:1.75}
+.early-form{display:flex;gap:.8rem;max-width:480px;margin:0 auto}
+.early-form input{flex:1;padding:.9rem 1.2rem;border:1.5px solid rgba(44,26,14,.25);background:rgba(255,253,248,.85);font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--earth);border-radius:3px;outline:none;transition:border-color .3s}
+.early-form input:focus{border-color:var(--earth)}
+.early-form input::placeholder{color:rgba(44,26,14,.4)}
+.btn-dark{padding:.9rem 2rem;background:var(--earth);color:var(--gold-pale);font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:none;border-radius:3px;cursor:none;transition:background .3s,transform .2s;flex-shrink:0}
+.btn-dark:hover{background:#1A0E06;transform:translateY(-1px)}
+.early-note{font-size:.72rem;color:var(--earth);opacity:.5;margin-top:1rem}
+
+/* ════════════════════════════════════════
+   CONTACT
+════════════════════════════════════════ */
+#contact{padding:8rem 5rem;background:var(--cream);display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:start}
+.cont-info .sec-title{margin-bottom:1rem}
+.cont-info .lead{font-size:.98rem;color:var(--text-soft);line-height:1.9;font-weight:300;margin-bottom:2.5rem}
+.cont-row{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.6rem}
+.cont-icon{width:42px;height:42px;background:rgba(200,146,42,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0}
+.cont-body strong{display:block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--earth);margin-bottom:.2rem}
+.cont-body span,.cont-body a{font-size:.88rem;color:var(--text-soft);font-weight:300;text-decoration:none;transition:color .3s}
+.cont-body a:hover{color:var(--gold)}
+.soc-row{display:flex;gap:.7rem;margin-top:2.2rem}
+.soc-btn{width:42px;height:42px;border:1.5px solid rgba(200,146,42,.22);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-soft);text-decoration:none;font-size:.82rem;font-weight:600;transition:all .3s}
+.soc-btn:hover{border-color:var(--gold);background:var(--gold);color:var(--earth)}
+.form-wrap h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--earth);margin-bottom:.4rem}
+.form-wrap .sub{font-size:.88rem;color:var(--text-soft);font-weight:300;line-height:1.7;margin-bottom:2rem}
+.fg{margin-bottom:1.1rem}
+.fg input,.fg textarea,.fg select{width:100%;padding:.88rem 1.2rem;border:1.5px solid rgba(200,146,42,.22);background:var(--white);font-family:'Outfit',sans-serif;font-size:.86rem;color:var(--text-dark);border-radius:3px;outline:none;transition:border-color .3s;appearance:none}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold)}
+.fg textarea{min-height:105px;resize:vertical}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer{background:var(--green-deep);padding:5rem 5rem 2.2rem}
+.ft-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4.5rem;padding-bottom:3.5rem;border-bottom:1px solid rgba(200,146,42,.1);margin-bottom:2rem}
+.ft-brand h3{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:400;color:var(--gold-pale);margin-bottom:.5rem}
+.ft-brand p{font-size:.8rem;color:rgba(250,246,239,.35);line-height:1.75;font-weight:300;max-width:260px}
+.ft-brand .ft-cert{display:flex;gap:.8rem;margin-top:1.8rem;flex-wrap:wrap}
+.ft-cert-badge{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;padding:.35rem .8rem;border:1px solid rgba(200,146,42,.22);border-radius:2px;color:rgba(250,246,239,.4)}
+.ft-col h4{font-size:.65rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.ft-col a{display:block;font-size:.8rem;color:rgba(250,246,239,.38);text-decoration:none;margin-bottom:.58rem;transition:color .3s;font-weight:300}
+.ft-col a:hover{color:var(--gold-pale)}
+.ft-bot{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:rgba(250,246,239,.22)}
+
+/* ════════════════════════════════════════
+   SCROLL REVEALS
+════════════════════════════════════════ */
+.rev{opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s ease}
+.rev.vis{opacity:1;transform:none}
+.rev-l{opacity:0;transform:translateX(-28px);transition:opacity .75s ease,transform .75s ease}
+.rev-l.vis{opacity:1;transform:none}
+.rev-r{opacity:0;transform:translateX(28px);transition:opacity .75s ease,transform .75s ease}
+.rev-r.vis{opacity:1;transform:none}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media(max-width:1100px){
+  nav{padding:1.2rem 2.5rem}
+  nav.up,nav.light{padding:.9rem 2.5rem}
+  .nav-links,.nav-cta{display:none}
+  .nav-ham{display:flex}
+  #story,#heritage,#trust,#contact{grid-template-columns:1fr;gap:3.5rem;padding:5.5rem 2.5rem}
+  #process,#roadmap,#fiveyear,#why,#testimonials,#early,#stats{padding:5.5rem 2.5rem}
+  .hero-content{padding:7rem 2.5rem 3rem}
+  .hero-visual{display:none}
+  .process-steps{grid-template-columns:1fr 1fr;gap:3rem}
+  .process-steps::before{display:none}
+  .plan-grid{grid-template-columns:1fr 1fr}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .why-intro{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr 1fr;gap:2.5rem}
+  #stats{grid-template-columns:1fr 1fr}
+  .stat-item:nth-child(2){border-right:none}
+  .stat-item:nth-child(3){border-right:1px solid rgba(200,146,42,.15)}
+  .stat-item{border-bottom:1px solid rgba(200,146,42,.1);padding:1.8rem}
+  .pull-quote{padding:4rem 2.5rem}
 }
-@media (max-width: 600px) {
-  .plan-grid { grid-template-columns: 1fr; }
-  .why-grid { grid-template-columns: 1fr; }
-  .footer-top { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
-  .hero-content { padding: 0 1.5rem; }
-  #story, #heritage, #contact, #roadmap, #fiveyear, #why { padding: 4rem 1.5rem; }
-  .roadmap-item { grid-template-columns: 1fr; gap: 1rem; }
-  .roadmap-year { font-size: 2.5rem; }
-  .product-card { flex-direction: column; }
-  .heritage-stat-row { flex-wrap: wrap; gap: 1.5rem; }
-  footer { padding: 3rem 1.5rem 1.5rem; }
+@media(max-width:640px){
+  .hero-content{padding:7rem 1.5rem 3rem}
+  .plan-grid{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr}
+  #stats{grid-template-columns:1fr 1fr}
+  .rm-item{grid-template-columns:1fr}
+  .rm-card{flex-direction:column}
+  .early-form{flex-direction:column}
+  .fr{grid-template-columns:1fr}
+  footer{padding:3.5rem 1.5rem 1.5rem}
+  #story,#heritage,#trust,#contact,#process,#roadmap,#fiveyear,#why,#testimonials,#early{padding:4.5rem 1.5rem}
+  .heri-stats{flex-wrap:wrap;gap:2rem}
+  .pull-quote::before,.pull-quote::after{font-size:7rem}
 }
 </style>
 </head>
 <body>
 
-<!-- CUSTOM CURSOR -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
 
 <!-- LOADER -->
 <div id="loader">
-  <div class="loader-logo">Salaria Naturals</div>
-  <div class="loader-sub">Pure from the Fields of Punjab</div>
-  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  <svg id="ld-drop-svg" width="48" height="48" viewBox="0 0 48 48" class="ld-drop">
+    <defs>
+      <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#E8B84B"/>
+        <stop offset="100%" stop-color="#8B6018"/>
+      </linearGradient>
+    </defs>
+    <path d="M24 4 C24 4 8 22 8 32 C8 40.8 15.2 48 24 48 C32.8 48 40 40.8 40 32 C40 22 24 4 24 4 Z" fill="url(#dg)"/>
+    <ellipse cx="19" cy="30" rx="4" ry="6" fill="rgba(255,255,255,0.2)" transform="rotate(-20,19,30)"/>
+  </svg>
+  <div class="ld-name">Salaria Naturals</div>
+  <div class="ld-tag">Pure from the Fields of Punjab</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<!-- FLOATING CTA -->
+<button id="floatBtn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Order / Enquire →</button>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#story" onclick="closeMob()">Our Story</a>
+  <a href="#process" onclick="closeMob()">Process</a>
+  <a href="#roadmap" onclick="closeMob()">Products</a>
+  <a href="#fiveyear" onclick="closeMob()">Vision 2030</a>
+  <a href="#heritage" onclick="closeMob()">Heritage</a>
+  <a href="#contact" onclick="closeMob()">Get in Touch</a>
 </div>
 
 <!-- NAV -->
 <nav id="mainNav">
-  <a href="#" class="nav-logo">Salaria Naturals</a>
+  <a href="#" class="nav-logo">
+    <svg width="28" height="32" viewBox="0 0 28 32"><defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8B84B"/><stop offset="100%" stop-color="#8B6018"/></linearGradient></defs><path d="M14 2C14 2 3 13 3 20C3 26.6 7.9 32 14 32C20.1 32 25 26.6 25 20C25 13 14 2 14 2Z" fill="url(#lg1)"/><ellipse cx="10.5" cy="18" rx="2.5" ry="4" fill="rgba(255,255,255,0.22)" transform="rotate(-20,10.5,18)"/></svg>
+    <span class="nav-logo-text">Salaria Naturals</span>
+  </a>
   <ul class="nav-links">
-    <li><a href="#story">Our Story</a></li>
+    <li><a href="#story">Story</a></li>
+    <li><a href="#process">Process</a></li>
     <li><a href="#roadmap">Products</a></li>
     <li><a href="#fiveyear">Vision 2030</a></li>
     <li><a href="#heritage">Heritage</a></li>
     <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
   </ul>
+  <div class="nav-ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></div>
 </nav>
 
-<!-- HERO -->
+<!-- ══════════════ HERO ══════════════ -->
 <section id="hero">
-  <div class="hero-bg">
-    <div class="hero-grain"></div>
-    <div class="hero-radial"></div>
-    <!-- Animated field landscape -->
-    <svg viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#0D2B14" stop-opacity="0"/>
-          <stop offset="100%" stop-color="#0D2B14" stop-opacity="0.6"/>
-        </linearGradient>
-      </defs>
-      <!-- Rolling hills -->
-      <path d="M0,280 Q200,220 400,250 Q600,280 800,230 Q1000,185 1200,220 Q1350,245 1440,210 L1440,400 L0,400 Z" fill="#16321A" opacity="0.7"/>
-      <path d="M0,310 Q300,270 600,285 Q900,300 1200,265 Q1350,250 1440,270 L1440,400 L0,400 Z" fill="#1A3A1F" opacity="0.9"/>
-      <!-- Mustard plant stalks far -->
-      <g opacity="0.25">
-        <line x1="80" y1="400" x2="75" y2="310" stroke="#C8922A" stroke-width="1.2"/>
-        <circle cx="75" cy="307" r="3" fill="#D4A017"/>
-        <line x1="160" y1="400" x2="157" y2="295" stroke="#C8922A" stroke-width="1.2"/>
-        <circle cx="157" cy="292" r="3" fill="#D4A017"/>
-        <line x1="240" y1="400" x2="243" y2="305" stroke="#C8922A" stroke-width="1.2"/>
-        <circle cx="243" cy="302" r="3" fill="#D4A017"/>
-        <line x1="320" y1="400" x2="318" y2="298" stroke="#C8922A" stroke-width="1.2"/>
-        <circle cx="318" cy="295" r="3" fill="#D4A017"/>
+  <div class="hero-sky"></div>
+  <canvas id="particleCanvas"></canvas>
+  <div class="hero-grain"></div>
+
+  <!-- Bottom field SVG -->
+  <div class="hero-field">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%">
+      <path d="M0,200 Q180,155 360,175 Q540,195 720,155 Q900,115 1080,150 Q1260,185 1440,140 L1440,320 L0,320Z" fill="#122818" opacity=".6"/>
+      <path d="M0,235 Q200,200 420,215 Q640,230 860,200 Q1080,170 1280,195 Q1380,207 1440,190 L1440,320 L0,320Z" fill="#1A3A20" opacity=".85"/>
+      <path d="M0,258 Q300,235 600,248 Q900,260 1200,235 Q1360,222 1440,240 L1440,320 L0,320Z" fill="#0F2214"/>
+      <!-- Mustard stalks far -->
+      <g opacity=".2">
+        <line x1="50" y1="320" x2="47" y2="248" stroke="#D4A017" stroke-width="1.5"/>
+        <ellipse cx="47" cy="242" rx="9" ry="6" fill="#E8B84B"/>
+        <line x1="120" y1="320" x2="123" y2="238" stroke="#C8922A" stroke-width="1.5"/>
+        <ellipse cx="123" cy="232" rx="9" ry="6" fill="#D4A017"/>
+        <line x1="220" y1="320" x2="217" y2="244" stroke="#D4A017" stroke-width="1.5"/>
+        <ellipse cx="217" cy="238" rx="9" ry="6" fill="#E8B84B"/>
+        <line x1="350" y1="320" x2="352" y2="236" stroke="#C8922A" stroke-width="1.5"/>
+        <ellipse cx="352" cy="230" rx="9" ry="6" fill="#D4A017"/>
+        <line x1="500" y1="320" x2="497" y2="241" stroke="#D4A017" stroke-width="1.5"/>
+        <ellipse cx="497" cy="235" rx="9" ry="6" fill="#E8B84B"/>
+        <line x1="700" y1="320" x2="703" y2="233" stroke="#C8922A" stroke-width="1.5"/>
+        <ellipse cx="703" cy="227" rx="9" ry="6" fill="#D4A017"/>
+        <line x1="900" y1="320" x2="897" y2="238" stroke="#D4A017" stroke-width="1.5"/>
+        <ellipse cx="897" cy="232" rx="9" ry="6" fill="#E8B84B"/>
+        <line x1="1100" y1="320" x2="1103" y2="235" stroke="#C8922A" stroke-width="1.5"/>
+        <ellipse cx="1103" cy="229" rx="9" ry="6" fill="#D4A017"/>
+        <line x1="1280" y1="320" x2="1277" y2="242" stroke="#D4A017" stroke-width="1.5"/>
+        <ellipse cx="1277" cy="236" rx="9" ry="6" fill="#E8B84B"/>
+        <line x1="1400" y1="320" x2="1403" y2="238" stroke="#C8922A" stroke-width="1.5"/>
+        <ellipse cx="1403" cy="232" rx="9" ry="6" fill="#D4A017"/>
       </g>
-      <rect x="0" y="0" width="1440" height="400" fill="url(#skyGrad)"/>
+      <!-- Mustard near -->
+      <g>
+        <line x1="30" y1="320" x2="26" y2="242" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="26" cy="228" rx="16" ry="10" fill="#C8922A"/>
+        <line x1="100" y1="320" x2="104" y2="230" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="104" cy="216" rx="17" ry="11" fill="#D4A017"/>
+        <line x1="185" y1="320" x2="182" y2="234" stroke="#2D5E35" stroke-width="3.5"/>
+        <ellipse cx="182" cy="218" rx="19" ry="12" fill="#E8B84B"/>
+        <line x1="280" y1="320" x2="284" y2="228" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="284" cy="213" rx="17" ry="11" fill="#C8922A"/>
+        <line x1="420" y1="320" x2="416" y2="232" stroke="#2D5E35" stroke-width="3.5"/>
+        <ellipse cx="416" cy="217" rx="19" ry="12" fill="#D4A017"/>
+        <line x1="600" y1="320" x2="603" y2="225" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="603" cy="210" rx="17" ry="11" fill="#E8B84B"/>
+        <line x1="790" y1="320" x2="786" y2="230" stroke="#2D5E35" stroke-width="3.5"/>
+        <ellipse cx="786" cy="215" rx="18" ry="11" fill="#C8922A"/>
+        <line x1="980" y1="320" x2="984" y2="227" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="984" cy="212" rx="17" ry="11" fill="#D4A017"/>
+        <line x1="1150" y1="320" x2="1146" y2="231" stroke="#2D5E35" stroke-width="3.5"/>
+        <ellipse cx="1146" cy="216" rx="19" ry="12" fill="#E8B84B"/>
+        <line x1="1340" y1="320" x2="1344" y2="228" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="1344" cy="213" rx="17" ry="11" fill="#D4A017"/>
+        <line x1="1420" y1="320" x2="1416" y2="235" stroke="#2D5E35" stroke-width="3"/>
+        <ellipse cx="1416" cy="220" rx="16" ry="10" fill="#C8922A"/>
+      </g>
     </svg>
   </div>
 
-  <!-- Large mustard plant illustration -->
-  <div class="hero-illustration">
-    <svg viewBox="0 0 600 650" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hero illustration — oil bottle with glow -->
+  <div class="hero-visual">
+    <svg viewBox="0 0 620 700" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="glowGrad" cx="50%" cy="70%" r="50%">
-          <stop offset="0%" stop-color="#C8922A" stop-opacity="0.15"/>
+        <radialGradient id="glow1" cx="50%" cy="60%" r="50%">
+          <stop offset="0%" stop-color="#C8922A" stop-opacity=".22"/>
           <stop offset="100%" stop-color="transparent"/>
         </radialGradient>
-        <filter id="softBlur">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="1.5"/>
-        </filter>
+        <linearGradient id="btlG" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#7A5010"/>
+          <stop offset="30%" stop-color="#D4A017"/>
+          <stop offset="60%" stop-color="#E8C050"/>
+          <stop offset="100%" stop-color="#8B6018"/>
+        </linearGradient>
+        <linearGradient id="oilG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F0D060"/>
+          <stop offset="100%" stop-color="#B87818"/>
+        </linearGradient>
+        <linearGradient id="labelG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(250,246,239,0.18)"/>
+          <stop offset="100%" stop-color="rgba(250,246,239,0.08)"/>
+        </linearGradient>
+        <filter id="gf"><feGaussianBlur stdDeviation="2.5"/></filter>
+        <filter id="bsf"><feDropShadow dx="0" dy="20" stdDeviation="25" flood-color="rgba(200,146,42,0.25)"/></filter>
+        <clipPath id="btlClip">
+          <path d="M230,200 L230,140 Q230,115 250,110 L370,110 Q390,115 390,140 L390,200 Q420,225 420,270 L420,560 Q420,590 390,590 L230,590 Q200,590 200,560 L200,270 Q200,225 230,200 Z"/>
+        </clipPath>
       </defs>
-      <ellipse cx="300" cy="600" rx="260" ry="60" fill="url(#glowGrad)"/>
-      <!-- Main stem -->
-      <path d="M300,650 C300,650 298,560 295,500 C290,420 285,360 290,290 C295,230 300,180 302,130" stroke="#2D5E35" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <!-- Branches -->
-      <path d="M298,450 C298,450 260,400 240,370 C220,340 210,310 215,290" stroke="#2D5E35" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <path d="M294,400 C294,400 330,350 345,320 C360,290 358,260 352,240" stroke="#2D5E35" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M296,340 C296,340 255,295 240,265 C225,235 228,210 232,195" stroke="#2D5E35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M298,290 C298,290 335,250 348,225 C360,200 356,178 350,165" stroke="#2D5E35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <!-- Leaves -->
-      <path d="M285,420 C285,420 240,380 225,345 C215,320 225,300 240,310 C255,320 270,355 285,420 Z" fill="#2D5E35" opacity="0.8"/>
-      <path d="M308,430 C308,430 350,390 368,355 C380,328 370,308 355,318 C340,328 322,363 308,430 Z" fill="#2D5E35" opacity="0.8"/>
-      <path d="M288,355 C288,355 244,318 230,285 C222,260 233,242 248,252 C262,262 276,295 288,355 Z" fill="#3D7A45" opacity="0.7"/>
-      <path d="M305,360 C305,360 346,322 362,290 C372,263 360,245 346,256 C332,266 316,299 305,360 Z" fill="#3D7A45" opacity="0.7"/>
-      <path d="M291,295 C291,295 250,260 238,230 C231,208 244,193 258,202 C271,211 282,244 291,295 Z" fill="#2D5E35" opacity="0.65"/>
-      <path d="M305,300 C305,300 344,264 358,234 C366,212 352,197 339,207 C325,216 312,250 305,300 Z" fill="#2D5E35" opacity="0.65"/>
-      <!-- Flower clusters -->
-      <!-- Top cluster -->
-      <g transform="translate(300,128)">
-        <circle cx="0" cy="0" r="6" fill="#E8B84B"/>
-        <circle cx="-15" cy="-8" r="5" fill="#D4A017"/>
-        <circle cx="15" cy="-10" r="5" fill="#E8B84B"/>
-        <circle cx="-8" cy="-18" r="5" fill="#C8922A"/>
-        <circle cx="8" cy="-16" r="5" fill="#D4A017"/>
-        <circle cx="0" cy="-24" r="4.5" fill="#E8B84B"/>
-        <!-- petals -->
-        <g opacity="0.9">
-          <circle cx="-20" cy="2" r="4" fill="#F5DFA0"/>
-          <circle cx="20" cy="2" r="4" fill="#F5DFA0"/>
-          <circle cx="-10" cy="-28" r="4" fill="#F5DFA0"/>
-          <circle cx="10" cy="-28" r="4" fill="#F5DFA0"/>
-        </g>
+
+      <!-- Background glow pool -->
+      <ellipse cx="310" cy="620" rx="240" ry="60" fill="url(#glow1)" filter="url(#gf)"/>
+
+      <!-- Bottle shadow -->
+      <ellipse cx="310" cy="605" rx="100" ry="22" fill="rgba(0,0,0,.25)" filter="url(#gf)"/>
+
+      <!-- Bottle body -->
+      <path d="M230,200 L230,140 Q230,115 250,110 L370,110 Q390,115 390,140 L390,200 Q420,225 420,270 L420,560 Q420,590 390,590 L230,590 Q200,590 200,560 L200,270 Q200,225 230,200 Z" fill="url(#btlG)" filter="url(#bsf)"/>
+
+      <!-- Oil fill inside bottle -->
+      <path d="M204,380 L204,558 Q204,584 230,586 L390,586 Q416,584 416,558 L416,380 Z" fill="url(#oilG)" opacity=".88" clip-path="url(#btlClip)"/>
+
+      <!-- Oil surface shimmer -->
+      <ellipse cx="310" cy="380" rx="106" ry="14" fill="#F0D868" opacity=".35"/>
+
+      <!-- Bottle shine highlight -->
+      <path d="M240,150 Q240,590 248,590" stroke="rgba(255,255,255,.18)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M255,135 Q254,580 260,582" stroke="rgba(255,255,255,.08)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+      <!-- Label background -->
+      <rect x="218" y="290" width="184" height="240" rx="6" fill="url(#labelG)"/>
+      <rect x="222" y="294" width="176" height="232" rx="5" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+
+      <!-- Label content -->
+      <text x="310" y="326" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" fill="rgba(255,255,255,.5)" letter-spacing="4">✦ KACHI GHANI ✦</text>
+      <line x1="235" y1="333" x2="385" y2="333" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+      <text x="310" y="358" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="22" font-weight="600" fill="rgba(255,253,248,.95)" letter-spacing="2">SALARIA</text>
+      <text x="310" y="376" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="13" fill="rgba(255,253,248,.65)" letter-spacing="5">NATURALS</text>
+      <line x1="250" y1="385" x2="370" y2="385" stroke="rgba(200,146,42,.5)" stroke-width=".8"/>
+      <text x="310" y="406" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="12" font-style="italic" fill="rgba(232,184,75,.85)">Mustard Oil</text>
+      <text x="310" y="424" text-anchor="middle" font-family="Outfit,sans-serif" font-size="8.5" fill="rgba(255,255,255,.35)" letter-spacing="2">COLD PRESSED · UNREFINED</text>
+      <line x1="250" y1="433" x2="370" y2="433" stroke="rgba(255,255,255,.08)" stroke-width=".8"/>
+      <text x="310" y="448" text-anchor="middle" font-family="Outfit,sans-serif" font-size="7.5" fill="rgba(255,255,255,.28)" letter-spacing="1.5">LUDHIANA, PUNJAB — INDIA</text>
+
+      <!-- QR placeholder on label -->
+      <rect x="284" y="460" width="52" height="52" rx="3" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+      <text x="310" y="490" text-anchor="middle" font-family="Outfit,sans-serif" font-size="7" fill="rgba(255,255,255,.2)">SCAN</text>
+      <text x="310" y="502" text-anchor="middle" font-family="Outfit,sans-serif" font-size="7" fill="rgba(255,255,255,.2)">BATCH</text>
+
+      <!-- Bottle neck -->
+      <rect x="242" y="78" width="136" height="38" rx="5" fill="#6B4226"/>
+      <rect x="248" y="72" width="124" height="24" rx="10" fill="#8B5A30"/>
+      <rect x="260" y="65" width="100" height="16" rx="6" fill="#7A4E28"/>
+      <!-- Cap -->
+      <rect x="268" y="52" width="84" height="20" rx="4" fill="#5A3820"/>
+      <rect x="275" y="48" width="70" height="10" rx="3" fill="#6B4226"/>
+
+      <!-- Scattered flowers left -->
+      <g transform="translate(90,280)">
+        <circle cx="0" cy="0" r="8" fill="#D4A017"/>
+        <circle cx="-14" cy="-8" r="6" fill="#E8B84B"/>
+        <circle cx="14" cy="-10" r="6" fill="#C8922A"/>
+        <circle cx="-6" cy="-20" r="6" fill="#D4A017"/>
+        <circle cx="6" cy="-18" r="6" fill="#E8B84B"/>
+        <circle cx="0" cy="-27" r="5" fill="#D4A017"/>
+        <circle cx="-22" cy="2" r="5" fill="#F5DFA0" opacity=".8"/>
+        <circle cx="22" cy="2" r="5" fill="#F5DFA0" opacity=".8"/>
+        <line x1="0" y1="8" x2="-2" y2="60" stroke="#2D5E35" stroke-width="3"/>
+        <path d="M-2,35 C-2,35 -26,26 -30,14 C-22,16 -8,28 -2,35Z" fill="#2D5E35" opacity=".8"/>
+        <path d="M-2,48 C-2,48 20,40 22,28 C16,32 4,44 -2,48Z" fill="#2D5E35" opacity=".7"/>
       </g>
-      <!-- Branch 1 cluster -->
-      <g transform="translate(214,288)">
-        <circle cx="0" cy="0" r="5" fill="#D4A017"/>
-        <circle cx="-10" cy="-6" r="4" fill="#E8B84B"/>
-        <circle cx="10" cy="-8" r="4" fill="#C8922A"/>
-        <circle cx="0" cy="-14" r="4" fill="#D4A017"/>
-        <circle cx="-14" cy="4" r="3.5" fill="#F5DFA0"/>
-        <circle cx="14" cy="4" r="3.5" fill="#F5DFA0"/>
+
+      <!-- Flowers right -->
+      <g transform="translate(520,260)">
+        <circle cx="0" cy="0" r="7" fill="#E8B84B"/>
+        <circle cx="-12" cy="-7" r="5.5" fill="#D4A017"/>
+        <circle cx="12" cy="-9" r="5.5" fill="#E8B84B"/>
+        <circle cx="-5" cy="-18" r="5.5" fill="#C8922A"/>
+        <circle cx="5" cy="-16" r="5.5" fill="#D4A017"/>
+        <circle cx="-18" cy="3" r="4.5" fill="#F5DFA0" opacity=".8"/>
+        <circle cx="18" cy="3" r="4.5" fill="#F5DFA0" opacity=".8"/>
+        <line x1="0" y1="7" x2="2" y2="55" stroke="#2D5E35" stroke-width="2.5"/>
+        <path d="M2,32 C2,32 24,24 26,12 C18,15 6,26 2,32Z" fill="#2D5E35" opacity=".7"/>
       </g>
-      <!-- Branch 2 cluster -->
-      <g transform="translate(353,238)">
-        <circle cx="0" cy="0" r="5" fill="#E8B84B"/>
-        <circle cx="-10" cy="-6" r="4" fill="#D4A017"/>
-        <circle cx="10" cy="-7" r="4" fill="#E8B84B"/>
-        <circle cx="0" cy="-14" r="4" fill="#C8922A"/>
-        <circle cx="-14" cy="4" r="3.5" fill="#F5DFA0"/>
-        <circle cx="14" cy="4" r="3.5" fill="#F5DFA0"/>
-      </g>
-      <!-- Branch 3 cluster -->
-      <g transform="translate(232,193)">
-        <circle cx="0" cy="0" r="4.5" fill="#D4A017"/>
-        <circle cx="-8" cy="-5" r="3.5" fill="#E8B84B"/>
-        <circle cx="8" cy="-7" r="3.5" fill="#C8922A"/>
-        <circle cx="0" cy="-13" r="3.5" fill="#D4A017"/>
-      </g>
-      <!-- Branch 4 cluster -->
-      <g transform="translate(350,163)">
-        <circle cx="0" cy="0" r="4.5" fill="#E8B84B"/>
-        <circle cx="-8" cy="-6" r="3.5" fill="#D4A017"/>
-        <circle cx="8" cy="-7" r="3.5" fill="#E8B84B"/>
-        <circle cx="0" cy="-13" r="3.5" fill="#C8922A"/>
-      </g>
-      <!-- Seed pods -->
-      <ellipse cx="278" cy="510" rx="3" ry="10" fill="#2D5E35" transform="rotate(-15,278,510)"/>
-      <ellipse cx="318" cy="505" rx="3" ry="10" fill="#2D5E35" transform="rotate(10,318,505)"/>
-      <ellipse cx="295" cy="520" rx="3" ry="10" fill="#2D5E35" transform="rotate(-5,295,520)"/>
-      <!-- Seeds scattered -->
-      <circle cx="260" cy="620" r="3.5" fill="#C8922A" opacity="0.5"/>
-      <circle cx="280" cy="635" r="3" fill="#D4A017" opacity="0.4"/>
-      <circle cx="330" cy="625" r="3.5" fill="#C8922A" opacity="0.5"/>
-      <circle cx="350" cy="618" r="2.5" fill="#D4A017" opacity="0.4"/>
+
+      <!-- Oil drip from bottle bottom -->
+      <path d="M295,590 Q293,615 292,635 Q291,645 298,645 Q305,645 304,635 Q303,615 306,590" fill="url(#oilG)" opacity=".7"/>
+      <circle cx="297" cy="648" r="6" fill="#C8922A" opacity=".5"/>
+
+      <!-- Mustard seeds scattered -->
+      <circle cx="150" cy="480" r="4" fill="#D4A017" opacity=".5"/>
+      <circle cx="135" cy="495" r="3" fill="#C8922A" opacity=".4"/>
+      <circle cx="168" cy="500" r="3.5" fill="#E8B84B" opacity=".45"/>
+      <circle cx="460" cy="470" r="4" fill="#D4A017" opacity=".5"/>
+      <circle cx="478" cy="488" r="3" fill="#C8922A" opacity=".4"/>
     </svg>
   </div>
 
   <div class="hero-content">
-    <div class="hero-eyebrow">Est. 2025 · Punjab, India</div>
-    <h1 class="hero-title">
-      Where Fields<br>
-      Meet <em>Purity</em>
+    <div class="hero-eyebrow">Est. 2026 · Mukerian, Punjab, India</div>
+    <h1 class="hero-h1">
+      Pure from<br>the Fields —<br><em>Honest to the Last Drop</em>
     </h1>
-    <p class="hero-desc">
-      From the sun-kissed mustard fields of Punjab, we bring you nature's finest — cold-pressed, unrefined, and honest. Salaria Naturals is a promise from our family to yours.
+    <p class="hero-sub">
+      From Punjab's sun-drenched mustard fields, <strong>cold-pressed using the ancient Kachi Ghani method</strong> — no heat, no chemicals, no compromise. Oil the way your grandmother knew it.
     </p>
-    <div class="hero-actions">
-      <a href="#roadmap" class="btn-primary">Discover Our Products</a>
-      <a href="#story" class="btn-ghost">Our Story</a>
+    <div class="hero-btns">
+      <a href="#roadmap" class="btn-gold">Discover Our Oil</a>
+      <a href="#story" class="btn-outline">Our Story</a>
     </div>
   </div>
 
-  <div class="hero-scroll-hint">
+  <div class="scroll-hint">
     <div class="scroll-line"></div>
-    Scroll to explore
+    <span>Scroll</span>
   </div>
 </section>
 
 <!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track" id="marqueeTrack">
-    <span class="marquee-item">Cold Pressed</span>
-    <span class="marquee-item">100% Natural</span>
-    <span class="marquee-item">Punjab Origin</span>
-    <span class="marquee-item">No Additives</span>
-    <span class="marquee-item">Traditional Methods</span>
-    <span class="marquee-item">Farm to Bottle</span>
-    <span class="marquee-item">Chemical Free</span>
-    <span class="marquee-item">Kachi Ghani</span>
-    <span class="marquee-item">Cold Pressed</span>
-    <span class="marquee-item">100% Natural</span>
-    <span class="marquee-item">Punjab Origin</span>
-    <span class="marquee-item">No Additives</span>
-    <span class="marquee-item">Traditional Methods</span>
-    <span class="marquee-item">Farm to Bottle</span>
-    <span class="marquee-item">Chemical Free</span>
-    <span class="marquee-item">Kachi Ghani</span>
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Cold Pressed</span><span class="marquee-item">100% Natural</span><span class="marquee-item">Punjab Origin</span><span class="marquee-item">Zero Additives</span><span class="marquee-item">Kachi Ghani</span><span class="marquee-item">Farm to Bottle</span><span class="marquee-item">Chemical Free</span><span class="marquee-item">Batch Traceable</span><span class="marquee-item">Glass Bottled</span><span class="marquee-item">FSSAI Certified</span>
+    <span class="marquee-item">Cold Pressed</span><span class="marquee-item">100% Natural</span><span class="marquee-item">Punjab Origin</span><span class="marquee-item">Zero Additives</span><span class="marquee-item">Kachi Ghani</span><span class="marquee-item">Farm to Bottle</span><span class="marquee-item">Chemical Free</span><span class="marquee-item">Batch Traceable</span><span class="marquee-item">Glass Bottled</span><span class="marquee-item">FSSAI Certified</span>
   </div>
 </div>
 
-<!-- STORY -->
+<!-- ══════════════ STORY ══════════════ -->
 <section id="story">
-  <div class="story-visual reveal-left">
-    <div class="story-visual-main">
-      <svg viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:4px;">
+  <div class="story-visual rev-l">
+    <div class="story-visual-inner">
+      <svg viewBox="0 0 520 440" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:6px">
         <defs>
-          <linearGradient id="fieldGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#87CEAB"/>
-            <stop offset="40%" stop-color="#4A8C54"/>
-            <stop offset="100%" stop-color="#1A3A1F"/>
-          </linearGradient>
-          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#B8D4C0"/>
-            <stop offset="100%" stop-color="#7FB08A"/>
-          </linearGradient>
-          <radialGradient id="sunG" cx="75%" cy="25%" r="30%">
-            <stop offset="0%" stop-color="#FFE066" stop-opacity="0.8"/>
-            <stop offset="100%" stop-color="transparent"/>
-          </radialGradient>
+          <linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A8D0B8"/><stop offset="100%" stop-color="#1A3A1F"/></linearGradient>
+          <linearGradient id="sg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C8E0D0"/><stop offset="100%" stop-color="#6AA880"/></linearGradient>
+          <radialGradient id="sg3" cx="78%" cy="22%" r="28%"><stop offset="0%" stop-color="#FFE878" stop-opacity=".85"/><stop offset="100%" stop-color="transparent"/></radialGradient>
         </defs>
-        <!-- Sky -->
-        <rect width="520" height="420" fill="url(#skyG)"/>
-        <rect width="520" height="420" fill="url(#sunG)"/>
+        <rect width="520" height="440" fill="url(#sg2)"/>
+        <rect width="520" height="440" fill="url(#sg3)"/>
         <!-- Sun -->
-        <circle cx="390" cy="90" r="35" fill="#FFE066" opacity="0.7"/>
-        <circle cx="390" cy="90" r="48" fill="#FFE066" opacity="0.15"/>
+        <circle cx="408" cy="82" r="38" fill="#FFE878" opacity=".65"/>
+        <circle cx="408" cy="82" r="55" fill="#FFE878" opacity=".12"/>
+        <circle cx="408" cy="82" r="75" fill="#FFE878" opacity=".06"/>
         <!-- Clouds -->
-        <ellipse cx="120" cy="70" rx="50" ry="18" fill="white" opacity="0.5"/>
-        <ellipse cx="150" cy="60" rx="35" ry="14" fill="white" opacity="0.5"/>
-        <ellipse cx="90" cy="65" rx="30" ry="12" fill="white" opacity="0.4"/>
-        <ellipse cx="300" cy="85" rx="40" ry="14" fill="white" opacity="0.35"/>
+        <g opacity=".55"><ellipse cx="110" cy="68" rx="52" ry="19" fill="white"/><ellipse cx="142" cy="57" rx="36" ry="14" fill="white"/><ellipse cx="82" cy="63" rx="28" ry="11" fill="white" opacity=".8"/></g>
+        <g opacity=".4"><ellipse cx="290" cy="80" rx="44" ry="15" fill="white"/><ellipse cx="318" cy="70" rx="28" ry="11" fill="white"/></g>
         <!-- Ground -->
-        <path d="M0,240 Q130,210 260,225 Q390,240 520,215 L520,420 L0,420 Z" fill="url(#fieldGrad)"/>
-        <!-- Mustard row 1 (far) -->
-        <g opacity="0.6">
-          <line x1="40" y1="420" x2="38" y2="340" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="38" cy="332" rx="10" ry="7" fill="#D4A017"/>
-          <line x1="90" y1="420" x2="92" y2="332" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="92" cy="324" rx="10" ry="7" fill="#C8922A"/>
-          <line x1="140" y1="420" x2="138" y2="338" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="138" cy="330" rx="10" ry="7" fill="#D4A017"/>
-          <line x1="190" y1="420" x2="192" y2="330" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="192" cy="322" rx="10" ry="7" fill="#E8B84B"/>
-          <line x1="240" y1="420" x2="238" y2="335" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="238" cy="327" rx="10" ry="7" fill="#C8922A"/>
-          <line x1="290" y1="420" x2="292" y2="328" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="292" cy="320" rx="10" ry="7" fill="#D4A017"/>
-          <line x1="340" y1="420" x2="338" y2="332" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="338" cy="324" rx="10" ry="7" fill="#E8B84B"/>
-          <line x1="390" y1="420" x2="392" y2="325" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="392" cy="317" rx="10" ry="7" fill="#D4A017"/>
-          <line x1="440" y1="420" x2="438" y2="330" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="438" cy="322" rx="10" ry="7" fill="#C8922A"/>
-          <line x1="490" y1="420" x2="492" y2="333" stroke="#5A7A3A" stroke-width="2"/>
-          <ellipse cx="492" cy="325" rx="10" ry="7" fill="#D4A017"/>
+        <path d="M0,250 Q130,215 260,232 Q390,248 520,218 L520,440 L0,440Z" fill="url(#sg1)"/>
+        <!-- Far plants -->
+        <g opacity=".55">
+          <line x1="40" y1="440" x2="38" y2="355" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="38" cy="346" rx="11" ry="7" fill="#D4A017"/>
+          <line x1="95" y1="440" x2="98" y2="342" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="98" cy="333" rx="12" ry="8" fill="#C8922A"/>
+          <line x1="155" y1="440" x2="152" y2="349" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="152" cy="340" rx="11" ry="7" fill="#E8B84B"/>
+          <line x1="215" y1="440" x2="218" y2="338" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="218" cy="329" rx="12" ry="8" fill="#D4A017"/>
+          <line x1="275" y1="440" x2="272" y2="343" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="272" cy="334" rx="11" ry="7" fill="#C8922A"/>
+          <line x1="340" y1="440" x2="343" y2="336" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="343" cy="327" rx="12" ry="8" fill="#E8B84B"/>
+          <line x1="400" y1="440" x2="397" y2="341" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="397" cy="332" rx="11" ry="7" fill="#D4A017"/>
+          <line x1="460" y1="440" x2="463" y2="335" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="463" cy="326" rx="12" ry="8" fill="#C8922A"/>
+          <line x1="510" y1="440" x2="508" y2="344" stroke="#4A7A3A" stroke-width="2"/><ellipse cx="508" cy="335" rx="11" ry="7" fill="#E8B84B"/>
         </g>
-        <!-- Mustard row 2 (near, larger) -->
+        <!-- Near plants -->
         <g>
-          <line x1="20" y1="420" x2="16" y2="310" stroke="#2D5E35" stroke-width="3"/>
-          <ellipse cx="16" cy="296" rx="16" ry="11" fill="#C8922A"/>
-          <line x1="70" y1="420" x2="74" y2="295" stroke="#2D5E35" stroke-width="3"/>
-          <ellipse cx="74" cy="280" rx="17" ry="12" fill="#D4A017"/>
-          <line x1="130" y1="420" x2="127" y2="300" stroke="#2D5E35" stroke-width="3"/>
-          <ellipse cx="127" cy="286" rx="16" ry="11" fill="#E8B84B"/>
-          <line x1="200" y1="420" x2="202" y2="290" stroke="#2D5E35" stroke-width="3.5"/>
-          <ellipse cx="202" cy="275" rx="18" ry="12" fill="#C8922A"/>
-          <line x1="270" y1="420" x2="267" y2="295" stroke="#2D5E35" stroke-width="3"/>
-          <ellipse cx="267" cy="280" rx="16" ry="11" fill="#D4A017"/>
-          <line x1="340" y1="420" x2="344" y2="288" stroke="#2D5E35" stroke-width="3.5"/>
-          <ellipse cx="344" cy="272" rx="18" ry="12" fill="#E8B84B"/>
-          <line x1="410" y1="420" x2="407" y2="293" stroke="#2D5E35" stroke-width="3"/>
-          <ellipse cx="407" cy="278" rx="16" ry="11" fill="#C8922A"/>
-          <line x1="478" y1="420" x2="480" y2="285" stroke="#2D5E35" stroke-width="3.5"/>
-          <ellipse cx="480" cy="270" rx="18" ry="12" fill="#D4A017"/>
+          <line x1="18" y1="440" x2="14" y2="318" stroke="#2D5E35" stroke-width="3.5"/><ellipse cx="14" cy="300" rx="18" ry="12" fill="#C8922A"/>
+          <line x1="72" y1="440" x2="76" y2="304" stroke="#2D5E35" stroke-width="3.5"/><ellipse cx="76" cy="285" rx="19" ry="13" fill="#D4A017"/>
+          <line x1="138" y1="440" x2="135" y2="310" stroke="#2D5E35" stroke-width="4"/><ellipse cx="135" cy="292" rx="20" ry="13" fill="#E8B84B"/>
+          <line x1="210" y1="440" x2="213" y2="302" stroke="#2D5E35" stroke-width="3.5"/><ellipse cx="213" cy="283" rx="19" ry="12" fill="#C8922A"/>
+          <line x1="280" y1="440" x2="277" y2="307" stroke="#2D5E35" stroke-width="4"/><ellipse cx="277" cy="289" rx="20" ry="13" fill="#D4A017"/>
+          <line x1="355" y1="440" x2="359" y2="300" stroke="#2D5E35" stroke-width="3.5"/><ellipse cx="359" cy="281" rx="20" ry="13" fill="#E8B84B"/>
+          <line x1="428" y1="440" x2="424" y2="305" stroke="#2D5E35" stroke-width="4"/><ellipse cx="424" cy="287" rx="19" ry="12" fill="#C8922A"/>
+          <line x1="500" y1="440" x2="503" y2="298" stroke="#2D5E35" stroke-width="3.5"/><ellipse cx="503" cy="279" rx="20" ry="13" fill="#D4A017"/>
         </g>
-        <!-- Farmer silhouette -->
-        <g transform="translate(250,285)" opacity="0.7">
-          <circle cx="0" cy="-70" r="10" fill="#3D2B1F"/>
-          <rect x="-6" y="-60" width="12" height="30" rx="3" fill="#3D2B1F"/>
-          <line x1="-6" y1="-50" x2="-20" y2="-35" stroke="#3D2B1F" stroke-width="3" stroke-linecap="round"/>
-          <line x1="6" y1="-50" x2="20" y2="-38" stroke="#3D2B1F" stroke-width="3" stroke-linecap="round"/>
-          <line x1="-3" y1="-30" x2="-5" y2="-10" stroke="#3D2B1F" stroke-width="3" stroke-linecap="round"/>
-          <line x1="3" y1="-30" x2="5" y2="-10" stroke="#3D2B1F" stroke-width="3" stroke-linecap="round"/>
+        <!-- Farmer -->
+        <g transform="translate(260,300)" opacity=".75">
+          <circle cx="0" cy="-72" r="11" fill="#2C1A0E"/>
+          <!-- Pagri / turban -->
+          <path d="M-11,-83 Q0,-96 11,-83 Q8,-78 -8,-78 Z" fill="#C8922A"/>
+          <rect x="-7" y="-62" width="14" height="32" rx="4" fill="#2C1A0E"/>
+          <line x1="-7" y1="-52" x2="-22" y2="-36" stroke="#2C1A0E" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="7" y1="-52" x2="22" y2="-40" stroke="#2C1A0E" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Tool -->
+          <line x1="22" y1="-40" x2="34" y2="-22" stroke="#6B4226" stroke-width="3" stroke-linecap="round"/>
+          <line x1="-3" y1="-30" x2="-5" y2="-10" stroke="#2C1A0E" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="3" y1="-30" x2="5" y2="-10" stroke="#2C1A0E" stroke-width="3.5" stroke-linecap="round"/>
         </g>
-        <!-- Overlay for text readability -->
-        <rect width="520" height="420" fill="rgba(0,0,0,0)" rx="4"/>
-        <!-- Label -->
-        <text x="26" y="400" font-family="Cormorant Garamond, serif" font-size="13" fill="rgba(255,255,255,0.7)" font-style="italic">Mustard fields, Ludhiana, Punjab</text>
+        <!-- Caption -->
+        <text x="24" y="420" font-family="Cormorant Garamond,serif" font-size="12" fill="rgba(255,255,255,.65)" font-style="italic">Mustard fields, Mukerian, Punjab</text>
       </svg>
     </div>
     <div class="story-badge">
-      <span>100%</span>
-      <span>Natural & Pure</span>
+      <b>100%</b>
+      <small>Natural<br>& Pure</small>
     </div>
   </div>
 
-  <div class="story-text reveal-right">
-    <div class="section-label">Our Story</div>
-    <h2 class="section-title">Rooted in the <em>Soil</em> of Punjab</h2>
-    <p>Salaria Naturals was born from a simple belief — that the most nourishing foods come straight from the earth, untouched by chemicals and uncompromised by shortcuts.</p>
-    <p>Founded in the heartland of India's most fertile agricultural state, we work directly with generations-old farming families. Every bottle of our oil carries the warmth of Punjab's sun and the wisdom of farmers who have worked this land for centuries.</p>
-    <p>We use the ancient <em>Kachi Ghani</em> cold-press method — slow, patient, preserving every nutrient and the full-bodied flavour that only real mustard oil possesses.</p>
-    <div class="story-values">
-      <div class="value-card">
-        <div class="value-icon">🌿</div>
-        <div class="value-title">100% Natural</div>
-        <div class="value-desc">Zero additives, zero preservatives. What grows in the field goes in the bottle.</div>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">🌾</div>
-        <div class="value-title">Farm Direct</div>
-        <div class="value-desc">We source directly from partner farmers — full transparency, no middlemen.</div>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">⚗️</div>
-        <div class="value-title">Cold Pressed</div>
-        <div class="value-desc">Traditional Kachi Ghani method retains all nutrients and natural aroma.</div>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">✅</div>
-        <div class="value-title">Quality Tested</div>
-        <div class="value-desc">Every batch independently tested for purity before it reaches you.</div>
-      </div>
+  <div class="rev-r">
+    <div class="sec-label">Our Story</div>
+    <h2 class="sec-title">Rooted in the <em>Soil</em> of Punjab</h2>
+    <p>Salaria Naturals was born from a single, unwavering belief — that the most nourishing foods come straight from the earth, <strong>untouched by chemicals</strong> and uncompromised by shortcuts.</p>
+    <p>We work directly with farming families who have worked this land for generations. Every bottle carries the warmth of Punjab's sun and the hard-earned wisdom of people who understand that <strong>real food takes patience</strong>.</p>
+    <p>We use the ancient <em>Kachi Ghani</em> cold-press method — slow, deliberate, preserving every nutrient, every aroma, every reason why this oil has been a staple in Indian kitchens for millennia.</p>
+    <div class="val-grid">
+      <div class="val-card"><div class="val-icon">🌿</div><div class="val-t">100% Natural</div><div class="val-d">Zero additives. What grows in the field goes in the bottle — nothing more.</div></div>
+      <div class="val-card"><div class="val-icon">🌾</div><div class="val-t">Farm Direct</div><div class="val-d">We source directly from partner farmers. No middlemen, full transparency.</div></div>
+      <div class="val-card"><div class="val-icon">❄️</div><div class="val-t">Cold Pressed</div><div class="val-d">Kachi Ghani below 40°C retains all nutrients, pungency, and natural flavour.</div></div>
+      <div class="val-card"><div class="val-icon">🔬</div><div class="val-t">Lab Verified</div><div class="val-d">Every batch independently tested and traceable to its source village.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ROADMAP / PRODUCTS -->
+<!-- PULL QUOTE -->
+<div class="pull-quote">
+  <p class="pq-text rev">"We don't cut corners because our customers can taste the difference — and so can we."</p>
+  <p class="pq-attr rev">— Salaria Family, Founders</p>
+</div>
+
+<!-- ══════════════ PROCESS ══════════════ -->
+<section id="process">
+  <div class="rev">
+    <div class="sec-label">How It's Made</div>
+    <h2 class="sec-title">Seed to Bottle — <em>Nothing Hidden</em></h2>
+  </div>
+  <div class="process-steps">
+    <div class="proc-step rev" style="transition-delay:.05s">
+      <div class="proc-circle">
+        <div class="proc-num">01</div>
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+          <circle cx="60" cy="60" r="56" fill="rgba(200,146,42,.07)" stroke="rgba(200,146,42,.18)" stroke-width="1"/>
+          <!-- Field rows -->
+          <g stroke="#2D5E35" stroke-width="2">
+            <line x1="20" y1="90" x2="20" y2="48"/><ellipse cx="20" cy="40" rx="9" ry="6" fill="#D4A017"/>
+            <line x1="40" y1="90" x2="40" y2="42"/><ellipse cx="40" cy="34" rx="9" ry="6" fill="#E8B84B"/>
+            <line x1="60" y1="90" x2="60" y2="38"/><ellipse cx="60" cy="30" rx="9" ry="6" fill="#C8922A"/>
+            <line x1="80" y1="90" x2="80" y2="43"/><ellipse cx="80" cy="35" rx="9" ry="6" fill="#D4A017"/>
+            <line x1="100" y1="90" x2="100" y2="46"/><ellipse cx="100" cy="38" rx="9" ry="6" fill="#E8B84B"/>
+          </g>
+          <ellipse cx="60" cy="92" rx="50" ry="8" fill="#1A3A1F" opacity=".4"/>
+          <text x="60" y="110" text-anchor="middle" font-family="Outfit,sans-serif" font-size="8" fill="rgba(200,146,42,.6)" letter-spacing="1">HARVEST</text>
+        </svg>
+      </div>
+      <div class="proc-title">Field Harvest</div>
+      <p class="proc-desc">Partner farmers harvest black mustard seeds at peak ripeness — hand-selected for purity and oil content.</p>
+    </div>
+    <div class="proc-step rev" style="transition-delay:.12s">
+      <div class="proc-circle">
+        <div class="proc-num">02</div>
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+          <circle cx="60" cy="60" r="56" fill="rgba(200,146,42,.07)" stroke="rgba(200,146,42,.18)" stroke-width="1"/>
+          <!-- Cleaning basket -->
+          <path d="M25,55 Q60,45 95,55 L90,85 Q60,95 30,85Z" fill="#8B5A30" opacity=".7"/>
+          <path d="M28,57 Q60,47 92,57 L88,60 Q60,50 32,60Z" fill="#A07040" opacity=".5"/>
+          <!-- Seeds inside -->
+          <g fill="#D4A017" opacity=".8">
+            <circle cx="45" cy="68" r="3.5"/><circle cx="58" cy="63" r="3"/><circle cx="70" cy="70" r="3.5"/>
+            <circle cx="52" cy="76" r="3"/><circle cx="66" cy="78" r="3.5"/><circle cx="42" cy="76" r="3"/>
+            <circle cx="77" cy="66" r="3"/><circle cx="36" cy="64" r="3.5"/>
+          </g>
+          <!-- Water drops -->
+          <g fill="#A8D0C0" opacity=".6">
+            <path d="M60,22 C60,22 56,28 56,31 C56,33.2 57.8,35 60,35 C62.2,35 64,33.2 64,31 C64,28 60,22 60,22Z"/>
+          </g>
+          <text x="60" y="110" text-anchor="middle" font-family="Outfit,sans-serif" font-size="8" fill="rgba(200,146,42,.6)" letter-spacing="1">CLEAN & SORT</text>
+        </svg>
+      </div>
+      <div class="proc-title">Clean & Sort</div>
+      <p class="proc-desc">Seeds are carefully cleaned and sorted — only the finest, fully formed seeds make the cut.</p>
+    </div>
+    <div class="proc-step rev" style="transition-delay:.19s">
+      <div class="proc-circle">
+        <div class="proc-num">03</div>
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+          <defs><radialGradient id="ckg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8B5A30"/><stop offset="100%" stop-color="#3D2B1F"/></radialGradient></defs>
+          <circle cx="60" cy="60" r="56" fill="rgba(200,146,42,.07)" stroke="rgba(200,146,42,.18)" stroke-width="1"/>
+          <!-- Chakki stones -->
+          <ellipse cx="60" cy="75" rx="38" ry="12" fill="url(#ckg)" opacity=".8"/>
+          <ellipse cx="60" cy="65" rx="38" ry="12" fill="#6B4226"/>
+          <ellipse cx="60" cy="65" rx="30" ry="9" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1.5"/>
+          <ellipse cx="60" cy="65" rx="18" ry="5" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+          <ellipse cx="60" cy="65" rx="6" ry="2" fill="#3D2B1F"/>
+          <!-- Handle -->
+          <rect x="56" y="28" width="8" height="42" rx="3" fill="#8B5A30" transform="rotate(5,60,49)"/>
+          <circle cx="64" cy="30" r="6" fill="#6B4226"/>
+          <!-- Oil drops -->
+          <path d="M36,72 Q34,82 33,90 Q32,96 37,96 Q42,96 41,90 Q40,82 38,72" fill="#C8922A" opacity=".7"/>
+          <text x="60" y="110" text-anchor="middle" font-family="Outfit,sans-serif" font-size="8" fill="rgba(200,146,42,.6)" letter-spacing="1">KACHI GHANI</text>
+        </svg>
+      </div>
+      <div class="proc-title">Cold Press</div>
+      <p class="proc-desc">Traditional Kachi Ghani stone pressing below 40°C — slow rotation that never uses heat, preserving everything.</p>
+    </div>
+    <div class="proc-step rev" style="transition-delay:.26s">
+      <div class="proc-circle">
+        <div class="proc-num">04</div>
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+          <defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7A5010"/><stop offset="50%" stop-color="#E8C050"/><stop offset="100%" stop-color="#7A5010"/></linearGradient></defs>
+          <circle cx="60" cy="60" r="56" fill="rgba(200,146,42,.07)" stroke="rgba(200,146,42,.18)" stroke-width="1"/>
+          <!-- Mini bottle -->
+          <path d="M46,35 L46,28 Q46,24 49,24 L71,24 Q74,24 74,28 L74,35 Q80,39 80,48 L80,88 Q80,94 74,94 L46,94 Q40,94 40,88 L40,48 Q40,39 46,35Z" fill="url(#bg2)"/>
+          <path d="M43,66 L43,88 Q43,91 46,91 L74,91 Q77,91 77,88 L77,66Z" fill="#C8A028" opacity=".8"/>
+          <rect x="44" y="55" width="32" height="22" rx="3" fill="rgba(255,255,255,.1)"/>
+          <text x="60" y="65" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6" fill="rgba(255,255,255,.8)" font-weight="600">SALARIA</text>
+          <text x="60" y="73" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="4.5" fill="rgba(255,255,255,.55)">NATURALS</text>
+          <!-- QR dot -->
+          <rect x="54" y="77" width="12" height="12" rx="1.5" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.12)" stroke-width=".5"/>
+          <rect x="50" y="22" width="20" height="6" rx="2.5" fill="#6B4226"/>
+          <text x="60" y="110" text-anchor="middle" font-family="Outfit,sans-serif" font-size="8" fill="rgba(200,146,42,.6)" letter-spacing="1">BOTTLE & SEAL</text>
+        </svg>
+      </div>
+      <div class="proc-title">Bottle & Seal</div>
+      <p class="proc-desc">Filled into dark glass bottles with a QR-coded batch label — sealed same day for maximum freshness.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PRODUCTS ROADMAP ══════════════ -->
 <section id="roadmap">
-  <div class="reveal">
-    <div class="section-label">Product Roadmap</div>
-    <h2 class="section-title">From Field to Bottle — <em>Year by Year</em></h2>
-    <p class="roadmap-subtitle">We're building a family of nature's finest, one carefully crafted product at a time. Each launch is a commitment to purity, not a compromise for speed.</p>
+  <div class="rev">
+    <div class="sec-label">Product Roadmap</div>
+    <h2 class="sec-title light">From Field to Bottle — <em>Year by Year</em></h2>
+    <p class="roadmap-sub">One product at a time, built with care. We'd rather do one thing perfectly than ten things carelessly.</p>
   </div>
+  <div class="roadmap-line">
 
-  <div class="roadmap-timeline">
-
-    <!-- 2026 — Mustard Oil -->
-    <div class="roadmap-item active reveal" style="transition-delay:0.1s">
-      <div class="roadmap-year">2026</div>
-      <div class="product-card">
-        <div class="product-illustration">
-          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-            <!-- Bottle -->
+    <!-- 2026 Mustard Oil -->
+    <div class="rm-item active">
+      <div class="rm-year">2026</div>
+      <div class="rm-card">
+        <div class="rm-illus">
+          <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="bottleGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#A07018"/>
-                <stop offset="40%" stop-color="#E8B84B"/>
-                <stop offset="100%" stop-color="#A07018"/>
-              </linearGradient>
-              <linearGradient id="oilGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#E8C060"/>
-                <stop offset="100%" stop-color="#C8922A"/>
-              </linearGradient>
+              <linearGradient id="rb1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7A5010"/><stop offset="45%" stop-color="#E8C050"/><stop offset="100%" stop-color="#7A5010"/></linearGradient>
+              <linearGradient id="ro1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F0D060"/><stop offset="100%" stop-color="#B87818"/></linearGradient>
             </defs>
-            <!-- Bottle body -->
-            <path d="M42,30 L42,20 Q42,15 48,15 L72,15 Q78,15 78,20 L78,30 Q88,38 88,55 L88,95 Q88,105 78,105 L42,105 Q32,105 32,95 L32,55 Q32,38 42,30 Z" fill="url(#bottleGrad)"/>
-            <!-- Oil fill -->
-            <path d="M44,60 L44,95 Q44,101 50,101 L70,101 Q76,101 76,95 L76,60 Z" fill="url(#oilGrad)" opacity="0.85"/>
-            <!-- Shine -->
-            <path d="M50,32 L50,95" stroke="rgba(255,255,255,0.2)" stroke-width="3" stroke-linecap="round"/>
-            <!-- Label area -->
-            <rect x="38" y="52" width="44" height="35" rx="3" fill="rgba(255,255,255,0.12)"/>
-            <!-- Label text -->
-            <text x="60" y="64" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="7" fill="rgba(255,255,255,0.9)" font-weight="600">SALARIA</text>
-            <text x="60" y="73" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="5.5" fill="rgba(255,255,255,0.7)">NATURALS</text>
-            <line x1="45" y1="77" x2="75" y2="77" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
-            <text x="60" y="83" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6" fill="rgba(255,255,255,0.8)" font-style="italic">Mustard Oil</text>
-            <!-- Cap -->
-            <rect x="46" y="10" width="28" height="8" rx="3" fill="#6B4226"/>
-            <!-- Flowers around -->
-            <circle cx="20" cy="55" r="4" fill="#D4A017" opacity="0.7"/>
-            <circle cx="18" cy="48" r="3" fill="#E8B84B" opacity="0.6"/>
-            <circle cx="100" cy="50" r="4" fill="#D4A017" opacity="0.7"/>
-            <circle cx="103" cy="43" r="3" fill="#E8B84B" opacity="0.6"/>
-            <line x1="20" y1="59" x2="15" y2="75" stroke="#2D5E35" stroke-width="1.5"/>
-            <line x1="100" y1="54" x2="105" y2="70" stroke="#2D5E35" stroke-width="1.5"/>
+            <path d="M38,28 L38,20 Q38,15 44,15 L66,15 Q72,15 72,20 L72,28 Q80,34 80,50 L80,88 Q80,96 72,96 L38,96 Q30,96 30,88 L30,50 Q30,34 38,28Z" fill="url(#rb1)"/>
+            <path d="M32,58 L32,88 Q32,93 38,93 L72,93 Q78,93 78,88 L78,58Z" fill="url(#ro1)" opacity=".88"/>
+            <path d="M40,30 L40,90" stroke="rgba(255,255,255,.15)" stroke-width="3.5" stroke-linecap="round"/>
+            <rect x="36" y="46" width="38" height="30" rx="2.5" fill="rgba(255,255,255,.1)"/>
+            <text x="55" y="57" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6.5" fill="rgba(255,255,255,.9)" font-weight="600">SALARIA</text>
+            <text x="55" y="66" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="4.8" fill="rgba(255,255,255,.6)">NATURALS</text>
+            <text x="55" y="74" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="5.2" fill="rgba(232,184,75,.8)" font-style="italic">Mustard Oil</text>
+            <rect x="42" y="11" width="26" height="7" rx="2.5" fill="#5A3820"/>
+            <circle cx="16" cy="50" r="5" fill="#D4A017" opacity=".7"/>
+            <circle cx="14" cy="42" r="4" fill="#E8B84B" opacity=".6"/>
+            <line x1="16" y1="55" x2="12" y2="70" stroke="#2D5E35" stroke-width="1.5"/>
+            <circle cx="94" cy="46" r="5" fill="#D4A017" opacity=".7"/>
+            <circle cx="97" cy="38" r="4" fill="#E8B84B" opacity=".6"/>
+            <line x1="94" y1="51" x2="98" y2="66" stroke="#2D5E35" stroke-width="1.5"/>
           </svg>
         </div>
-        <div class="product-info">
-          <span class="product-tag tag-launch">🚀 Launching 2026</span>
-          <h3 class="product-name">Kachi Ghani Mustard Oil</h3>
-          <p class="product-desc">Our flagship — cold-pressed from the finest black mustard seeds of Punjab. Rich in Omega-3, allyl isothiocyanate, and generations of flavour. The oil your grandmother always told you to cook with.</p>
-          <div class="product-specs">
-            <span class="spec">Cold Pressed</span>
-            <span class="spec">No Preservatives</span>
-            <span class="spec">High Smoke Point</span>
-            <span class="spec">Rich Omega-3</span>
+        <div class="rm-info">
+          <span class="rm-tag tag-now">🚀 Launching 2026</span>
+          <h3 class="rm-name">Kachi Ghani Mustard Oil</h3>
+          <p class="rm-desc">Our flagship — cold-pressed from the finest black mustard seeds of Punjab. Rich in Omega-3, glucosinolates, and generations of flavour. The oil your grandmother always told you to cook with.</p>
+          <div class="rm-specs">
+            <span class="rm-spec">Cold Pressed</span>
+            <span class="rm-spec">No Preservatives</span>
+            <span class="rm-spec">High Smoke Point</span>
+            <span class="rm-spec">Rich Omega-3</span>
+            <span class="rm-spec">Glass Bottled</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2027 — Turmeric -->
-    <div class="roadmap-item reveal" style="transition-delay:0.2s">
-      <div class="roadmap-year">2027</div>
-      <div class="product-card">
-        <div class="product-illustration">
-          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- 2027 Turmeric -->
+    <div class="rm-item">
+      <div class="rm-year">2027</div>
+      <div class="rm-card">
+        <div class="rm-illus">
+          <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="turmGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#C8670A"/>
-                <stop offset="50%" stop-color="#E8A020"/>
-                <stop offset="100%" stop-color="#C8670A"/>
-              </linearGradient>
-              <radialGradient id="turmPowder" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#F5C842"/>
-                <stop offset="100%" stop-color="#D48010"/>
-              </radialGradient>
+              <linearGradient id="rt1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#B8580A"/><stop offset="50%" stop-color="#E8A020"/><stop offset="100%" stop-color="#B8580A"/></linearGradient>
+              <radialGradient id="rtp" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F5C840"/><stop offset="100%" stop-color="#D07810"/></radialGradient>
             </defs>
-            <!-- Jar body -->
-            <rect x="28" y="40" width="64" height="65" rx="6" fill="url(#turmGrad)"/>
-            <!-- Jar shine -->
-            <path d="M38,42 L38,100" stroke="rgba(255,255,255,0.15)" stroke-width="4" stroke-linecap="round"/>
-            <!-- Powder fill -->
-            <path d="M30,75 Q60,65 90,75 L90,105 Q90,105 84,105 L36,105 Q30,105 30,100 Z" fill="url(#turmPowder)" opacity="0.9"/>
-            <!-- Lid -->
-            <rect x="26" y="32" width="68" height="14" rx="5" fill="#6B4226"/>
-            <rect x="35" y="28" width="50" height="10" rx="4" fill="#8B5A30"/>
-            <!-- Label -->
-            <rect x="35" y="48" width="50" height="28" rx="3" fill="rgba(255,255,255,0.1)"/>
-            <text x="60" y="60" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" font-weight="600">SALARIA</text>
-            <text x="60" y="69" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="5" fill="rgba(255,255,255,0.7)">NATURALS</text>
-            <line x1="40" y1="72" x2="80" y2="72" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
-            <!-- Turmeric roots scattered -->
-            <path d="M15,80 Q18,72 14,65 Q18,70 22,65 Q18,72 22,80 Z" fill="#C8670A" opacity="0.7" transform="rotate(-20,18,72)"/>
-            <path d="M98,75 Q102,67 98,60 Q103,65 107,60 Q103,68 107,76 Z" fill="#E8A020" opacity="0.7" transform="rotate(15,103,68)"/>
-            <circle cx="17" cy="82" r="3" fill="#D48010" opacity="0.6"/>
-            <circle cx="103" cy="78" r="3" fill="#E8B040" opacity="0.6"/>
+            <rect x="24" y="34" width="62" height="62" rx="6" fill="url(#rt1)"/>
+            <path d="M26,62 Q55,52 84,62 L84,96 Q78,96 30,96 Q24,96 24,96Z" fill="url(#rtp)" opacity=".85"/>
+            <path d="M34,36 L34,90" stroke="rgba(255,255,255,.12)" stroke-width="3.5" stroke-linecap="round"/>
+            <rect x="28" y="26" width="54" height="13" rx="4" fill="#5A3820"/>
+            <rect x="34" y="21" width="42" height="10" rx="3.5" fill="#7A4E28"/>
+            <rect x="32" y="42" width="46" height="24" rx="2.5" fill="rgba(255,255,255,.08)"/>
+            <text x="55" y="52" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6.5" fill="rgba(255,255,255,.85)" font-weight="600">SALARIA</text>
+            <text x="55" y="61" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="4.8" fill="rgba(255,255,255,.55)">NATURALS</text>
+            <text x="55" y="69" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="5" fill="rgba(245,223,160,.8)" font-style="italic">Turmeric</text>
+            <!-- Roots -->
+            <path d="M10,66 Q13,57 9,50 Q14,54 18,50 Q14,58 18,66Z" fill="#B8580A" opacity=".7" transform="rotate(-15,13,58)"/>
+            <path d="M95,62 Q99,53 95,46 Q100,50 104,46 Q100,55 104,63Z" fill="#E8A020" opacity=".7" transform="rotate(10,99,55)"/>
           </svg>
         </div>
-        <div class="product-info">
-          <span class="product-tag tag-upcoming">🌿 Coming 2027</span>
-          <h3 class="product-name">Pure Ground Turmeric</h3>
-          <p class="product-desc">Stone-ground from organically grown Lakadong turmeric — the world's highest curcumin variety. Anti-inflammatory, antioxidant-rich, and a cornerstone of Ayurvedic wellness for 5,000 years.</p>
-          <div class="product-specs">
-            <span class="spec">High Curcumin</span>
-            <span class="spec">Stone Ground</span>
-            <span class="spec">Organic</span>
-            <span class="spec">Ayurvedic Grade</span>
+        <div class="rm-info">
+          <span class="rm-tag tag-next">🌿 Coming 2027</span>
+          <h3 class="rm-name">Pure Ground Turmeric</h3>
+          <p class="rm-desc">Stone-ground from organically grown Lakadong turmeric — the world's highest curcumin variety. Anti-inflammatory, antioxidant-rich, and a cornerstone of Ayurvedic wellness for 5,000 years.</p>
+          <div class="rm-specs">
+            <span class="rm-spec">High Curcumin</span>
+            <span class="rm-spec">Stone Ground</span>
+            <span class="rm-spec">Organic</span>
+            <span class="rm-spec">Ayurvedic Grade</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2028 — Chilli -->
-    <div class="roadmap-item reveal" style="transition-delay:0.3s">
-      <div class="roadmap-year">2028</div>
-      <div class="product-card">
-        <div class="product-illustration">
-          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- 2028 Chilli -->
+    <div class="rm-item">
+      <div class="rm-year">2028</div>
+      <div class="rm-card">
+        <div class="rm-illus">
+          <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="chilliGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#8B1A1A"/>
-                <stop offset="50%" stop-color="#D4220A"/>
-                <stop offset="100%" stop-color="#8B1A1A"/>
-              </linearGradient>
-              <radialGradient id="chilliPowder" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#E85020"/>
-                <stop offset="100%" stop-color="#A01010"/>
-              </radialGradient>
+              <linearGradient id="rc1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7A1010"/><stop offset="50%" stop-color="#D42010"/><stop offset="100%" stop-color="#7A1010"/></linearGradient>
+              <radialGradient id="rcp" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#E84018"/><stop offset="100%" stop-color="#901010"/></radialGradient>
             </defs>
-            <!-- Jar -->
-            <rect x="28" y="40" width="64" height="65" rx="6" fill="url(#chilliGrad)"/>
-            <path d="M38,42 L38,100" stroke="rgba(255,255,255,0.12)" stroke-width="4" stroke-linecap="round"/>
-            <!-- Powder fill -->
-            <path d="M30,72 Q60,62 90,72 L90,105 Q90,105 84,105 L36,105 Q30,105 30,100 Z" fill="url(#chilliPowder)" opacity="0.9"/>
-            <!-- Lid -->
-            <rect x="26" y="32" width="68" height="14" rx="5" fill="#5A1010"/>
-            <rect x="35" y="28" width="50" height="10" rx="4" fill="#7A2020"/>
-            <!-- Label -->
-            <rect x="35" y="48" width="50" height="28" rx="3" fill="rgba(255,255,255,0.08)"/>
-            <text x="60" y="60" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" font-weight="600">SALARIA</text>
-            <text x="60" y="69" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="5" fill="rgba(255,255,255,0.65)">NATURALS</text>
+            <rect x="24" y="34" width="62" height="62" rx="6" fill="url(#rc1)"/>
+            <path d="M26,60 Q55,50 84,60 L84,96 Q78,96 30,96 Q24,96 24,96Z" fill="url(#rcp)" opacity=".88"/>
+            <path d="M34,36 L34,90" stroke="rgba(255,255,255,.1)" stroke-width="3.5" stroke-linecap="round"/>
+            <rect x="28" y="26" width="54" height="13" rx="4" fill="#481010"/>
+            <rect x="34" y="21" width="42" height="10" rx="3.5" fill="#6A1818"/>
+            <rect x="32" y="42" width="46" height="24" rx="2.5" fill="rgba(255,255,255,.07)"/>
+            <text x="55" y="52" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="6.5" fill="rgba(255,255,255,.85)" font-weight="600">SALARIA</text>
+            <text x="55" y="61" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="4.8" fill="rgba(255,255,255,.5)">NATURALS</text>
+            <text x="55" y="69" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="5" fill="rgba(245,200,180,.8)" font-style="italic">Chilli Powder</text>
             <!-- Chilli pods -->
-            <path d="M12,60 C8,50 14,38 20,42 C24,45 22,55 18,62 C16,65 12,63 12,60 Z" fill="#C01010" opacity="0.8"/>
-            <path d="M20,42 C20,38 18,34 20,30" stroke="#2D5E35" stroke-width="1.5" fill="none"/>
-            <path d="M105,58 C109,48 103,36 97,40 C93,43 95,53 99,60 C101,63 105,61 105,58 Z" fill="#D42010" opacity="0.8"/>
-            <path d="M97,40 C97,36 99,32 97,28" stroke="#2D5E35" stroke-width="1.5" fill="none"/>
-            <circle cx="15" cy="75" r="2.5" fill="#E84020" opacity="0.5"/>
-            <circle cx="105" cy="72" r="2.5" fill="#E84020" opacity="0.5"/>
+            <path d="M10,54 C6,44 12,32 18,36 C22,39 20,49 16,56 C14,59 10,57 10,54Z" fill="#C01010" opacity=".85"/>
+            <path d="M18,36 C18,32 16,28 18,24" stroke="#2D5E35" stroke-width="1.5" fill="none"/>
+            <path d="M100,52 C104,42 98,30 92,34 C88,37 90,47 94,54 C96,57 100,55 100,52Z" fill="#D42010" opacity=".85"/>
+            <path d="M92,34 C92,30 94,26 92,22" stroke="#2D5E35" stroke-width="1.5" fill="none"/>
           </svg>
         </div>
-        <div class="product-info">
-          <span class="product-tag tag-upcoming">🌶 Coming 2028</span>
-          <h3 class="product-name">Kashmiri Chilli Powder</h3>
-          <p class="product-desc">Slow-dried and stone-ground Kashmiri mirch — renowned for its deep crimson colour and warming heat that doesn't overwhelm. The secret behind India's most vibrant dishes.</p>
-          <div class="product-specs">
-            <span class="spec">Deep Red Colour</span>
-            <span class="spec">Balanced Heat</span>
-            <span class="spec">Sun Dried</span>
-            <span class="spec">Stone Ground</span>
+        <div class="rm-info">
+          <span class="rm-tag tag-next">🌶 Coming 2028</span>
+          <h3 class="rm-name">Kashmiri Chilli Powder</h3>
+          <p class="rm-desc">Slow-dried and stone-ground Kashmiri mirch — renowned for its deep crimson colour and warming heat that never overwhelms. The secret behind India's most vibrant dishes.</p>
+          <div class="rm-specs">
+            <span class="rm-spec">Deep Red Colour</span>
+            <span class="rm-spec">Balanced Heat</span>
+            <span class="rm-spec">Sun Dried</span>
+            <span class="rm-spec">Stone Ground</span>
           </div>
         </div>
       </div>
@@ -1404,398 +997,546 @@ footer {
   </div>
 </section>
 
-<!-- FIVE YEAR PLAN -->
-<section id="fiveyear">
-  <div class="reveal">
-    <div class="section-label">Vision 2030</div>
-    <h2 class="section-title">Our <em>Five-Year</em> Plan</h2>
-    <p style="font-size:1rem;color:var(--text-mid);font-weight:300;line-height:1.8;max-width:600px;margin-bottom:0;">
-      Every great brand is built one deliberate step at a time. Here's how Salaria Naturals grows from a single oil to India's most trusted natural food brand.
-    </p>
+<!-- ══════════════ STATS ══════════════ -->
+<section id="stats">
+  <div class="stat-item rev">
+    <span class="stat-num"><span class="counter" data-target="5000">0</span><span class="stat-suffix">+</span></span>
+    <div class="stat-lbl">Years of Kachi Ghani Heritage</div>
   </div>
-  <div class="plan-grid reveal">
-    <div class="plan-col plan-highlight">
-      <div class="plan-year">2026</div>
-      <div class="plan-title">Foundation</div>
-      <ul class="plan-items">
+  <div class="stat-item rev" style="transition-delay:.08s">
+    <span class="stat-num"><span class="counter" data-target="100">0</span><span class="stat-suffix">%</span></span>
+    <div class="stat-lbl">Farm Direct, Always</div>
+  </div>
+  <div class="stat-item rev" style="transition-delay:.16s">
+    <span class="stat-num"><span class="counter" data-target="0">0</span><span class="stat-suffix"></span></span>
+    <div class="stat-lbl">Additives or Preservatives</div>
+  </div>
+  <div class="stat-item rev" style="transition-delay:.24s">
+    <span class="stat-num"><span class="counter" data-target="24">0</span><span class="stat-suffix">hr</span></span>
+    <div class="stat-lbl">From Press to Seal</div>
+  </div>
+</section>
+
+<!-- ══════════════ TRUST / TRANSPARENCY ══════════════ -->
+<section id="trust">
+  <div class="rev-l">
+    <div class="sec-label">Radical Transparency</div>
+    <h2 class="sec-title">Scan Your Bottle. <em>Know Everything.</em></h2>
+    <p>In a world of vague labels and empty promises, we go further. Every bottle of Salaria Naturals carries a QR code that connects you directly to the full story of your oil.</p>
+    <div class="trust-steps">
+      <div class="trust-step">
+        <div class="trust-step-num">1</div>
+        <div class="trust-step-body">
+          <strong>Origin Village</strong>
+          <span>Exact GPS location of the farm where your mustard seeds were grown.</span>
+        </div>
+      </div>
+      <div class="trust-step">
+        <div class="trust-step-num">2</div>
+        <div class="trust-step-body">
+          <strong>Pressing Date & Batch</strong>
+          <span>When your oil was cold-pressed and the batch number for full traceability.</span>
+        </div>
+      </div>
+      <div class="trust-step">
+        <div class="trust-step-num">3</div>
+        <div class="trust-step-body">
+          <strong>Lab Test Report</strong>
+          <span>Third-party purity certificate — acidity, moisture, heavy metals. All visible, all real.</span>
+        </div>
+      </div>
+      <div class="trust-step">
+        <div class="trust-step-num">4</div>
+        <div class="trust-step-body">
+          <strong>Farmer Profile</strong>
+          <span>Meet the family who grew your food. Their name, their land, their story.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="qr-visual rev-r">
+    <div class="qr-card">
+      <div class="qr-title">Batch Trace Card</div>
+      <div class="qr-sub">Scan the QR on your bottle to reveal</div>
+      <div class="qr-box">
+        <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg" width="130" height="130">
+          <!-- QR code pattern (decorative) -->
+          <rect x="10" y="10" width="40" height="40" rx="4" fill="none" stroke="rgba(200,146,42,.5)" stroke-width="2"/>
+          <rect x="18" y="18" width="24" height="24" rx="2" fill="rgba(200,146,42,.2)"/>
+          <rect x="22" y="22" width="16" height="16" rx="1" fill="rgba(200,146,42,.6)"/>
+          <rect x="80" y="10" width="40" height="40" rx="4" fill="none" stroke="rgba(200,146,42,.5)" stroke-width="2"/>
+          <rect x="88" y="18" width="24" height="24" rx="2" fill="rgba(200,146,42,.2)"/>
+          <rect x="92" y="22" width="16" height="16" rx="1" fill="rgba(200,146,42,.6)"/>
+          <rect x="10" y="80" width="40" height="40" rx="4" fill="none" stroke="rgba(200,146,42,.5)" stroke-width="2"/>
+          <rect x="18" y="88" width="24" height="24" rx="2" fill="rgba(200,146,42,.2)"/>
+          <rect x="22" y="92" width="16" height="16" rx="1" fill="rgba(200,146,42,.6)"/>
+          <!-- Data dots -->
+          <g fill="rgba(200,146,42,.7)">
+            <rect x="60" y="10" width="8" height="8" rx="1"/><rect x="72" y="10" width="8" height="8" rx="1"/>
+            <rect x="60" y="22" width="8" height="8" rx="1"/><rect x="60" y="34" width="8" height="8" rx="1"/>
+            <rect x="72" y="34" width="8" height="8" rx="1"/>
+            <rect x="80" y="60" width="8" height="8" rx="1"/><rect x="92" y="60" width="8" height="8" rx="1"/>
+            <rect x="104" y="60" width="8" height="8" rx="1"/><rect x="80" y="72" width="8" height="8" rx="1"/>
+            <rect x="104" y="72" width="8" height="8" rx="1"/><rect x="92" y="84" width="8" height="8" rx="1"/>
+            <rect x="60" y="60" width="8" height="8" rx="1"/><rect x="60" y="72" width="8" height="8" rx="1"/>
+            <rect x="60" y="84" width="8" height="8" rx="1"/><rect x="60" y="96" width="8" height="8" rx="1"/>
+            <rect x="72" y="60" width="8" height="8" rx="1"/><rect x="72" y="96" width="8" height="8" rx="1"/>
+            <rect x="10" y="60" width="8" height="8" rx="1"/><rect x="22" y="60" width="8" height="8" rx="1"/>
+            <rect x="34" y="60" width="8" height="8" rx="1"/><rect x="10" y="72" width="8" height="8" rx="1"/>
+            <rect x="34" y="72" width="8" height="8" rx="1"/>
+          </g>
+        </svg>
+      </div>
+      <div class="qr-info-row">
+        <div class="qr-info-item"><strong>Origin</strong><span>Mukerian, PB</span></div>
+        <div class="qr-info-item"><strong>Method</strong><span>Kachi Ghani</span></div>
+        <div class="qr-info-item"><strong>Status</strong><span style="color:var(--green-light)">✓ Verified</span></div>
+      </div>
+      <div style="margin-top:1.2rem;padding:.7rem;background:rgba(200,146,42,.07);border-radius:4px;font-size:.75rem;color:var(--text-soft);text-align:left;line-height:1.6">
+        <strong style="color:var(--earth);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Farmer</strong><br>
+        Harjinder Singh, Jodhan Village<br>
+        <span style="color:var(--text-soft);font-size:.72rem">Est. farming since 1972 · 8 acres</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FIVE YEAR PLAN ══════════════ -->
+<section id="fiveyear">
+  <div class="rev">
+    <div class="sec-label">Vision 2030</div>
+    <h2 class="sec-title light">Our <em>Five-Year</em> Plan</h2>
+    <p class="plan-intro">Every great brand is built one deliberate step at a time. Here is exactly how Salaria Naturals grows from one honest oil to India's most trusted natural food brand.</p>
+  </div>
+  <div class="plan-grid rev">
+    <div class="plan-col now">
+      <div class="plan-yr">2026</div>
+      <div class="plan-head">Foundation</div>
+      <ul class="plan-list">
         <li>Launch Kachi Ghani Mustard Oil</li>
-        <li>Establish farm partnerships in Ludhiana & Amritsar districts</li>
-        <li>FSSAI certification & lab testing protocols</li>
-        <li>Direct-to-consumer online launch</li>
-        <li>Build brand identity & packaging</li>
+        <li>Farm partnerships in Mukerian & Hoshiarpur</li>
+        <li>FSSAI certification & lab protocols</li>
+        <li>Direct-to-consumer online store</li>
+        <li>Brand identity & glass packaging</li>
       </ul>
     </div>
     <div class="plan-col">
-      <div class="plan-year">2027</div>
-      <div class="plan-title">Expansion</div>
-      <ul class="plan-items">
+      <div class="plan-yr">2027</div>
+      <div class="plan-head">Expansion</div>
+      <ul class="plan-list">
         <li>Launch Pure Ground Turmeric</li>
-        <li>Enter 50+ kiryana & organic stores in Punjab</li>
-        <li>Launch subscription model</li>
-        <li>Social media & influencer growth</li>
-        <li>Begin export enquiries</li>
+        <li>50+ organic stores in Punjab</li>
+        <li>Subscription model launch</li>
+        <li>Social media & influencer campaign</li>
+        <li>Begin export enquiries (UAE/UK)</li>
       </ul>
     </div>
     <div class="plan-col">
-      <div class="plan-year">2028</div>
-      <div class="plan-title">Growth</div>
-      <ul class="plan-items">
+      <div class="plan-yr">2028</div>
+      <div class="plan-head">Growth</div>
+      <ul class="plan-list">
         <li>Launch Kashmiri Chilli Powder</li>
-        <li>Enter Delhi, Mumbai & Chandigarh retail</li>
-        <li>Introduce gift & festive packaging</li>
-        <li>Achieve 10,000 monthly orders</li>
-        <li>Begin UAE & UK export pilot</li>
+        <li>Enter Delhi, Mumbai & Chandigarh</li>
+        <li>Gift & festive packaging launch</li>
+        <li>Reach 10,000 monthly orders</li>
+        <li>UAE & UK export pilot</li>
       </ul>
     </div>
     <div class="plan-col">
-      <div class="plan-year">2029</div>
-      <div class="plan-title">Scale</div>
-      <ul class="plan-items">
-        <li>4th product launch — Cold Pressed Groundnut Oil</li>
+      <div class="plan-yr">2029</div>
+      <div class="plan-head">Scale</div>
+      <ul class="plan-list">
+        <li>Cold Pressed Groundnut Oil launch</li>
         <li>Pan-India modern trade distribution</li>
-        <li>Launch Salaria Naturals recipe platform</li>
-        <li>Organic & sustainable farm certification</li>
+        <li>Salaria Naturals Recipe Platform</li>
+        <li>Organic farm certification</li>
         <li>Seed investment round</li>
       </ul>
     </div>
     <div class="plan-col">
-      <div class="plan-year">2030</div>
-      <div class="plan-title">Leadership</div>
-      <ul class="plan-items">
-        <li>Full range of 8+ natural spices & oils</li>
-        <li>International presence in 5 countries</li>
-        <li>Salaria Naturals Wellness range launch</li>
-        <li>100% sustainable, zero-waste packaging</li>
+      <div class="plan-yr">2030</div>
+      <div class="plan-head">Leadership</div>
+      <ul class="plan-list">
+        <li>Full range of 8+ natural products</li>
+        <li>International in 5+ countries</li>
+        <li>Salaria Naturals Wellness range</li>
+        <li>100% zero-waste packaging</li>
         <li>India's most loved natural food brand</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- WHY CHOOSE -->
+<!-- ══════════════ WHY SALARIA ══════════════ -->
 <section id="why">
-  <div class="reveal" style="max-width:700px">
-    <div class="section-label">Why Salaria</div>
-    <h2 class="section-title">Not Just Natural. <em>Genuinely</em> Different.</h2>
+  <div class="why-intro">
+    <div class="why-intro-left rev-l">
+      <div class="sec-label">Why Salaria</div>
+      <h2 class="sec-title">Not Just Natural.<br><em>Genuinely Different.</em></h2>
+    </div>
+    <div class="why-intro-right rev-r">
+      <p>Most brands claim to be natural. We show you proof — from the farm GPS to the lab report on your bottle. This is what transparency actually looks like.</p>
+    </div>
   </div>
-  <div class="why-grid reveal">
-    <div class="why-card">
-      <div class="why-number">01</div>
-      <div class="why-title">We Know Our Farmers by Name</div>
-      <div class="why-desc">Our supply chain starts with people, not suppliers. We visit every partner farm, pay fair prices, and build relationships that outlast harvest seasons.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-number">02</div>
-      <div class="why-title">The Kachi Ghani Difference</div>
-      <div class="why-desc">Cold-pressing at below 40°C preserves glucosinolates, Omega-3 fatty acids, and the unmistakable pungency that only true mustard oil carries. Heat-extracted oils simply cannot replicate this.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-number">03</div>
-      <div class="why-title">Radical Transparency</div>
-      <div class="why-desc">Every batch gets a QR code. Scan it and see your oil's exact origin village, pressing date, and lab report. No secrets. No spin.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-number">04</div>
-      <div class="why-title">Packaging with Purpose</div>
-      <div class="why-desc">Glass bottles, recyclable caps, minimal labels — designed to look beautiful on your shelf and leave nothing behind on the planet.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-number">05</div>
-      <div class="why-title">Rooted in Punjab</div>
-      <div class="why-desc">Punjab's black mustard is globally recognised for its superior quality. We don't source from the cheapest market — we source from the best soil on earth for this crop.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-number">06</div>
-      <div class="why-title">A Family Brand, Always</div>
-      <div class="why-desc">Salaria Naturals will never be sold to a conglomerate. We're family-built, community-rooted, and committed to staying that way — no matter how large we grow.</div>
-    </div>
+  <div class="why-grid rev">
+    <div class="why-card"><div class="why-n">01</div><div class="why-t">We Know Our Farmers by Name</div><div class="why-d">Our supply chain starts with people, not suppliers. We visit every partner farm, pay fair prices, and build relationships that outlast harvest seasons.</div></div>
+    <div class="why-card"><div class="why-n">02</div><div class="why-t">The Kachi Ghani Difference</div><div class="why-d">Cold-pressing at below 40°C preserves glucosinolates, Omega-3 fatty acids, and the unmistakable pungency that only true mustard oil carries. Heat-extracted oils simply cannot replicate this.</div></div>
+    <div class="why-card"><div class="why-n">03</div><div class="why-t">Radical Transparency</div><div class="why-d">Every batch carries a scannable QR code linking to the origin village, pressing date, and third-party lab report. No secrets. No spin. Just truth.</div></div>
+    <div class="why-card"><div class="why-n">04</div><div class="why-t">Glass, Not Plastic</div><div class="why-d">Dark glass bottles protect the oil from light and leaching — better for the oil, better for the planet, and beautiful on your shelf.</div></div>
+    <div class="why-card"><div class="why-n">05</div><div class="why-t">Punjab's Best Black Mustard</div><div class="why-d">Punjab's black mustard is globally recognised for its superior oil content and flavour profile. We source from the best soil on earth for this crop.</div></div>
+    <div class="why-card"><div class="why-n">06</div><div class="why-t">A Family Brand, Always</div><div class="why-d">Salaria Naturals will never be sold to a conglomerate. We are family-built, community-rooted, and committed to staying that way — regardless of growth.</div></div>
   </div>
 </section>
 
-<!-- HERITAGE -->
-<section id="heritage">
-  <div class="heritage-text reveal-left">
-    <div class="section-label">Our Heritage</div>
-    <h2 class="section-title">Punjab in <em>Every Drop</em></h2>
-    <p>The word "Salaria" carries the weight of history — a name that echoes through the villages of Punjab, tied to honest work, fertile land, and the generosity of a culture that has always believed in sharing the best of what it grows.</p>
-    <p>We are not just selling oil. We are preserving a way of life — the village chakki, the scent of freshly pressed mustard filling the early morning air, the knowledge passed from grandmother to granddaughter about which oil makes rotis taste like home.</p>
-    <p>That knowledge, that heritage, that flavour — we're bottling it, carefully, for a generation that deserves to know where their food truly comes from.</p>
-    <div class="heritage-stat-row">
-      <div class="heritage-stat">
-        <div class="num">5000+</div>
-        <div class="lbl">Years of Ayurvedic Use</div>
-      </div>
-      <div class="heritage-stat">
-        <div class="num">100%</div>
-        <div class="lbl">Farm Direct</div>
-      </div>
-      <div class="heritage-stat">
-        <div class="num">0</div>
-        <div class="lbl">Additives, Ever</div>
-      </div>
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<section id="testimonials">
+  <div class="rev">
+    <div class="sec-label">What People Say</div>
+    <h2 class="sec-title">First Impressions — <em>From Real Kitchens</em></h2>
+  </div>
+  <div class="testi-wrapper" id="testiRow">
+    <div class="testi-card">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">"The moment I opened the bottle I knew this was different. The aroma alone — pungent, real, just like my mother used to keep."</p>
+      <div class="testi-author">Amarjit Kaur</div>
+      <div class="testi-loc">Mukerian, Punjab</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">"I've been searching for genuinely cold-pressed mustard oil for years. Scanned the QR, checked the lab report, and ordered a case immediately."</p>
+      <div class="testi-author">Rahul Mehta</div>
+      <div class="testi-loc">Delhi, India</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">"As a nutritionist I recommend cold-pressed oils to all my clients. Salaria is the first brand I've found that I'd vouch for publicly."</p>
+      <div class="testi-author">Dr. Priya Sharma</div>
+      <div class="testi-loc">Wellness Consultant, Chandigarh</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">"We stocked it in our organic store and it sold out in 3 days. Customers come back specifically asking for it by name. That never happens."</p>
+      <div class="testi-author">Vikram Anand</div>
+      <div class="testi-loc">Organic Store Owner, Amritsar</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">"The packaging is stunning — glass bottle, minimal label. I use it in my kitchen and my guests always ask where I got it."</p>
+      <div class="testi-author">Nandini Bose</div>
+      <div class="testi-loc">Food Blogger, Bengaluru</div>
     </div>
   </div>
+  <div class="testi-nav rev">
+    <button onclick="scrollTesti(-1)">←</button>
+    <button onclick="scrollTesti(1)">→</button>
+  </div>
+</section>
 
-  <div class="heritage-visual reveal-right">
-    <svg viewBox="0 0 440 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<!-- ══════════════ HERITAGE ══════════════ -->
+<section id="heritage">
+  <div class="heri-text rev-l">
+    <div class="sec-label">Our Heritage</div>
+    <h2 class="sec-title light">Punjab in <em>Every Drop</em></h2>
+    <p>The word "Salaria" carries the weight of history — a name that echoes through villages of Punjab, tied to honest work, fertile land, and a culture that has always believed in sharing the best of what it grows.</p>
+    <p>We are not just selling oil. We are preserving a way of life — the village chakki, the scent of freshly pressed mustard filling the early morning air, the knowledge passed from grandmother to granddaughter about which oil makes rotis taste like home.</p>
+    <p>That knowledge, that heritage, that flavour — we are bottling it carefully for a generation that deserves to know where their food truly comes from.</p>
+    <div class="heri-stats">
+      <div class="heri-stat"><div class="num">5000+</div><div class="lbl">Years Kachi Ghani History</div></div>
+      <div class="heri-stat"><div class="num">100%</div><div class="lbl">Farm Direct Sourcing</div></div>
+      <div class="heri-stat"><div class="num">0</div><div class="lbl">Additives, Ever</div></div>
+    </div>
+  </div>
+  <div class="heri-visual rev-r">
+    <svg viewBox="0 0 440 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px">
       <defs>
-        <radialGradient id="chakki" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#8B5A30"/>
-          <stop offset="100%" stop-color="#3D2B1F"/>
-        </radialGradient>
-        <radialGradient id="oilPool" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#E8C060"/>
-          <stop offset="100%" stop-color="#C8922A"/>
-        </radialGradient>
-        <filter id="dropShadow">
-          <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(0,0,0,0.4)"/>
-        </filter>
+        <radialGradient id="chg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8B5A30"/><stop offset="100%" stop-color="#3D2B1F"/></radialGradient>
+        <radialGradient id="opg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F0D060"/><stop offset="100%" stop-color="#C8922A"/></radialGradient>
+        <filter id="dsf"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="rgba(0,0,0,.35)"/></filter>
       </defs>
-      <!-- Background circle decoration -->
-      <circle cx="220" cy="250" r="200" fill="rgba(200,146,42,0.06)"/>
-      <circle cx="220" cy="250" r="160" fill="rgba(200,146,42,0.04)"/>
-      <circle cx="220" cy="250" r="120" stroke="rgba(200,146,42,0.12)" stroke-width="1" fill="none" stroke-dasharray="8 6"/>
-      <!-- Chakki (stone grinder) base -->
-      <ellipse cx="220" cy="340" rx="130" ry="35" fill="url(#chakki)" filter="url(#dropShadow)"/>
-      <ellipse cx="220" cy="330" rx="130" ry="35" fill="#5A3820"/>
-      <!-- Chakki top stone -->
-      <ellipse cx="220" cy="295" rx="130" ry="35" fill="url(#chakki)"/>
-      <ellipse cx="220" cy="288" rx="130" ry="35" fill="#6B4226"/>
-      <!-- Stone texture rings -->
-      <ellipse cx="220" cy="288" rx="105" ry="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
-      <ellipse cx="220" cy="288" rx="80" ry="21" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
-      <ellipse cx="220" cy="288" rx="50" ry="13" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-      <!-- Center hole -->
+      <!-- Decorative circles -->
+      <circle cx="220" cy="250" r="200" fill="rgba(200,146,42,.04)"/>
+      <circle cx="220" cy="250" r="155" fill="rgba(200,146,42,.03)"/>
+      <circle cx="220" cy="250" r="115" stroke="rgba(200,146,42,.1)" stroke-width="1" fill="none" stroke-dasharray="10 8"/>
+      <!-- Chakki base -->
+      <ellipse cx="220" cy="344" rx="135" ry="36" fill="url(#chg)" filter="url(#dsf)"/>
+      <ellipse cx="220" cy="334" rx="135" ry="36" fill="#4A3018"/>
+      <!-- Top stone -->
+      <ellipse cx="220" cy="296" rx="135" ry="36" fill="url(#chg)"/>
+      <ellipse cx="220" cy="288" rx="135" ry="36" fill="#5A3820"/>
+      <!-- Texture rings -->
+      <ellipse cx="220" cy="288" rx="108" ry="29" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="2"/>
+      <ellipse cx="220" cy="288" rx="80" ry="21" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1.5"/>
+      <ellipse cx="220" cy="288" rx="48" ry="13" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
       <ellipse cx="220" cy="288" rx="20" ry="6" fill="#3D2B1F"/>
-      <!-- Wooden handle -->
-      <rect x="214" y="160" width="12" height="135" rx="5" fill="#8B5A30" transform="rotate(8,220,228)"/>
-      <circle cx="232" cy="162" r="10" fill="#6B4226"/>
-      <!-- Oil dripping from chakki -->
-      <path d="M160,320 Q155,350 152,380 Q150,395 158,395 Q166,395 164,380 Q162,350 165,320" fill="url(#oilPool)" opacity="0.8"/>
-      <path d="M270,318 Q275,348 278,378 Q280,393 272,393 Q264,393 266,378 Q268,348 265,318" fill="url(#oilPool)" opacity="0.8"/>
-      <!-- Oil pool at bottom -->
-      <ellipse cx="220" cy="415" rx="90" ry="22" fill="url(#oilPool)" opacity="0.6"/>
-      <ellipse cx="220" cy="412" rx="70" ry="16" fill="url(#oilPool)" opacity="0.8"/>
-      <!-- Mustard seeds scattered -->
-      <g fill="#D4A017" opacity="0.7">
-        <circle cx="90" cy="350" r="3.5"/>
-        <circle cx="105" cy="360" r="3"/>
-        <circle cx="78" cy="365" r="2.5"/>
-        <circle cx="340" cy="345" r="3.5"/>
-        <circle cx="355" cy="358" r="3"/>
-        <circle cx="325" cy="368" r="2.5"/>
+      <!-- Handle -->
+      <rect x="214" y="158" width="13" height="138" rx="5.5" fill="#7A5028" transform="rotate(7,220,227)"/>
+      <circle cx="232" cy="160" r="11" fill="#6B4226"/>
+      <!-- Oil drips -->
+      <path d="M158,323 Q154,355 151,385 Q149,398 158,398 Q167,398 165,385 Q163,352 166,323" fill="url(#opg)" opacity=".75"/>
+      <path d="M272,321 Q277,353 280,383 Q282,396 274,396 Q266,396 268,383 Q270,350 267,321" fill="url(#opg)" opacity=".75"/>
+      <!-- Oil pool -->
+      <ellipse cx="220" cy="418" rx="92" ry="23" fill="url(#opg)" opacity=".55"/>
+      <ellipse cx="220" cy="414" rx="70" ry="16" fill="url(#opg)" opacity=".8"/>
+      <!-- Mustard seeds -->
+      <g fill="#D4A017" opacity=".65">
+        <circle cx="85" cy="355" r="4"/><circle cx="100" cy="368" r="3.5"/><circle cx="72" cy="370" r="3"/>
+        <circle cx="345" cy="350" r="4"/><circle cx="360" cy="362" r="3.5"/><circle cx="330" cy="372" r="3"/>
       </g>
-      <!-- Decorative flowers -->
-      <g transform="translate(80,180)">
-        <circle cx="0" cy="0" r="7" fill="#D4A017"/>
-        <circle cx="-12" cy="-7" r="5" fill="#E8B84B"/>
-        <circle cx="12" cy="-8" r="5" fill="#C8922A"/>
-        <circle cx="0" cy="-15" r="5" fill="#D4A017"/>
-        <line x1="0" y1="7" x2="-2" y2="50" stroke="#2D5E35" stroke-width="2.5"/>
-        <!-- leaves -->
-        <path d="M-2,30 C-2,30 -22,22 -26,12 C-20,14 -8,25 -2,30 Z" fill="#2D5E35" opacity="0.8"/>
+      <!-- Flowers -->
+      <g transform="translate(76,180)">
+        <circle cx="0" cy="0" r="8" fill="#D4A017"/>
+        <circle cx="-14" cy="-8" r="6" fill="#E8B84B"/><circle cx="14" cy="-10" r="6" fill="#C8922A"/>
+        <circle cx="-6" cy="-20" r="6" fill="#D4A017"/><circle cx="0" cy="-27" r="5" fill="#E8B84B"/>
+        <circle cx="-24" cy="3" r="5" fill="#F5DFA0" opacity=".8"/><circle cx="24" cy="3" r="5" fill="#F5DFA0" opacity=".8"/>
+        <line x1="0" y1="8" x2="-2" y2="55" stroke="#2D5E35" stroke-width="3"/>
+        <path d="M-2,32 C-2,32 -28,23 -32,10 C-24,13 -8,26 -2,32Z" fill="#2D5E35" opacity=".75"/>
       </g>
-      <g transform="translate(355,175)">
+      <g transform="translate(360,175)">
         <circle cx="0" cy="0" r="7" fill="#E8B84B"/>
-        <circle cx="-12" cy="-7" r="5" fill="#D4A017"/>
-        <circle cx="12" cy="-8" r="5" fill="#E8B84B"/>
-        <circle cx="0" cy="-15" r="5" fill="#C8922A"/>
-        <line x1="0" y1="7" x2="2" y2="50" stroke="#2D5E35" stroke-width="2.5"/>
-        <path d="M2,30 C2,30 22,22 26,12 C20,14 8,25 2,30 Z" fill="#2D5E35" opacity="0.8"/>
+        <circle cx="-12" cy="-7" r="5.5" fill="#D4A017"/><circle cx="12" cy="-9" r="5.5" fill="#E8B84B"/>
+        <circle cx="-5" cy="-18" r="5.5" fill="#C8922A"/><circle cx="5" cy="-16" r="5.5" fill="#D4A017"/>
+        <line x1="0" y1="7" x2="2" y2="52" stroke="#2D5E35" stroke-width="2.5"/>
+        <path d="M2,30 C2,30 26,22 28,10 C20,14 6,24 2,30Z" fill="#2D5E35" opacity=".7"/>
       </g>
-      <!-- Caption -->
-      <text x="220" y="465" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="13" fill="rgba(250,246,239,0.5)" font-style="italic">The ancient Kachi Ghani cold press</text>
+      <text x="220" y="468" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="13" fill="rgba(250,246,239,.42)" font-style="italic">The ancient Kachi Ghani cold press</text>
     </svg>
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- ══════════════ EARLY ACCESS ══════════════ -->
+<section id="early">
+  <div class="early-inner">
+    <div class="early-eyebrow">Be First in Line</div>
+    <h2 class="early-title">Get Early Access<br>to Our Launch</h2>
+    <p class="early-sub">We're launching in 2026. Join our list to get notified first, receive an exclusive founding-batch discount, and taste the difference before anyone else.</p>
+    <div class="early-form">
+      <input type="email" placeholder="Your email address" id="earlyEmail"/>
+      <button class="btn-dark" onclick="joinEarly()">Join the List</button>
+    </div>
+    <p class="early-note">No spam. Just one email when we launch. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- ══════════════ CONTACT ══════════════ -->
 <section id="contact">
-  <div class="contact-info reveal-left">
-    <div class="section-label">Get in Touch</div>
-    <h3>Let's Talk <em style="font-family:Cormorant Garamond,serif;font-style:italic;color:var(--gold)">Purity</em></h3>
-    <p>Whether you're a retailer, a wellness platform, a corporate buyer, or simply someone who wants the finest natural oil delivered to their door — we'd love to hear from you.</p>
-    <div class="contact-detail">
-      <div class="contact-detail-icon">📍</div>
-      <div class="contact-detail-text">
-        <strong>Location</strong>
-        <span>Ludhiana, Punjab, India</span>
-      </div>
-    </div>
-    <div class="contact-detail">
-      <div class="contact-detail-icon">📧</div>
-      <div class="contact-detail-text">
-        <strong>Email</strong>
-        <span>hello@salarianaturals.com</span>
-      </div>
-    </div>
-    <div class="contact-detail">
-      <div class="contact-detail-icon">📱</div>
-      <div class="contact-detail-text">
-        <strong>WhatsApp</strong>
-        <span>+91 98760 XXXXX</span>
-      </div>
-    </div>
-    <div class="contact-detail">
-      <div class="contact-detail-icon">🕐</div>
-      <div class="contact-detail-text">
-        <strong>Hours</strong>
-        <span>Mon–Sat, 9 AM – 7 PM IST</span>
-      </div>
-    </div>
-    <div class="social-links">
-      <a href="#" class="social-link" title="Instagram">In</a>
-      <a href="#" class="social-link" title="Facebook">Fb</a>
-      <a href="#" class="social-link" title="YouTube">Yt</a>
-      <a href="#" class="social-link" title="WhatsApp">Wa</a>
+  <div class="cont-info rev-l">
+    <div class="sec-label">Get in Touch</div>
+    <h2 class="sec-title">Let's Talk <em>Purity</em></h2>
+    <p class="lead">Whether you're a retailer, wellness platform, corporate buyer, bulk customer, or simply want the finest natural oil — we'd love to hear from you.</p>
+    <div class="cont-row"><div class="cont-icon">📍</div><div class="cont-body"><strong>Location</strong><span>Mukerian, Punjab, India — 144211</span></div></div>
+    <div class="cont-row"><div class="cont-icon">📧</div><div class="cont-body"><strong>Email</strong><a href="mailto:hello@salarianaturals.com">hello@salarianaturals.com</a></div></div>
+    <div class="cont-row"><div class="cont-icon">📱</div><div class="cont-body"><strong>WhatsApp</strong><span>+91 98760 XXXXX</span></div></div>
+    <div class="cont-row"><div class="cont-icon">🕐</div><div class="cont-body"><strong>Hours</strong><span>Mon–Sat, 9 AM – 7 PM IST</span></div></div>
+    <div class="soc-row">
+      <a href="#" class="soc-btn" title="Instagram">IG</a>
+      <a href="#" class="soc-btn" title="Facebook">FB</a>
+      <a href="#" class="soc-btn" title="YouTube">YT</a>
+      <a href="#" class="soc-btn" title="WhatsApp">WA</a>
+      <a href="#" class="soc-btn" title="LinkedIn">LI</a>
     </div>
   </div>
-
-  <div class="contact-form-wrapper reveal-right">
+  <div class="form-wrap rev-r">
     <h2>Send a Message</h2>
-    <p>Interested in stocking our products, placing a bulk order, or just curious? Fill in below and we'll respond within 24 hours.</p>
-    <div class="form-row">
-      <div class="form-group"><input type="text" placeholder="Your Name"/></div>
-      <div class="form-group"><input type="text" placeholder="Company / Brand (optional)"/></div>
+    <p class="sub">Interested in stocking our products, placing a bulk order, or just curious? We respond within 24 hours.</p>
+    <div class="fr">
+      <div class="fg"><input type="text" placeholder="Your Name"/></div>
+      <div class="fg"><input type="text" placeholder="Company / Brand (optional)"/></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><input type="email" placeholder="Email Address"/></div>
-      <div class="form-group"><input type="tel" placeholder="Phone / WhatsApp"/></div>
+    <div class="fr">
+      <div class="fg"><input type="email" placeholder="Email Address"/></div>
+      <div class="fg"><input type="tel" placeholder="Phone / WhatsApp"/></div>
     </div>
-    <div class="form-group">
+    <div class="fg">
       <select>
         <option value="" disabled selected>Enquiry Type</option>
         <option>Retail / B2B Partnership</option>
+        <option>Bulk / Wholesale Order</option>
         <option>Online Order / Subscription</option>
         <option>Export Enquiry</option>
         <option>Press / Media</option>
         <option>Other</option>
       </select>
     </div>
-    <div class="form-group"><textarea placeholder="Tell us a little about what you're looking for..."></textarea></div>
-    <button class="btn-primary" onclick="alert('Thank you! We will be in touch shortly.')" style="border:none;cursor:pointer;width:100%;text-align:center;font-family:Outfit,sans-serif;">
-      Send Message →
-    </button>
+    <div class="fg"><textarea placeholder="Tell us what you're looking for…"></textarea></div>
+    <button class="btn-gold" onclick="submitForm()" style="width:100%;border:none;cursor:none;font-family:'Outfit',sans-serif;text-align:center">Send Message →</button>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-top">
-    <div class="footer-brand">
+  <div class="ft-top">
+    <div class="ft-brand">
       <h3>Salaria Naturals</h3>
-      <p>Pure cold-pressed oils and natural spices from the fields of Punjab. Honest food for honest people.</p>
-      <p style="margin-top:1rem;font-size:0.75rem;color:rgba(250,246,239,0.25);">Est. 2025 · Ludhiana, Punjab, India</p>
+      <p>Cold-pressed oils and natural spices from the fields of Punjab. Honest food for honest people — since 2026.</p>
+      <div class="ft-cert">
+        <span class="ft-cert-badge">FSSAI</span>
+        <span class="ft-cert-badge">Cold Pressed</span>
+        <span class="ft-cert-badge">Glass Bottled</span>
+        <span class="ft-cert-badge">Lab Verified</span>
+      </div>
     </div>
-    <div class="footer-col">
+    <div class="ft-col">
       <h4>Products</h4>
       <a href="#">Kachi Ghani Mustard Oil</a>
-      <a href="#">Turmeric — 2027</a>
-      <a href="#">Chilli Powder — 2028</a>
-      <a href="#">Upcoming Products</a>
+      <a href="#">Turmeric — Coming 2027</a>
+      <a href="#">Chilli Powder — Coming 2028</a>
+      <a href="#">Vision 2030</a>
     </div>
-    <div class="footer-col">
+    <div class="ft-col">
       <h4>Company</h4>
       <a href="#">Our Story</a>
       <a href="#">Heritage</a>
+      <a href="#">Our Process</a>
       <a href="#">Farm Partners</a>
-      <a href="#">Vision 2030</a>
-      <a href="#">Press</a>
+      <a href="#">Press & Media</a>
     </div>
-    <div class="footer-col">
+    <div class="ft-col">
       <h4>Connect</h4>
       <a href="#">Instagram</a>
       <a href="#">Facebook</a>
       <a href="#">YouTube</a>
       <a href="#">WhatsApp</a>
-      <a href="#">hello@salarianaturals.com</a>
+      <a href="mailto:hello@salarianaturals.com">hello@salarianaturals.com</a>
     </div>
   </div>
-  <div class="footer-bottom">
-    <span>© 2025–2026 Salaria Naturals. All rights reserved.</span>
+  <div class="ft-bot">
+    <span>© 2026 Salaria Naturals. All rights reserved.</span>
     <span>Made with ❤️ in Punjab, India</span>
   </div>
 </footer>
 
+<!-- ════════════════════════════════════════
+   JAVASCRIPT
+════════════════════════════════════════ -->
 <script>
-// ── LOADER ──
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('loader').classList.add('hidden');
-  }, 2000);
+/* ── LOADER ── */
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('out'),2100)});
+
+/* ── CURSOR ── */
+const cur=document.getElementById('cur');
+const ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+document.querySelectorAll('a,button,.val-card,.why-card,.plan-col,.rm-card,.testi-card,.proc-step').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='56px';ring.style.height='56px';ring.style.opacity='.35'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='38px';ring.style.height='38px';ring.style.opacity='.5'});
 });
 
-// ── CUSTOM CURSOR ──
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top = my + 'px';
+/* ── NAV ── */
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY;
+  if(s<80){nav.className=''}
+  else if(s<window.innerHeight){nav.className='up'}
+  else{nav.className='light'}
+  // float btn
+  document.getElementById('floatBtn').classList.toggle('show',s>400);
 });
-function animateRing() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px';
-  ring.style.top = ry + 'px';
-  requestAnimationFrame(animateRing);
-}
-animateRing();
-document.querySelectorAll('a, button, .value-card, .why-card, .plan-col').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.width = '20px'; cursor.style.height = '20px'; cursor.style.opacity = '0.6';
-    ring.style.width = '60px'; ring.style.height = '60px';
+
+/* ── MOBILE MENU ── */
+function toggleMob(){document.getElementById('ham').classList.toggle('open');document.getElementById('mobMenu').classList.toggle('open')}
+function closeMob(){document.getElementById('ham').classList.remove('open');document.getElementById('mobMenu').classList.remove('open')}
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis')}});
+},{threshold:.1});
+document.querySelectorAll('.rev,.rev-l,.rev-r,.rm-item').forEach(el=>obs.observe(el));
+
+/* ── COUNTER ANIMATION ── */
+const counterObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target;
+      const target=+el.dataset.target;
+      const dur=1800;
+      const step=target/60;
+      let current=0;
+      const timer=setInterval(()=>{
+        current=Math.min(current+step,target);
+        el.textContent=Math.floor(current).toLocaleString();
+        if(current>=target){clearInterval(timer);el.textContent=target.toLocaleString()}
+      },dur/60);
+      counterObs.unobserve(el);
+    }
   });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.opacity = '1';
-    ring.style.width = '40px'; ring.style.height = '40px';
-  });
-});
+},{threshold:.5});
+document.querySelectorAll('.counter').forEach(el=>counterObs.observe(el));
 
-// ── NAV SCROLL ──
-const nav = document.getElementById('mainNav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-});
-
-// ── SCROLL REVEAL ──
-const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .roadmap-item');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); }
-  });
-}, { threshold: 0.12 });
-reveals.forEach(el => observer.observe(el));
-
-// ── SMOOTH ANCHOR ──
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const href = a.getAttribute('href');
-    if (href === '#') return;
-    e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  });
-});
-
-// ── PARALLAX HERO ──
-window.addEventListener('scroll', () => {
-  const hero = document.getElementById('hero');
-  const scrolled = window.scrollY;
-  if (scrolled < window.innerHeight) {
-    const heroContent = hero.querySelector('.hero-content');
-    const heroBg = hero.querySelector('.hero-bg');
-    heroContent.style.transform = `translateY(${scrolled * 0.25}px)`;
-    heroContent.style.opacity = 1 - scrolled / 600;
-    heroBg.style.transform = `translateY(${scrolled * 0.15}px)`;
-    const illus = hero.querySelector('.hero-illustration');
-    if (illus) illus.style.transform = `translateY(${scrolled * 0.2}px) translateX(${scrolled * 0.02}px)`;
+/* ── PARALLAX HERO ── */
+let ticking=false;
+window.addEventListener('scroll',()=>{
+  if(!ticking){
+    requestAnimationFrame(()=>{
+      const s=window.scrollY;
+      if(s<window.innerHeight){
+        const hc=document.querySelector('.hero-content');
+        const hv=document.querySelector('.hero-visual');
+        if(hc){hc.style.transform=`translateY(${s*.22}px)`;hc.style.opacity=Math.max(0,1-s/580)}
+        if(hv){hv.style.transform=`translateY(${s*.16}px)`}
+      }
+      ticking=false;
+    });
+    ticking=true;
   }
 });
 
-// ── MARQUEE duplicate ──
-const track = document.getElementById('marqueeTrack');
+/* ── PARTICLE CANVAS ── */
+const canvas=document.getElementById('particleCanvas');
+const ctx=canvas.getContext('2d');
+let particles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+function Particle(){
+  this.x=Math.random()*canvas.width;
+  this.y=Math.random()*canvas.height;
+  this.r=Math.random()*2.5+.8;
+  this.vx=(Math.random()-.5)*.35;
+  this.vy=-Math.random()*.5-.1;
+  this.alpha=Math.random()*.45+.1;
+  this.color=Math.random()>.5?'#D4A017':'#E8B84B';
+}
+Particle.prototype.update=function(){this.x+=this.vx;this.y+=this.vy;if(this.y<-5)this.y=canvas.height+5;if(this.x<0)this.x=canvas.width;if(this.x>canvas.width)this.x=0};
+Particle.prototype.draw=function(){ctx.save();ctx.globalAlpha=this.alpha;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();ctx.restore()};
+for(let i=0;i<80;i++)particles.push(new Particle());
+function animParticles(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.update();p.draw()});if(window.scrollY<window.innerHeight)requestAnimationFrame(animParticles)}
+setTimeout(animParticles,2200);
+
+/* ── SMOOTH ANCHORS ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const h=a.getAttribute('href');
+    if(h==='#')return;
+    e.preventDefault();
+    const t=document.querySelector(h);
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* ── TESTIMONIALS SCROLL ── */
+function scrollTesti(dir){
+  const r=document.getElementById('testiRow');
+  r.scrollBy({left:dir*360,behavior:'smooth'});
+}
+
+/* ── FORM ACTIONS ── */
+function submitForm(){
+  const btn=event.target;
+  btn.textContent='✓ Message Sent!';
+  btn.style.background='var(--green-mid)';
+  btn.style.color='white';
+  setTimeout(()=>{btn.textContent='Send Message →';btn.style.background='';btn.style.color=''},3000);
+}
+function joinEarly(){
+  const input=document.getElementById('earlyEmail');
+  if(input.value&&input.value.includes('@')){
+    input.value='';
+    input.placeholder='✓ You\'re on the list!';
+    setTimeout(()=>{input.placeholder='Your email address'},3000);
+  }
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Sarson Pro — Oil Business Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════ */
+:root{
+  --bg:#090b10;--s1:#111420;--s2:#171b28;--s3:#1e2235;--s4:#252a3e;
+  --b1:#2a2f47;--b2:#363d5a;
+  --gold:#f0a500;--gold2:#ffc740;--golddim:rgba(240,165,0,.13);
+  --text:#e4e8f5;--t2:#8d94b8;--t3:#4e5672;
+  --green:#1fd47a;--greenbg:rgba(31,212,122,.1);
+  --amber:#f5bc00;--amberbg:rgba(245,188,0,.1);
+  --red:#f04040;--redbg:rgba(240,64,64,.1);
+  --blue:#4a9eff;--bluebg:rgba(74,158,255,.1);
+  --purple:#9d7aff;
+  --r:14px;--rsm:9px;--rxs:6px;
+  --sh:0 4px 28px rgba(0,0,0,.55);
+  --fd:'Syne','Segoe UI',system-ui,sans-serif;
+  --fm:'DM Mono','Consolas',monospace;
+  --mob:768px;
+  --nav-h:60px;
+}
+[data-theme=light]{
+  --bg:#efece5;--s1:#fff;--s2:#f7f4ee;--s3:#edeae2;--s4:#e3dfd6;
+  --b1:#d8d3c8;--b2:#c2bcb0;
+  --gold:#c47800;--gold2:#a86000;--golddim:rgba(196,120,0,.1);
+  --text:#1a1710;--t2:#5a5448;--t3:#8a8474;
+  --green:#157a48;--greenbg:rgba(21,122,72,.09);
+  --amber:#8a6800;--amberbg:rgba(138,104,0,.09);
+  --red:#b82020;--redbg:rgba(184,32,32,.09);
+  --blue:#1a5fb8;--bluebg:rgba(26,95,184,.09);
+  --sh:0 4px 28px rgba(0,0,0,.09);
+}
+
+/* ══════════════════════════════════════════════════════
+   BASE
+══════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{font-size:15px;scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  font-family:var(--fd);background:var(--bg);color:var(--text);
+  min-height:100vh;min-height:100dvh;
+  transition:background .25s,color .25s;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px;}
+input[type=number]::-webkit-inner-spin-button{opacity:.4;}
+input[type=range]{accent-color:var(--gold);cursor:pointer;}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+
+/* ══════════════════════════════════════════════════════
+   LAYOUT — DESKTOP
+══════════════════════════════════════════════════════ */
+.app-shell{
+  display:grid;
+  grid-template-areas:'header header''sidebar main';
+  grid-template-rows:58px 1fr;
+  grid-template-columns:390px 1fr;
+  height:100vh;height:100dvh;
+  overflow:hidden;
+}
+/* HEADER */
+.top-bar{
+  grid-area:header;
+  background:var(--s1);border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;padding:0 18px;gap:12px;
+  position:sticky;top:0;z-index:300;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{
+  width:36px;height:36px;background:var(--gold);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;flex-shrink:0;
+}
+.brand-name{
+  font-size:.95rem;font-weight:800;color:var(--gold);
+  letter-spacing:-.02em;line-height:1.1;
+}
+.brand-name span{display:block;font-size:.62rem;font-weight:400;color:var(--t3);font-family:var(--fm);letter-spacing:.04em;}
+.top-actions{margin-left:auto;display:flex;gap:6px;align-items:center;}
+.btn{
+  font-family:var(--fd);font-size:.73rem;font-weight:700;
+  padding:7px 12px;border-radius:var(--rsm);border:none;
+  display:inline-flex;align-items:center;gap:5px;
+  transition:all .15s;white-space:nowrap;
+}
+.btn-gold{background:var(--gold);color:#090b10;}
+.btn-gold:hover{background:var(--gold2);}
+.btn-ghost{background:var(--s2);color:var(--text);border:1px solid var(--b1);}
+.btn-ghost:hover{background:var(--s3);}
+.btn-icon{width:34px;height:34px;padding:0;justify-content:center;font-size:1rem;}
+
+/* SIDEBAR */
+.sidebar{
+  grid-area:sidebar;
+  background:var(--s1);border-right:1px solid var(--b1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sidebar-tabs{
+  display:flex;border-bottom:1px solid var(--b1);flex-shrink:0;
+  background:var(--s1);
+}
+.stab{
+  flex:1;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:11px 4px;border:none;background:none;
+  color:var(--t3);border-bottom:2px solid transparent;transition:all .13s;
+  font-family:var(--fd);
+}
+.stab.on{color:var(--gold);border-bottom-color:var(--gold);}
+.sidebar-body{overflow-y:auto;flex:1;padding:10px 14px 80px;}
+.spanel{display:none;}.spanel.on{display:block;}
+
+/* MAIN */
+.main-area{
+  grid-area:main;overflow-y:auto;background:var(--bg);
+  display:flex;flex-direction:column;
+}
+.main-nav{
+  display:flex;padding:14px 18px 0;gap:2px;
+  border-bottom:1px solid var(--b1);background:var(--bg);
+  position:sticky;top:0;z-index:100;
+  overflow-x:auto;scrollbar-width:none;flex-shrink:0;
+}
+.main-nav::-webkit-scrollbar{display:none;}
+.rtab{
+  font-size:.72rem;font-weight:700;letter-spacing:.02em;
+  color:var(--t3);background:none;border:none;
+  border-bottom:2px solid transparent;padding:9px 13px;
+  transition:all .13s;margin-bottom:-1px;white-space:nowrap;
+  font-family:var(--fd);
+}
+.rtab.on{color:var(--gold);border-bottom-color:var(--gold);}
+.rtab:hover{color:var(--text);}
+.rpage{display:none;padding:18px;animation:fadeUp .25s ease;}
+.rpage.on{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE LAYOUT
+══════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  .app-shell{
+    grid-template-areas:'header''main';
+    grid-template-rows:56px 1fr;
+    grid-template-columns:1fr;
+  }
+  .sidebar{display:none;}
+  .brand-name span{display:none;}
+  .top-bar{padding:0 12px;}
+  .btn-ghost.desktop-only{display:none;}
+
+  /* Floating input drawer trigger */
+  .fab{
+    position:fixed;bottom:calc(var(--nav-h) + 14px);right:16px;z-index:500;
+    width:52px;height:52px;border-radius:50%;border:none;
+    background:var(--gold);color:#090b10;font-size:1.4rem;
+    box-shadow:0 4px 20px rgba(240,165,0,.45);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .2s;
+  }
+  .fab:active{transform:scale(.92);}
+
+  /* Drawer */
+  .drawer-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;
+    opacity:0;pointer-events:none;transition:opacity .25s;
+  }
+  .drawer-overlay.open{opacity:1;pointer-events:all;}
+  .drawer{
+    position:fixed;bottom:0;left:0;right:0;z-index:700;
+    background:var(--s1);border-radius:20px 20px 0 0;
+    max-height:88dvh;display:flex;flex-direction:column;
+    transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  }
+  .drawer.open{transform:translateY(0);}
+  .drawer-handle{
+    width:40px;height:4px;background:var(--b2);border-radius:99px;
+    margin:12px auto 0;flex-shrink:0;
+  }
+  .drawer-tabs{
+    display:flex;border-bottom:1px solid var(--b1);flex-shrink:0;
+    padding:0 4px;margin-top:6px;
+  }
+  .drawer-body{overflow-y:auto;padding:10px 16px 32px;flex:1;}
+
+  /* Bottom nav */
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+    background:var(--s1);border-top:1px solid var(--b1);
+    display:flex;align-items:center;z-index:400;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .bnav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:2px;border:none;background:none;
+    padding:6px 2px;transition:all .15s;
+  }
+  .bnav-icon{font-size:1.25rem;line-height:1;}
+  .bnav-label{font-size:.56rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--t3);font-family:var(--fd);}
+  .bnav-item.on .bnav-label{color:var(--gold);}
+  .bnav-item.on .bnav-icon{filter:drop-shadow(0 0 6px var(--gold));}
+
+  .main-area{padding-bottom:var(--nav-h);}
+  .main-nav{display:none;}
+  .rpage{padding:14px;}
+
+  /* Grid overrides */
+  .g2,.g3,.g4{grid-template-columns:1fr!important;}
+  .g2m2{grid-template-columns:1fr 1fr!important;}
+  .kpi-grid{grid-template-columns:1fr 1fr!important;}
+  .scenario-grid{grid-template-columns:1fr!important;}
+  .insights-grid{grid-template-columns:1fr!important;}
+  .wc-grid{grid-template-columns:1fr 1fr!important;}
+}
+
+/* ══════════════════════════════════════════════════════
+   INPUT COMPONENTS
+══════════════════════════════════════════════════════ */
+.sec-hd{
+  font-size:.63rem;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:8px;
+  margin:16px 0 8px;
+}
+.sec-hd::after{content:'';flex:1;height:1px;background:var(--b1);}
+.sec-hd:first-child{margin-top:4px;}
+
+.irow{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:3px 0;}
+.ilbl{font-size:.82rem;color:var(--t2);line-height:1.3;}
+.ilbl small{display:block;font-size:.66rem;color:var(--t3);font-style:italic;margin-top:1px;}
+.ibox{
+  display:flex;align-items:stretch;
+  background:var(--s2);border:1.5px solid var(--b1);
+  border-radius:var(--rsm);overflow:hidden;transition:border-color .13s;
+}
+.ibox:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px var(--golddim);}
+.ibox input{
+  background:transparent;border:none;outline:none;
+  color:var(--text);font-family:var(--fm);font-size:.86rem;font-weight:500;
+  width:80px;padding:8px 8px;text-align:right;min-height:38px;
+}
+.iunit{
+  font-family:var(--fm);font-size:.6rem;color:var(--t3);
+  padding:0 7px 0 5px;white-space:nowrap;
+  border-left:1px solid var(--b1);
+  display:flex;align-items:center;background:var(--s3);min-width:42px;
+}
+.calc-btn{
+  width:100%;padding:14px;background:var(--gold);color:#090b10;
+  font-family:var(--fd);font-size:.9rem;font-weight:800;letter-spacing:.04em;
+  border:none;border-radius:var(--r);margin-top:16px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .18s;box-shadow:0 4px 16px rgba(240,165,0,.25);
+}
+.calc-btn:hover{background:var(--gold2);transform:translateY(-1px);}
+.calc-btn:active{transform:scale(.98);}
+
+/* ══════════════════════════════════════════════════════
+   HEALTH BANNER
+══════════════════════════════════════════════════════ */
+.health{
+  border-radius:var(--r);padding:14px 18px;display:flex;
+  align-items:center;gap:14px;border:1px solid;margin-bottom:14px;
+}
+.health.g{background:var(--greenbg);border-color:var(--green);}
+.health.a{background:var(--amberbg);border-color:var(--amber);}
+.health.r{background:var(--redbg);border-color:var(--red);}
+.hdot{width:11px;height:11px;border-radius:50%;flex-shrink:0;animation:hpulse 2.2s ease infinite;}
+@keyframes hpulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.7;transform:scale(1.35);}}
+.health.g .hdot{background:var(--green);}
+.health.a .hdot{background:var(--amber);}
+.health.r .hdot{background:var(--red);}
+.htxt{font-size:.88rem;font-weight:700;}
+.health.g .htxt{color:var(--green);}
+.health.a .htxt{color:var(--amber);}
+.health.r .htxt{color:var(--red);}
+.hsub{font-size:.74rem;color:var(--t2);margin-top:2px;line-height:1.4;}
+
+/* ══════════════════════════════════════════════════════
+   KPI CARDS
+══════════════════════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px;}
+.kpi{
+  background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);
+  padding:13px 14px;transition:transform .16s;
+}
+.kpi:active{transform:scale(.98);}
+.kpi-lbl{font-family:var(--fm);font-size:.59rem;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:5px;}
+.kpi-val{font-size:1.18rem;font-weight:800;color:var(--text);line-height:1;}
+.kpi-val.p{color:var(--green);}
+.kpi-val.l{color:var(--red);}
+.kpi-val.w{color:var(--amber);}
+.kpi-val.g{color:var(--gold);}
+.kpi-sub{font-size:.64rem;color:var(--t3);margin-top:4px;font-family:var(--fm);line-height:1.3;}
+
+/* ══════════════════════════════════════════════════════
+   GRIDS
+══════════════════════════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+.g2m2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.mb{margin-bottom:14px;}
+
+/* ══════════════════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════════════════ */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:16px;}
+.card-hd{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);margin-bottom:12px;}
+.chart-box{position:relative;height:210px;}
+.chart-box.tall{height:260px;}
+
+.page-hd{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:3px;}
+.page-sub{font-size:.76rem;color:var(--t3);margin-bottom:14px;line-height:1.4;}
+
+/* ══════════════════════════════════════════════════════
+   TABLES
+══════════════════════════════════════════════════════ */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--b1);}
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem;}
+.tbl th{
+  font-size:.61rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--t3);text-align:left;padding:9px 12px;background:var(--s2);
+  border-bottom:2px solid var(--b1);white-space:nowrap;
+}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--b1);color:var(--t2);vertical-align:middle;}
+.tbl td:last-child,.tbl th:last-child{text-align:right;}
+.tbl tbody tr:hover td{background:var(--s2);}
+.tbl .mono{font-family:var(--fm);font-weight:500;color:var(--text);}
+.tbl .sec-row td{background:var(--s2);font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3)!important;padding:7px 12px;}
+.tbl .tot-row td{font-weight:800;color:var(--gold);border-top:2px solid var(--b2);border-bottom:2px solid var(--b2);font-family:var(--fm);}
+.tbl .pr-row td{color:var(--green);font-weight:700;font-family:var(--fm);}
+.tbl .ls-row td{color:var(--red);font-weight:700;font-family:var(--fm);}
+.tbl .yr-row td{font-size:.72rem;color:var(--t3);padding-top:4px;padding-bottom:4px;}
+
+/* ══════════════════════════════════════════════════════
+   SCENARIO CARDS
+══════════════════════════════════════════════════════ */
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.sc-card{
+  background:var(--s1);border:1.5px solid var(--b1);border-radius:var(--r);
+  padding:14px;position:relative;overflow:hidden;
+}
+.sc-card.highlight{border-color:var(--gold);box-shadow:0 0 0 2px var(--golddim);}
+.sc-name{font-size:.8rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-right:54px;line-height:1.2;}
+.sc-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b1);font-size:.74rem;}
+.sc-row:last-child{border-bottom:none;}
+.sc-row .sk{color:var(--t3);}
+.sc-row .sv{font-family:var(--fm);font-weight:500;}
+.sc-tag{
+  position:absolute;top:10px;right:10px;
+  font-size:.57rem;font-weight:700;padding:2px 7px;border-radius:99px;
+}
+.t-now{background:var(--golddim);color:var(--gold);}
+.t-up{background:var(--greenbg);color:var(--green);}
+.t-dn{background:var(--redbg);color:var(--red);}
+.t-str{background:var(--bluebg);color:var(--blue);}
+
+/* ══════════════════════════════════════════════════════
+   MATRIX
+══════════════════════════════════════════════════════ */
+.matrix{border-collapse:collapse;font-family:var(--fm);font-size:.7rem;min-width:560px;width:100%;}
+.matrix th,.matrix td{padding:7px 9px;text-align:center;border:1px solid var(--b1);}
+.matrix th{background:var(--s2);color:var(--t2);font-size:.62rem;}
+.matrix .rh{background:var(--s2);text-align:left;font-weight:600;color:var(--t2);white-space:nowrap;}
+.cg{background:rgba(31,212,122,.15);color:var(--green);font-weight:600;}
+.ca{background:rgba(245,188,0,.13);color:var(--amber);font-weight:600;}
+.cr{background:rgba(240,64,64,.15);color:var(--red);font-weight:600;}
+.hl{outline:2px solid var(--gold)!important;z-index:2;position:relative;font-weight:800!important;}
+
+/* ══════════════════════════════════════════════════════
+   TIMELINE
+══════════════════════════════════════════════════════ */
+.tl{position:relative;padding-left:22px;}
+.tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--b1);}
+.tl-item{position:relative;margin-bottom:20px;}
+.tl-dot{
+  position:absolute;left:-22px;top:3px;width:12px;height:12px;
+  border-radius:50%;border:2px solid var(--b2);background:var(--s1);
+}
+.tl-dot.done{background:var(--green);border-color:var(--green);}
+.tl-dot.now{background:var(--gold);border-color:var(--gold);animation:hpulse 2s infinite;}
+.tl-when{font-family:var(--fm);font-size:.63rem;color:var(--t3);margin-bottom:2px;}
+.tl-title{font-size:.86rem;font-weight:800;color:var(--text);margin-bottom:4px;}
+.tl-body{font-size:.77rem;color:var(--t2);line-height:1.55;}
+.tl-chips{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px;}
+.chip{
+  font-family:var(--fm);font-size:.66rem;font-weight:500;
+  background:var(--s2);border:1px solid var(--b1);
+  border-radius:6px;padding:2px 8px;color:var(--gold);
+}
+
+/* ══════════════════════════════════════════════════════
+   INSIGHTS
+══════════════════════════════════════════════════════ */
+.insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ins{
+  background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);
+  padding:14px;border-left:3px solid var(--b2);
+}
+.ins.tip{border-left-color:var(--gold);}
+.ins.opp{border-left-color:var(--green);}
+.ins.warn{border-left-color:var(--red);}
+.ins.info{border-left-color:var(--blue);}
+.ins-icon{font-size:1.1rem;margin-bottom:5px;}
+.ins-title{font-size:.8rem;font-weight:800;color:var(--text);margin-bottom:5px;}
+.ins-body{font-size:.76rem;color:var(--t2);line-height:1.55;}
+.ins-action{font-family:var(--fm);font-size:.68rem;color:var(--gold);margin-top:8px;font-weight:500;}
+
+/* ══════════════════════════════════════════════════════
+   WORKING CAPITAL
+══════════════════════════════════════════════════════ */
+.wc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.wc-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;}
+.wc-lbl{font-family:var(--fm);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:5px;}
+.wc-val{font-size:1.1rem;font-weight:800;margin-bottom:3px;}
+.wc-sub{font-size:.68rem;color:var(--t3);margin-bottom:6px;}
+.pbar{height:5px;background:var(--s3);border-radius:99px;overflow:hidden;}
+.pfill{height:100%;border-radius:99px;transition:width .5s ease;}
+
+/* ══════════════════════════════════════════════════════
+   DAILY TRACKER
+══════════════════════════════════════════════════════ */
+.daily-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.daily-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;text-align:center;}
+.daily-val{font-size:1.4rem;font-weight:800;color:var(--gold);line-height:1;}
+.daily-lbl{font-size:.65rem;color:var(--t3);margin-top:4px;font-family:var(--fm);text-transform:uppercase;letter-spacing:.06em;}
+.daily-entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.daily-entry-card{background:var(--s1);border:1.5px solid var(--b1);border-radius:var(--r);padding:14px;}
+.daily-entry-title{font-size:.75rem;font-weight:700;color:var(--t2);margin-bottom:10px;}
+.daily-irow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--b1);}
+.daily-irow:last-child{border:none;}
+.daily-irow label{font-size:.76rem;color:var(--t2);}
+.daily-irow input{
+  background:var(--s2);border:1px solid var(--b1);border-radius:var(--rxs);
+  color:var(--text);font-family:var(--fm);font-size:.82rem;
+  width:90px;padding:5px 8px;text-align:right;outline:none;
+}
+.daily-irow input:focus{border-color:var(--gold);}
+.log-table-wrap{margin-top:14px;}
+.log-empty{text-align:center;padding:24px;color:var(--t3);font-size:.8rem;}
+
+/* ══════════════════════════════════════════════════════
+   COMPETITOR
+══════════════════════════════════════════════════════ */
+.comp-tbl td:first-child strong{font-size:.82rem;}
+.your-row td{border-left:3px solid var(--gold)!important;background:var(--golddim)!important;font-weight:600;}
+.your-row td:first-child{color:var(--gold);}
+.tag{display:inline-block;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:99px;}
+.tag-p{background:var(--golddim);color:var(--gold);}
+.tag-m{background:var(--greenbg);color:var(--green);}
+.tag-b{background:var(--bluebg);color:var(--blue);}
+
+/* ══════════════════════════════════════════════════════
+   GST / LOAN BADGE
+══════════════════════════════════════════════════════ */
+.info-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--fm);font-size:.67rem;font-weight:500;
+  padding:3px 10px;border-radius:99px;
+  background:var(--bluebg);color:var(--blue);
+  border:1px solid rgba(74,158,255,.2);margin:2px;
+}
+
+/* ══════════════════════════════════════════════════════
+   MISC
+══════════════════════════════════════════════════════ */
+.divider{height:1px;background:var(--b1);margin:18px 0;}
+.section-gap{margin-top:18px;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:.65rem;font-weight:500;padding:3px 9px;border-radius:99px;}
+.badge-gold{background:var(--golddim);color:var(--gold);}
+.badge-green{background:var(--greenbg);color:var(--green);}
+.badge-red{background:var(--redbg);color:var(--red);}
+.mix-result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.mix-res{background:var(--s2);border-radius:var(--rsm);padding:10px;text-align:center;}
+.mix-res .ml{font-family:var(--fm);font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:3px;}
+.mix-res .mv{font-size:.95rem;font-weight:800;color:var(--gold);}
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + 10px);right:16px;
+  background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);
+  padding:11px 16px;font-size:.78rem;font-weight:700;color:var(--text);
+  box-shadow:var(--sh);z-index:9999;animation:fadeUp .25s ease;
+}
+.toast.ok{border-color:var(--green);color:var(--green);}
+.toast.err{border-color:var(--red);color:var(--red);}
+@media(min-width:769px){
+  .bottom-nav,.fab,.drawer,.drawer-overlay{display:none!important;}
+  .toast{bottom:16px;}
+}
+@media print{
+  .sidebar,.top-actions,.main-nav,.bottom-nav,.fab{display:none!important;}
+  .app-shell{grid-template-areas:'header''main';grid-template-columns:1fr;}
+  .rpage{display:block!important;}
+  body{background:#fff;color:#000;}
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+<!-- ═══════════ TOP BAR ═══════════ -->
+<header class="top-bar">
+  <div class="brand">
+    <div class="brand-icon">🌻</div>
+    <div class="brand-name">SARSON PRO
+      <span>Mukerian, Punjab · Smart Oil Business</span>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="btn btn-ghost btn-icon desktop-only" onclick="saveData()" title="Save">💾</button>
+    <button class="btn btn-ghost btn-icon desktop-only" onclick="loadData()" title="Load">📂</button>
+    <button class="btn btn-ghost btn-icon desktop-only" onclick="window.print()" title="Print">🖨</button>
+    <button class="btn btn-ghost btn-icon" id="themeBtn" onclick="toggleTheme()" title="Theme">☀</button>
+  </div>
+</header>
+
+<!-- ═══════════ SIDEBAR (desktop) ═══════════ -->
+<aside class="sidebar">
+  <div class="sidebar-tabs">
+    <button class="stab on" onclick="showStab('production',this)">⚙ Machine</button>
+    <button class="stab" onclick="showStab('costs',this)">💸 Costs</button>
+    <button class="stab" onclick="showStab('sales',this)">💰 Sales</button>
+    <button class="stab" onclick="showStab('finance',this)">🏦 Finance</button>
+  </div>
+  <div class="sidebar-body" id="sidebar-body">
+    <!-- PRODUCTION -->
+    <div class="spanel on" id="sp-production">
+      <div class="sec-hd">Machine & Seed</div>
+      <div class="irow"><label class="ilbl">Machine Capacity<small>10–15 HP: 40–70 kg/hr</small></label><div class="ibox"><input type="number" id="machine_cap" value="50" min="1" oninput="calculate()"><span class="iunit">kg/hr</span></div></div>
+      <div class="irow"><label class="ilbl">Working Hours/Day</label><div class="ibox"><input type="number" id="work_hrs" value="10" min="1" max="24" oninput="calculate()"><span class="iunit">hrs</span></div></div>
+      <div class="irow"><label class="ilbl">Working Days/Month</label><div class="ibox"><input type="number" id="work_days" value="26" min="1" max="31" oninput="calculate()"><span class="iunit">days</span></div></div>
+      <div class="irow"><label class="ilbl">Oil Extraction %<small>Cold press: 30–35%</small></label><div class="ibox"><input type="number" id="oil_pct" value="32" min="1" max="60" step=".5" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <div class="sec-hd">Seed Procurement</div>
+      <div class="irow"><label class="ilbl">Seed Price<small>1 quintal = 100 kg</small></label><div class="ibox"><input type="number" id="seed_price" value="5800" oninput="calculate()"><span class="iunit">₹/qtl</span></div></div>
+      <div class="irow"><label class="ilbl">Seed Stock on Hand</label><div class="ibox"><input type="number" id="seed_stock" value="50" oninput="calculate()"><span class="iunit">qtl</span></div></div>
+      <div class="irow"><label class="ilbl">Peak Season Seed Price<small>Oct–Jan spike estimate</small></label><div class="ibox"><input type="number" id="seed_peak" value="6800" oninput="calculate()"><span class="iunit">₹/qtl</span></div></div>
+      <div class="irow"><label class="ilbl">Off-Season Seed Price<small>Apr–Jul low estimate</small></label><div class="ibox"><input type="number" id="seed_low" value="5200" oninput="calculate()"><span class="iunit">₹/qtl</span></div></div>
+      <div class="irow"><label class="ilbl">Staff Attendance %<small>Absenteeism impact</small></label><div class="ibox"><input type="number" id="attendance_pct" value="95" min="50" max="100" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <button class="calc-btn" onclick="calculate()">🔄 CALCULATE</button>
+    </div>
+    <!-- COSTS -->
+    <div class="spanel" id="sp-costs">
+      <div class="sec-hd">Power</div>
+      <div class="irow"><label class="ilbl">Electricity Consumed<small>10–15 HP motor</small></label><div class="ibox"><input type="number" id="elec_units" value="12" step=".5" oninput="calculate()"><span class="iunit">kWh/hr</span></div></div>
+      <div class="irow"><label class="ilbl">Punjab Rate<small>Commercial 2024</small></label><div class="ibox"><input type="number" id="elec_rate" value="7.5" step=".1" oninput="calculate()"><span class="iunit">₹/unit</span></div></div>
+      <div class="irow"><label class="ilbl">DG Backup/Day</label><div class="ibox"><input type="number" id="dg_cost" value="150" oninput="calculate()"><span class="iunit">₹/day</span></div></div>
+      <div class="sec-hd">Labour</div>
+      <div class="irow"><label class="ilbl">Total Labour<small>2 workers @ ₹11K each</small></label><div class="ibox"><input type="number" id="labour" value="22000" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="irow"><label class="ilbl">Owner Salary<small>Pay yourself first</small></label><div class="ibox"><input type="number" id="owner_salary" value="20000" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="sec-hd">Overhead</div>
+      <div class="irow"><label class="ilbl">Packaging/Litre<small>Bottle+cap+label</small></label><div class="ibox"><input type="number" id="packaging" value="8" step=".5" oninput="calculate()"><span class="iunit">₹/L</span></div></div>
+      <div class="irow"><label class="ilbl">Maintenance</label><div class="ibox"><input type="number" id="maintenance" value="3000" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="irow"><label class="ilbl">Transport</label><div class="ibox"><input type="number" id="transport" value="4000" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="irow"><label class="ilbl">Shop/Godown Rent</label><div class="ibox"><input type="number" id="rent" value="8000" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="irow"><label class="ilbl">Water & Cleaning</label><div class="ibox"><input type="number" id="water" value="800" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="irow"><label class="ilbl">Miscellaneous</label><div class="ibox"><input type="number" id="misc" value="3000" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <button class="calc-btn" onclick="calculate()">🔄 CALCULATE</button>
+    </div>
+    <!-- SALES -->
+    <div class="spanel" id="sp-sales">
+      <div class="sec-hd">Oil Pricing</div>
+      <div class="irow"><label class="ilbl">Retail Price<small>Kachi Ghani premium</small></label><div class="ibox"><input type="number" id="retail_price" value="220" oninput="calculate()"><span class="iunit">₹/L</span></div></div>
+      <div class="irow"><label class="ilbl">Wholesale Price</label><div class="ibox"><input type="number" id="wholesale_price" value="185" oninput="calculate()"><span class="iunit">₹/L</span></div></div>
+      <div class="irow"><label class="ilbl">Online Price<small>Amazon/BigBasket</small></label><div class="ibox"><input type="number" id="online_price" value="0" oninput="calculate()"><span class="iunit">₹/L</span></div></div>
+      <div class="irow"><label class="ilbl">% Retail</label><div class="ibox"><input type="number" id="retail_pct" value="40" min="0" max="100" oninput="syncPct('r')"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">% Wholesale</label><div class="ibox"><input type="number" id="wholesale_pct" value="55" min="0" max="100" oninput="syncPct('w')"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">% Online</label><div class="ibox"><input type="number" id="online_pct" value="5" min="0" max="100" oninput="syncPct('o')"><span class="iunit">%</span></div></div>
+      <div class="sec-hd">Byproducts</div>
+      <div class="irow"><label class="ilbl">Khal/Cake Price<small>Animal feed</small></label><div class="ibox"><input type="number" id="khal_price" value="22" step=".5" oninput="calculate()"><span class="iunit">₹/kg</span></div></div>
+      <div class="irow"><label class="ilbl">Mustard Husk Price<small>If sold separately</small></label><div class="ibox"><input type="number" id="husk_price" value="0" step=".5" oninput="calculate()"><span class="iunit">₹/kg</span></div></div>
+      <div class="sec-hd">Targets</div>
+      <div class="irow"><label class="ilbl">Monthly Profit Target</label><div class="ibox"><input type="number" id="profit_target" value="80000" oninput="calculate()"><span class="iunit">₹</span></div></div>
+      <div class="irow"><label class="ilbl">2nd Machine Budget</label><div class="ibox"><input type="number" id="machine_budget" value="300000" oninput="calculate()"><span class="iunit">₹</span></div></div>
+      <button class="calc-btn" onclick="calculate()">🔄 CALCULATE</button>
+    </div>
+    <!-- FINANCE -->
+    <div class="spanel" id="sp-finance">
+      <div class="sec-hd">GST & Tax</div>
+      <div class="irow"><label class="ilbl">GST on Oil Sales<small>Edible oil: 5%</small></label><div class="ibox"><input type="number" id="gst_pct" value="5" min="0" max="28" step=".5" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">GST on Khal Sales<small>Agri: 0% or 5%</small></label><div class="ibox"><input type="number" id="khal_gst" value="0" min="0" max="18" step=".5" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">Input GST Credit<small>On seed & packaging</small></label><div class="ibox"><input type="number" id="gst_credit" value="0" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="sec-hd">Loan / EMI</div>
+      <div class="irow"><label class="ilbl">Machine Loan EMI</label><div class="ibox"><input type="number" id="loan_emi" value="0" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="irow"><label class="ilbl">Working Capital Loan<small>Seed credit/kisan CC</small></label><div class="ibox"><input type="number" id="wc_loan_int" value="0" oninput="calculate()"><span class="iunit">₹/mo</span></div></div>
+      <div class="sec-hd">Packaging Mix</div>
+      <div class="irow"><label class="ilbl">500ml Bottle %<small>Higher cost, better price</small></label><div class="ibox"><input type="number" id="pack_500" value="20" min="0" max="100" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">1L Bottle %</label><div class="ibox"><input type="number" id="pack_1l" value="60" min="0" max="100" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">5L Jar / Tin %<small>Bulk — lower margin</small></label><div class="ibox"><input type="number" id="pack_5l" value="20" min="0" max="100" oninput="calculate()"><span class="iunit">%</span></div></div>
+      <div class="irow"><label class="ilbl">500ml Extra Cost<small>vs 1L baseline</small></label><div class="ibox"><input type="number" id="pack_500_extra" value="3" step=".5" oninput="calculate()"><span class="iunit">₹/L</span></div></div>
+      <div class="irow"><label class="ilbl">5L Tin Saving<small>vs 1L baseline</small></label><div class="ibox"><input type="number" id="pack_5l_save" value="2" step=".5" oninput="calculate()"><span class="iunit">₹/L</span></div></div>
+      <button class="calc-btn" onclick="calculate()">🔄 CALCULATE</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN AREA ═══════════ -->
+<main class="main-area">
+  <nav class="main-nav">
+    <button class="rtab on" onclick="showRPage('dashboard',this)">📊 Dashboard</button>
+    <button class="rtab" onclick="showRPage('daily',this)">📅 Daily Log</button>
+    <button class="rtab" onclick="showRPage('scenarios',this)">🎯 Scenarios</button>
+    <button class="rtab" onclick="showRPage('pricing',this)">💹 Price Matrix</button>
+    <button class="rtab" onclick="showRPage('growth',this)">🚀 Growth</button>
+    <button class="rtab" onclick="showRPage('capital',this)">🏦 Cash Flow</button>
+    <button class="rtab" onclick="showRPage('market',this)">🏪 Market</button>
+    <button class="rtab" onclick="showRPage('pl',this)">🧾 P&L</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <div class="rpage on" id="page-dashboard">
+    <div id="healthBanner" class="health g">
+      <div class="hdot"></div>
+      <div><div class="htxt" id="healthText">—</div><div class="hsub" id="healthSub"></div></div>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="g2 mb">
+      <div class="card"><div class="card-hd">Cost Breakdown</div><div class="chart-box"><canvas id="cPie"></canvas></div></div>
+      <div class="card"><div class="card-hd">Revenue vs Cost vs Profit</div><div class="chart-box"><canvas id="cBar"></canvas></div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd">Profit Waterfall</div><div class="chart-box"><canvas id="cWf"></canvas></div></div>
+      <div class="card"><div class="card-hd">Revenue Sources</div><div class="chart-box"><canvas id="cRev"></canvas></div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="g2">
+      <div class="card"><div class="card-hd">Seasonal Seed Price Impact</div><div class="chart-box"><canvas id="cSeasonal"></canvas></div></div>
+      <div class="card"><div class="card-hd">GST & Net-of-Tax Profit</div><div class="chart-box"><canvas id="cGst"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- DAILY LOG -->
+  <div class="rpage" id="page-daily">
+    <div class="flex-between mb">
+      <div><div class="page-hd">📅 Daily Operations Log</div><div class="page-sub">Track each day's production, sales & expenses. Helps catch problems early.</div></div>
+      <button class="btn btn-ghost" onclick="clearLog()">🗑 Clear Log</button>
+    </div>
+    <div class="daily-grid" id="dailySummary"></div>
+    <div class="daily-entry-grid mb">
+      <div class="daily-entry-card">
+        <div class="daily-entry-title">📥 Log Today's Production</div>
+        <div class="daily-irow"><label>Date</label><input type="date" id="log_date" style="width:130px;"></div>
+        <div class="daily-irow"><label>Seed Used (kg)</label><input type="number" id="log_seed" placeholder="0"></div>
+        <div class="daily-irow"><label>Oil Produced (L)</label><input type="number" id="log_oil" placeholder="0"></div>
+        <div class="daily-irow"><label>Khal Produced (kg)</label><input type="number" id="log_khal" placeholder="0"></div>
+        <div class="daily-irow"><label>Hours Worked</label><input type="number" id="log_hrs" placeholder="0"></div>
+      </div>
+      <div class="daily-entry-card">
+        <div class="daily-entry-title">💰 Log Today's Sales</div>
+        <div class="daily-irow"><label>Retail Sales (L)</label><input type="number" id="log_retail" placeholder="0"></div>
+        <div class="daily-irow"><label>Wholesale Sales (L)</label><input type="number" id="log_wholesale" placeholder="0"></div>
+        <div class="daily-irow"><label>Khal Sold (kg)</label><input type="number" id="log_khal_sold" placeholder="0"></div>
+        <div class="daily-irow"><label>Cash Expenses (₹)</label><input type="number" id="log_expense" placeholder="0"></div>
+        <div class="daily-irow"><label>Notes</label><input type="text" id="log_note" placeholder="Any note..." style="width:130px;font-size:.75rem;"></div>
+      </div>
+    </div>
+    <button class="calc-btn" style="max-width:260px" onclick="addLogEntry()">+ Add Entry</button>
+    <div class="log-table-wrap" id="logTableWrap"></div>
+  </div>
+
+  <!-- SCENARIOS -->
+  <div class="rpage" id="page-scenarios">
+    <div class="page-hd">🎯 What-If Scenario Planner</div>
+    <div class="page-sub">Compare your current numbers against 5 strategic scenarios. Make decisions before spending money.</div>
+    <div class="scenario-grid" id="scenarioCards"></div>
+    <div class="g2 mb">
+      <div class="card"><div class="card-hd">Monthly Profit by Scenario</div><div class="chart-box tall"><canvas id="cScP"></canvas></div></div>
+      <div class="card"><div class="card-hd">Profit Margin % by Scenario</div><div class="chart-box tall"><canvas id="cScM"></canvas></div></div>
+    </div>
+    <div class="card" id="scInsight"></div>
+  </div>
+
+  <!-- PRICING MATRIX -->
+  <div class="rpage" id="page-pricing">
+    <div class="page-hd">💹 Pricing Intelligence Matrix</div>
+    <div class="page-sub">Profit margin % at every combination of seed price (rows) × retail price (columns). Your current position is outlined in gold. Green ≥ 18%, Yellow 8–18%, Red &lt; 8%.</div>
+    <div class="tbl-wrap mb" id="pricingMatrix"></div>
+    <div class="divider"></div>
+    <div class="page-hd" style="font-size:.88rem;margin-bottom:8px;">Minimum Prices to Hit Target Margins</div>
+    <div class="tbl-wrap" id="mvpTable"></div>
+  </div>
+
+  <!-- GROWTH -->
+  <div class="rpage" id="page-growth">
+    <div class="page-hd">🚀 Business Growth Roadmap</div>
+    <div class="page-sub">Your personalised path from a single expeller to a serious business — built on your actual numbers.</div>
+    <div class="g2 mb">
+      <div class="card"><div class="card-hd">Cumulative Savings vs Machine Cost</div><div class="chart-box tall"><canvas id="cGS"></canvas></div></div>
+      <div class="card"><div class="card-hd">Profit With 2nd Machine (at Month X)</div><div class="chart-box tall"><canvas id="cGP"></canvas></div></div>
+    </div>
+    <div class="page-hd" style="font-size:.88rem;margin-bottom:12px;">📅 Your Personalised Growth Timeline</div>
+    <div class="tl" id="growthTl"></div>
+  </div>
+
+  <!-- CASH FLOW -->
+  <div class="rpage" id="page-capital">
+    <div class="page-hd">🏦 Working Capital & Cash Flow</div>
+    <div class="page-sub">Profitable businesses die from cash problems. Track your seed stock, receivables, and daily burn rate here.</div>
+    <div class="wc-grid" id="wcGrid"></div>
+    <div class="g2 mb">
+      <div class="card"><div class="card-hd">Weekly Cash In vs Cash Out</div><div class="chart-box"><canvas id="cCF"></canvas></div></div>
+      <div class="card"><div class="card-hd">Fixed vs Variable Cost Split</div><div class="chart-box"><canvas id="cFV"></canvas></div></div>
+    </div>
+    <div class="card mb"><div class="card-hd">Risk Indicators</div><div id="cashRisks"></div></div>
+    <div class="card"><div class="card-hd">EMI & Loan Impact</div><div id="loanImpact"></div></div>
+  </div>
+
+  <!-- MARKET -->
+  <div class="rpage" id="page-market">
+    <div class="page-hd">🏪 Market Intelligence</div>
+    <div class="page-sub">Where you stand vs competitors, and your biggest growth levers.</div>
+    <div class="tbl-wrap mb"><table class="tbl comp-tbl" id="compTable"></table></div>
+    <div class="divider"></div>
+    <div class="page-hd" style="font-size:.88rem;margin-bottom:10px;">💡 Growth Insights</div>
+    <div class="insights-grid mb" id="insightsGrid"></div>
+    <div class="divider"></div>
+    <div class="page-hd" style="font-size:.88rem;margin-bottom:6px;">🧪 Sales Mix Optimizer</div>
+    <div class="page-sub">Drag the sliders to find your most profitable retail/wholesale/online split.</div>
+    <div class="card">
+      <div style="margin-bottom:10px;">
+        <label style="font-size:.78rem;color:var(--t2);">Retail % (₹<span id="slRP">220</span>/L)</label>
+        <input type="range" id="slR" min="0" max="100" value="40" oninput="mixSlider('r')" style="width:100%;">
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;color:var(--t3)"><span>0%</span><span id="slRV" style="color:var(--gold);font-weight:600">40%</span><span>100%</span></div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:.78rem;color:var(--t2);">Wholesale % (₹<span id="slWP">185</span>/L)</label>
+        <input type="range" id="slW" min="0" max="100" value="55" oninput="mixSlider('w')" style="width:100%;">
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;color:var(--t3)"><span>0%</span><span id="slWV" style="color:var(--gold);font-weight:600">55%</span><span>100%</span></div>
+      </div>
+      <div style="margin-bottom:4px;">
+        <label style="font-size:.78rem;color:var(--t2);">Online % (₹<span id="slOP">0</span>/L)</label>
+        <input type="range" id="slO" min="0" max="100" value="5" oninput="mixSlider('o')" style="width:100%;">
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;color:var(--t3)"><span>0%</span><span id="slOV" style="color:var(--gold);font-weight:600">5%</span><span>100%</span></div>
+      </div>
+      <div class="mix-result-grid" id="mixResults"></div>
+    </div>
+  </div>
+
+  <!-- P&L -->
+  <div class="rpage" id="page-pl">
+    <div class="flex-between mb">
+      <div><div class="page-hd">🧾 Full Profit & Loss Report</div><div class="page-sub">Complete statement with GST, owner salary, and packaging mix impact.</div></div>
+      <button class="btn btn-ghost" onclick="window.print()">🖨 Print</button>
+    </div>
+    <div class="tbl-wrap mb"><table class="tbl" id="plTable"></table></div>
+    <div class="divider"></div>
+    <div class="card" id="plSummaryCard"></div>
+  </div>
+
+</main>
+</div><!-- app-shell -->
+
+<!-- MOBILE FAB -->
+<button class="fab" onclick="openDrawer()" aria-label="Open inputs">⚙</button>
+
+<!-- MOBILE DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-tabs sidebar-tabs" id="drawerTabs">
+    <button class="stab on" onclick="showDTab('production',this)">⚙ Machine</button>
+    <button class="stab" onclick="showDTab('costs',this)">💸 Costs</button>
+    <button class="stab" onclick="showDTab('sales',this)">💰 Sales</button>
+    <button class="stab" onclick="showDTab('finance',this)">🏦 Finance</button>
+  </div>
+  <div class="drawer-body" id="drawer-body">
+    <!-- Cloned dynamically -->
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bnav-item on" onclick="showMPage('dashboard',this)"><div class="bnav-icon">📊</div><div class="bnav-label">Home</div></button>
+  <button class="bnav-item" onclick="showMPage('daily',this)"><div class="bnav-icon">📅</div><div class="bnav-label">Daily</div></button>
+  <button class="bnav-item" onclick="showMPage('scenarios',this)"><div class="bnav-icon">🎯</div><div class="bnav-label">Scenarios</div></button>
+  <button class="bnav-item" onclick="showMPage('growth',this)"><div class="bnav-icon">🚀</div><div class="bnav-label">Growth</div></button>
+  <button class="bnav-item" onclick="showMPage('market',this)"><div class="bnav-icon">🏪</div><div class="bnav-label">Market</div></button>
+  <button class="bnav-item" onclick="showMPage('pl',this)"><div class="bnav-icon">🧾</div><div class="bnav-label">P&L</div></button>
+</nav>
+
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleLoad(event)">
+
+<script>
+/* ════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════ */
+const $=id=>document.getElementById(id);
+const n=id=>parseFloat($(id)?.value)||0;
+
+function inr(v,d=0){
+  if(isNaN(v))return'₹0';
+  const neg=v<0;v=Math.abs(v);
+  const s=v.toFixed(d);const[ip,dp]=s.split('.');
+  let r='',rest=ip;
+  if(rest.length>3){const l3=rest.slice(-3);rest=rest.slice(0,-3);let rf='';
+    while(rest.length>2){rf=','+rest.slice(-2)+rf;rest=rest.slice(0,-2);}rf=rest+rf;r=rf+','+l3;}
+  else r=rest;
+  return(neg?'₹-':'₹')+r+(dp!==undefined?'.'+dp:'');
+}
+function inrK(v){const a=Math.abs(v);if(a>=1e7)return inr(v/1e7,2)+'Cr';if(a>=1e5)return inr(v/1e5,2)+'L';if(a>=1e3)return inr(v/1e3,1)+'K';return inr(v);}
+
+// percent sync — retail+wholesale+online = 100
+function syncPct(changed){
+  let r=n('retail_pct'),w=n('wholesale_pct'),o=n('online_pct');
+  if(changed==='r'){const left=100-r;w=Math.round(left*w/(w+o||1));o=100-r-w;}
+  else if(changed==='w'){const left=100-w;r=Math.round(left*r/(r+o||1));o=100-r-w;}
+  else{const left=100-o;r=Math.round(left*r/(r+w||1));w=100-r-o;}
+  $('retail_pct').value=Math.max(0,r);
+  $('wholesale_pct').value=Math.max(0,w);
+  $('online_pct').value=Math.max(0,o);
+  calculate();
+}
+
+/* ════════════════════════════════════════════
+   CALC ENGINE
+════════════════════════════════════════════ */
+let R={},D={};
+
+function getInputs(){return{
+  machine_cap:n('machine_cap'),work_hrs:n('work_hrs'),work_days:n('work_days'),
+  oil_pct:n('oil_pct'),seed_price:n('seed_price'),seed_stock:n('seed_stock'),
+  seed_peak:n('seed_peak'),seed_low:n('seed_low'),attendance_pct:n('attendance_pct'),
+  elec_units:n('elec_units'),elec_rate:n('elec_rate'),dg_cost:n('dg_cost'),
+  labour:n('labour'),owner_salary:n('owner_salary'),packaging:n('packaging'),
+  maintenance:n('maintenance'),transport:n('transport'),rent:n('rent'),
+  water:n('water'),misc:n('misc'),
+  retail_price:n('retail_price'),wholesale_price:n('wholesale_price'),
+  online_price:n('online_price'),
+  retail_pct:n('retail_pct'),wholesale_pct:n('wholesale_pct'),online_pct:n('online_pct'),
+  khal_price:n('khal_price'),husk_price:n('husk_price'),
+  profit_target:n('profit_target'),machine_budget:n('machine_budget'),
+  gst_pct:n('gst_pct'),khal_gst:n('khal_gst'),gst_credit:n('gst_credit'),
+  loan_emi:n('loan_emi'),wc_loan_int:n('wc_loan_int'),
+  pack_500:n('pack_500'),pack_1l:n('pack_1l'),pack_5l:n('pack_5l'),
+  pack_500_extra:n('pack_500_extra'),pack_5l_save:n('pack_5l_save'),
+};}
+
+function calcFrom(d){
+  const oilPct=d.oil_pct/100;
+  const effHrs=d.work_hrs*(d.attendance_pct/100); // attendance impact
+  const seedKgDay=d.machine_cap*effHrs;
+  const seedKgMonth=seedKgDay*d.work_days;
+  const oilLDay=seedKgDay*oilPct*1.05;
+  const oilLMonth=oilLDay*d.work_days;
+  const khalPct=1-oilPct-0.05;
+  const khalKgDay=seedKgDay*khalPct;
+  const khalKgMonth=khalKgDay*d.work_days;
+  // Packaging cost adjusted for size mix
+  const packCost500=(d.pack_500/100)*(d.packaging+d.pack_500_extra);
+  const packCost1l=(d.pack_1l/100)*d.packaging;
+  const packCost5l=(d.pack_5l/100)*Math.max(0,d.packaging-d.pack_5l_save);
+  const blendedPackaging=packCost500+packCost1l+packCost5l;
+  const seedCostDay=(seedKgDay/100)*d.seed_price;
+  const seedCostMonth=seedCostDay*d.work_days;
+  const elecCostDay=d.elec_units*effHrs*d.elec_rate;
+  const elecCostMonth=elecCostDay*d.work_days;
+  const dgCostMonth=d.dg_cost*d.work_days;
+  const packagingMonth=oilLMonth*blendedPackaging;
+  const fixedMonthly=d.labour+d.owner_salary+d.maintenance+d.transport+d.rent+d.water+d.misc+d.loan_emi+d.wc_loan_int;
+  const totalCostMonth=seedCostMonth+elecCostMonth+dgCostMonth+packagingMonth+fixedMonthly;
+  const costPerLitre=oilLMonth>0?totalCostMonth/oilLMonth:0;
+  // Revenue channels
+  const retailVol=oilLMonth*(d.retail_pct/100);
+  const wholesaleVol=oilLMonth*(d.wholesale_pct/100);
+  const onlineVol=oilLMonth*(d.online_pct/100);
+  const oilRevenue=retailVol*d.retail_price+wholesaleVol*d.wholesale_price+onlineVol*(d.online_price||d.retail_price*1.1);
+  const khalRevenue=khalKgMonth*d.khal_price;
+  const huskRevenue=khalKgMonth*0.05*(d.husk_price||0);
+  const totalRevPreGst=oilRevenue+khalRevenue+huskRevenue;
+  // GST
+  const gstOnOil=(oilRevenue*d.gst_pct/100);
+  const gstOnKhal=(khalRevenue*d.khal_gst/100);
+  const netGst=gstOnOil+gstOnKhal-d.gst_credit;
+  const totalRevenue=totalRevPreGst; // Revenue is gross; GST is a pass-through cost
+  const netProfit=totalRevenue-totalCostMonth-Math.max(0,netGst);
+  const profitMargin=totalRevenue>0?(netProfit/totalRevenue)*100:0;
+  const yearlyProfit=netProfit*12;
+  const avgPrice=d.retail_price*(d.retail_pct/100)+d.wholesale_price*(d.wholesale_pct/100)+(d.online_price||(d.retail_price*1.1))*(d.online_pct/100);
+  const beLitres=avgPrice>0?totalCostMonth/avgPrice:0;
+  const beDays=oilLDay>0?beLitres/oilLDay:0;
+  const health=profitMargin>=18?'g':profitMargin>=8?'a':'r';
+  return{
+    seedKgDay,seedKgMonth,oilLDay,oilLMonth,khalKgDay,khalKgMonth,
+    seedCostDay,seedCostMonth,elecCostDay,elecCostMonth,dgCostMonth,
+    packagingMonth,blendedPackaging,fixedMonthly,totalCostMonth,costPerLitre,
+    retailVol,wholesaleVol,onlineVol,oilRevenue,khalRevenue,huskRevenue,
+    totalRevPreGst,gstOnOil,gstOnKhal,netGst,totalRevenue,
+    netProfit,profitMargin,yearlyProfit,beLitres,beDays,health,avgPrice,
+    grossProfit:totalRevenue-seedCostMonth-packagingMonth,
+    profitPerKgSeed:seedKgMonth>0?netProfit/seedKgMonth:0,
+    effHrs,blendedPackaging,d,
+  };
+}
+
+function calculate(){
+  D=getInputs();R=calcFrom(D);
+  renderDashboard();renderScenarios();renderPricing();
+  renderGrowth();renderCapital();renderMarket();renderPL();
+  saveToStorage();
+}
+
+/* ════════════════════════════════════════════
+   CHART COLORS
+════════════════════════════════════════════ */
+let charts={};
+function dk(){return document.documentElement.getAttribute('data-theme')!=='light';}
+function C(){return dk()?{
+  grid:'#2a2f47',text:'#8d94b8',bg:'#111420',sur:'#171b28',
+  pal:['#f0a500','#1fd47a','#4a9eff','#f04040','#9d7aff','#00d4c8','#f5bc00','#8d94b8']
+}:{
+  grid:'#d8d3c8',text:'#5a5448',bg:'#fff',sur:'#f7f4ee',
+  pal:['#c47800','#157a48','#1a5fb8','#b82020','#6040c8','#007a74','#8a6800','#5a5448']
+};}
+function dc(k){if(charts[k]){charts[k].destroy();charts[k]=null;}}
+const baseChart=()=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:C().text,font:{family:'DM Mono',size:10},boxWidth:12}}}});
+
+/* ════════════════════════════════════════════
+   DASHBOARD
+════════════════════════════════════════════ */
+function renderDashboard(){
+  const r=R;
+  // Health
+  const hb=$('healthBanner'),ht=$('healthText'),hs=$('healthSub');
+  hb.className='health '+r.health;
+  const hmap={g:'✅  PROFITABLE',a:'⚠️  MODERATE MARGIN',r:'🔴  LOW MARGIN — ACTION NEEDED'};
+  const hsmap={
+    g:`${r.profitMargin.toFixed(1)}% margin · Monthly profit ${inr(r.netProfit)} · Yearly ${inr(r.yearlyProfit)}`,
+    a:`${r.profitMargin.toFixed(1)}% margin · Increase retail % or reduce seed cost to break 18%`,
+    r:`${r.profitMargin.toFixed(1)}% margin · Review pricing and costs urgently. At risk of loss.`
+  };
+  ht.textContent=hmap[r.health];hs.textContent=hsmap[r.health];
+
+  // KPI grid
+  const profCls=r.netProfit>=0?'p':'l';
+  const margCls=r.profitMargin>=18?'p':r.profitMargin>=8?'w':'l';
+  const gapV=D.profit_target>0?r.netProfit-D.profit_target:null;
+  const kpis=[
+    {l:'Oil/Day',v:`${r.oilLDay.toFixed(0)} L`,s:`${r.seedKgDay.toFixed(0)} kg seed consumed`,c:'g'},
+    {l:'Oil/Month',v:`${r.oilLMonth.toFixed(0)} L`,s:`${r.d.work_days} days × ${r.oilLDay.toFixed(1)} L/day`,c:'g'},
+    {l:'Khal/Month',v:`${r.khalKgMonth.toFixed(0)} kg`,s:`${r.khalKgDay.toFixed(1)} kg/day byproduct`,c:''},
+    {l:'Cost/Litre',v:inr(r.costPerLitre,2),s:`Blended packaging: ₹${r.blendedPackaging.toFixed(2)}/L`,c:''},
+    {l:'Monthly Revenue',v:inr(r.totalRevenue),s:`Oil ${inr(r.oilRevenue)} + Khal ${inr(r.khalRevenue)}`,c:''},
+    {l:'Monthly Cost',v:inr(r.totalCostMonth),s:`Seed ${inr(r.seedCostMonth)} + Fixed ${inr(r.fixedMonthly)}`,c:''},
+    {l:'Net Profit/Month',v:inr(r.netProfit),s:`${r.profitMargin.toFixed(1)}% margin`,c:profCls},
+    {l:'Profit Margin',v:`${r.profitMargin.toFixed(1)}%`,s:r.health==='g'?'Above 18% ✓':r.health==='a'?'8–18% zone':'Below 8% ⚠',c:margCls},
+    {l:'Yearly Profit',v:inr(r.yearlyProfit),s:`${inr(r.netProfit)}/mo × 12`,c:profCls},
+    {l:'Break-even Vol',v:`${r.beLitres.toFixed(0)} L`,s:'Per month to cover costs',c:''},
+    {l:'Break-even Days',v:`${r.beDays.toFixed(1)} days`,s:'Of full-capacity production',c:''},
+    {l:gapV!==null?'vs Your Target':'Profit/kg Seed',v:gapV!==null?(gapV>=0?'✅ '+inr(gapV)+' ahead':'₹'+Math.abs(gapV/1000).toFixed(1)+'K short'):('₹'+r.profitPerKgSeed.toFixed(2)),s:gapV!==null?(gapV>=0?'Target achieved!':'Need to close gap'):('Per kg of seed processed'),c:gapV!==null?(gapV>=0?'p':'w'):''},
+  ];
+  $('kpiGrid').innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-lbl">${k.l}</div><div class="kpi-val ${k.c}" id="kv_${k.l.replace(/\W/g,'')}">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+
+  // Charts
+  const c=C();const bc=baseChart();
+  // PIE
+  dc('pie');
+  charts.pie=new Chart($('cPie'),{type:'doughnut',data:{
+    labels:['Seed','Electricity','DG','Packaging','Labour','Owner Salary','Maintenance','Transport','Rent','Water+Misc','Loan'],
+    datasets:[{data:[r.seedCostMonth,r.elecCostMonth,r.dgCostMonth,r.packagingMonth,D.labour,D.owner_salary,D.maintenance,D.transport,D.rent,D.water+D.misc,D.loan_emi+D.wc_loan_int],
+      backgroundColor:c.pal,borderColor:c.bg,borderWidth:2}]
+  },options:{...bc,cutout:'54%',plugins:{...bc.plugins,tooltip:{callbacks:{label:x=>` ${x.label}: ${inr(x.raw)}`}}}}});
+
+  // BAR
+  dc('bar');
+  charts.bar=new Chart($('cBar'),{type:'bar',data:{
+    labels:['Revenue','Total Cost','Net Profit'],
+    datasets:[{data:[r.totalRevenue,r.totalCostMonth,r.netProfit],
+      backgroundColor:['#4a9eff','#f04040',r.netProfit>=0?'#1fd47a':'#f04040'],borderRadius:7,borderSkipped:false}]
+  },options:{...bc,plugins:{...bc.plugins,legend:{display:false},tooltip:{callbacks:{label:x=>` ${inr(x.raw)}`}}},
+    scales:{x:{grid:{color:c.grid},ticks:{color:c.text}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}}}});
+
+  // WATERFALL
+  const wfL=['Revenue','−Seed','−Elec','−DG','−Pack','−Labour','−Owner','−Maint','−Trans','−Rent','−Other','−GST','= Profit'];
+  const wfBase=[],wfV=[];
+  let run=r.totalRevenue;
+  wfBase.push(0);wfV.push(run);
+  [r.seedCostMonth,r.elecCostMonth,r.dgCostMonth,r.packagingMonth,D.labour,D.owner_salary,D.maintenance,D.transport,D.rent,D.water+D.misc+D.loan_emi+D.wc_loan_int,Math.max(0,r.netGst)].forEach(d=>{
+    wfBase.push(run-d);wfV.push(d);run-=d;});
+  wfBase.push(0);wfV.push(run);
+  dc('wf');
+  charts.wf=new Chart($('cWf'),{type:'bar',data:{labels:wfL,datasets:[
+    {data:wfBase,backgroundColor:'transparent',borderColor:'transparent'},
+    {data:wfV,backgroundColor:wfV.map((_,i)=>i===0?'#4a9eff':i===wfV.length-1?(run>=0?'#1fd47a':'#f04040'):'#f0a500'),borderRadius:4,borderSkipped:false}
+  ]},options:{...bc,plugins:{...bc.plugins,legend:{display:false},tooltip:{callbacks:{label:x=>x.datasetIndex===1?` ${inr(x.raw)}`:''}}},
+    scales:{x:{stacked:true,grid:{color:c.grid},ticks:{color:c.text,font:{size:8}}},y:{stacked:true,grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}}}});
+
+  // REV SPLIT
+  dc('rev');
+  charts.rev=new Chart($('cRev'),{type:'doughnut',data:{
+    labels:['Retail Oil','Wholesale Oil','Online Oil','Khal Revenue','Husk'],
+    datasets:[{data:[r.retailVol*D.retail_price,r.wholesaleVol*D.wholesale_price,r.onlineVol*(D.online_price||D.retail_price*1.1),r.khalRevenue,r.huskRevenue],
+      backgroundColor:c.pal,borderColor:c.bg,borderWidth:2}]
+  },options:{...bc,cutout:'54%',plugins:{...bc.plugins,tooltip:{callbacks:{label:x=>` ${x.label}: ${inr(x.raw)}`}}}}});
+
+  // SEASONAL IMPACT
+  const seasons=['Jan (Peak)','Mar','May','Jul (Low)','Sep','Nov (Rise)'];
+  const seedPrices=[D.seed_peak,D.seed_peak*0.9,D.seed_price,D.seed_low,D.seed_price*0.95,D.seed_peak*0.85];
+  const seasonalProfits=seedPrices.map(sp=>calcFrom({...D,seed_price:sp}).netProfit);
+  dc('seas');
+  charts.seas=new Chart($('cSeasonal'),{type:'line',data:{
+    labels:seasons,
+    datasets:[{label:'Monthly Profit',data:seasonalProfits,borderColor:'#f0a500',fill:true,backgroundColor:'rgba(240,165,0,.08)',tension:.4,pointBackgroundColor:'#f0a500',pointRadius:4},
+              {label:'Break-even Line',data:seasons.map(()=>0),borderColor:'#f04040',borderDash:[5,4],fill:false,pointRadius:0}]
+  },options:{...bc,scales:{x:{grid:{color:c.grid},ticks:{color:c.text,font:{size:9}}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}},
+    plugins:{...bc.plugins,tooltip:{callbacks:{label:x=>` ${inr(x.raw)}/month`}}}}});
+
+  // GST CHART
+  const gstScen=[0,3,5,12];
+  const gstProfits=gstScen.map(g=>calcFrom({...D,gst_pct:g}).netProfit);
+  dc('gst');
+  charts.gst=new Chart($('cGst'),{type:'bar',data:{
+    labels:gstScen.map(g=>`GST ${g}%`),
+    datasets:[{label:'Net Profit at GST %',data:gstProfits,backgroundColor:gstProfits.map(p=>p>=0?'#1fd47a':'#f04040'),borderRadius:6,borderSkipped:false}]
+  },options:{...bc,plugins:{...bc.plugins,legend:{display:false},tooltip:{callbacks:{label:x=>` ${inr(x.raw)}`}}},
+    scales:{x:{grid:{color:c.grid},ticks:{color:c.text}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}}}});
+}
+
+/* ════════════════════════════════════════════
+   DAILY LOG
+════════════════════════════════════════════ */
+let logData=JSON.parse(localStorage.getItem('sarson_log')||'[]');
+
+function initDailyDate(){
+  const d=new Date();
+  $('log_date').value=d.toISOString().slice(0,10);
+}
+
+function addLogEntry(){
+  const entry={
+    date:$('log_date').value||new Date().toISOString().slice(0,10),
+    seed:n('log_seed'),oil:n('log_oil'),khal:n('log_khal'),hrs:n('log_hrs'),
+    retail:n('log_retail'),wholesale:n('log_wholesale'),khal_sold:n('log_khal_sold'),
+    expense:n('log_expense'),note:$('log_note').value||'',
+    rev:(n('log_retail')*D.retail_price)+(n('log_wholesale')*D.wholesale_price)+(n('log_khal_sold')*D.khal_price),
+  };
+  if(!entry.seed&&!entry.oil){toast('Enter at least seed or oil data','err');return;}
+  logData.unshift(entry);
+  localStorage.setItem('sarson_log',JSON.stringify(logData.slice(0,90)));
+  ['log_seed','log_oil','log_khal','log_hrs','log_retail','log_wholesale','log_khal_sold','log_expense','log_note'].forEach(id=>$(id).value='');
+  renderDailyLog();toast('✅ Entry added!','ok');
+}
+
+function clearLog(){if(confirm('Clear all log entries?')){logData=[];localStorage.removeItem('sarson_log');renderDailyLog();}}
+
+function renderDailyLog(){
+  // Monthly summary
+  const thisMonth=new Date().toISOString().slice(0,7);
+  const mLog=logData.filter(e=>e.date.startsWith(thisMonth));
+  const totOil=mLog.reduce((a,e)=>a+e.oil,0);
+  const totRev=mLog.reduce((a,e)=>a+e.rev,0);
+  const totExp=mLog.reduce((a,e)=>a+e.expense,0);
+  const totProfit=totRev-totExp;
+  $('dailySummary').innerHTML=[
+    {l:'Oil This Month',v:`${totOil.toFixed(0)} L`,sub:`${mLog.length} days logged`},
+    {l:'Revenue This Month',v:inr(totRev),sub:'Retail+Wholesale+Khal'},
+    {l:'Expenses This Month',v:inr(totExp),sub:'Cash expenses logged'},
+    {l:'Estimated Profit',v:inr(totProfit),sub:'Revenue minus logged expenses'},
+    {l:'Avg Oil/Day',v:mLog.length>0?`${(totOil/mLog.length).toFixed(1)} L`:'—',sub:'Logged days'},
+    {l:'Avg Revenue/Day',v:mLog.length>0?inr(totRev/mLog.length):'—',sub:''},
+  ].map(c=>`<div class="daily-card"><div class="daily-val">${c.v}</div><div class="daily-lbl">${c.l}</div><div style="font-size:.63rem;color:var(--t3);margin-top:3px">${c.sub}</div></div>`).join('');
+
+  if(!logData.length){
+    $('logTableWrap').innerHTML='<div class="log-empty">📋 No entries yet. Log your first day above.</div>';return;
+  }
+  $('logTableWrap').innerHTML=`<div class="tbl-wrap" style="margin-top:14px"><table class="tbl">
+    <thead><tr><th>Date</th><th>Seed(kg)</th><th>Oil(L)</th><th>Khal(kg)</th><th>Revenue</th><th>Expense</th><th>Note</th><th></th></tr></thead>
+    <tbody>${logData.slice(0,30).map((e,i)=>`<tr>
+      <td class="mono">${e.date}</td><td>${e.seed||'—'}</td><td>${e.oil||'—'}</td><td>${e.khal||'—'}</td>
+      <td class="mono">${inr(e.rev)}</td><td class="mono">${e.expense?inr(e.expense):'—'}</td>
+      <td style="font-size:.72rem;color:var(--t3)">${e.note||''}</td>
+      <td><button onclick="deleteLog(${i})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function deleteLog(i){logData.splice(i,1);localStorage.setItem('sarson_log',JSON.stringify(logData));renderDailyLog();}
+
+/* ════════════════════════════════════════════
+   SCENARIOS
+════════════════════════════════════════════ */
+function renderScenarios(){
+  const sc=[
+    {name:'Current Situation',tag:'t-now',tl:'NOW',d:{...D},hl:true},
+    {name:'More Retail (+20%)',tag:'t-up',tl:'BEST',d:{...D,retail_pct:Math.min(100,D.retail_pct+20),wholesale_pct:Math.max(0,D.wholesale_pct-20),retail_price:D.retail_price+15}},
+    {name:'Seed Price Spike (+₹800)',tag:'t-dn',tl:'RISK',d:{...D,seed_price:D.seed_price+800}},
+    {name:'Double Daily Hours',tag:'t-str',tl:'GROWTH',d:{...D,work_hrs:Math.min(20,D.work_hrs+4),labour:D.labour*1.3}},
+    {name:'Premium Branding (+₹30)',tag:'t-up',tl:'BRAND',d:{...D,retail_pct:75,wholesale_pct:20,online_pct:5,retail_price:D.retail_price+30,packaging:D.packaging+2}},
+    {name:'Lean Cost Drive',tag:'t-up',tl:'LEAN',d:{...D,misc:Math.max(1000,D.misc-1000),maintenance:Math.max(1500,D.maintenance-500),water:Math.max(400,D.water-200)}},
+  ];
+  $('scenarioCards').innerHTML=sc.map(s=>{
+    const r2=calcFrom(s.d);const pc=r2.netProfit>=0?'var(--green)':'var(--red)';
+    return`<div class="sc-card${s.hl?' highlight':''}">
+      <span class="sc-tag ${s.tag}">${s.tl}</span>
+      <div class="sc-name">${s.name}</div>
+      <div class="sc-row"><span class="sk">Profit/Month</span><span class="sv" style="color:${pc}">${inr(r2.netProfit)}</span></div>
+      <div class="sc-row"><span class="sk">Margin %</span><span class="sv">${r2.profitMargin.toFixed(1)}%</span></div>
+      <div class="sc-row"><span class="sk">Yearly</span><span class="sv">${inr(r2.yearlyProfit)}</span></div>
+      <div class="sc-row"><span class="sk">vs Now</span><span class="sv" style="color:${(r2.netProfit-R.netProfit)>=0?'var(--green)':'var(--red)'}">${(r2.netProfit-R.netProfit>=0?'+':'')}${inr(r2.netProfit-R.netProfit)}</span></div>
+    </div>`;
+  }).join('');
+
+  const c=C();const bc=baseChart();
+  const profits=sc.map(s=>calcFrom(s.d).netProfit);
+  const margins=sc.map(s=>calcFrom(s.d).profitMargin);
+  dc('scP');
+  charts.scP=new Chart($('cScP'),{type:'bar',data:{
+    labels:sc.map(s=>s.name.length>16?s.name.slice(0,16)+'…':s.name),
+    datasets:[{data:profits,backgroundColor:profits.map(p=>p>=0?'#1fd47a':'#f04040'),borderRadius:6,borderSkipped:false}]
+  },options:{...bc,plugins:{...bc.plugins,legend:{display:false},tooltip:{callbacks:{label:x=>` ${inr(x.raw)}`}}},
+    scales:{x:{grid:{color:c.grid},ticks:{color:c.text,font:{size:8}}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}}}});
+  dc('scM');
+  charts.scM=new Chart($('cScM'),{type:'bar',data:{
+    labels:sc.map(s=>s.name.length>16?s.name.slice(0,16)+'…':s.name),
+    datasets:[{data:margins,backgroundColor:margins.map(m=>m>=18?'#1fd47a':m>=8?'#f5bc00':'#f04040'),borderRadius:6,borderSkipped:false}]
+  },options:{...bc,plugins:{...bc.plugins,legend:{display:false},tooltip:{callbacks:{label:x=>` ${x.raw.toFixed(1)}%`}}},
+    scales:{x:{grid:{color:c.grid},ticks:{color:c.text,font:{size:8}}},y:{max:40,grid:{color:c.grid},ticks:{color:c.text,callback:v=>v+'%'}}}}});
+
+  const bestSc=sc.reduce((a,b)=>calcFrom(b.d).netProfit>calcFrom(a.d).netProfit?b:a);
+  const bR=calcFrom(bestSc.d);
+  $('scInsight').innerHTML=`<div class="card-hd">📌 Key Insight</div>
+    <div style="font-size:.8rem;color:var(--t2);line-height:1.6">
+    🏆 <strong>Best scenario: "${bestSc.name}"</strong> — generates <strong style="color:var(--green)">${inr(bR.netProfit)}/month</strong> (${bR.profitMargin.toFixed(1)}% margin), 
+    which is <strong style="color:var(--green)">${inr(bR.netProfit-R.netProfit)} more</strong> than your current setup.<br><br>
+    The "More Retail" scenario is almost always the highest-value move because it costs nothing extra — just a change in who you sell to. 
+    Even shifting 10% of volume from wholesale to retail at current prices adds <strong style="color:var(--gold)">${inr(calcFrom({...D,retail_pct:D.retail_pct+10,wholesale_pct:D.wholesale_pct-10}).netProfit-R.netProfit)}/month</strong> immediately.
+    </div>`;
+}
+
+/* ════════════════════════════════════════════
+   PRICING MATRIX
+════════════════════════════════════════════ */
+function renderPricing(){
+  const seedR=[D.seed_price-1000,D.seed_price-600,D.seed_price-200,D.seed_price,D.seed_price+400,D.seed_price+800,D.seed_price+1200].map(v=>Math.max(3000,v)).sort((a,b)=>a-b);
+  const retR=[D.retail_price-40,D.retail_price-20,D.retail_price-5,D.retail_price,D.retail_price+20,D.retail_price+40,D.retail_price+60].sort((a,b)=>a-b);
+  let html=`<table class="matrix"><thead><tr><th class="rh">Seed ↓ / Retail →</th>`;
+  retR.forEach(rp=>html+=`<th>${inr(rp)}</th>`);html+='</tr></thead><tbody>';
+  seedR.forEach(sp=>{
+    html+=`<tr><td class="rh">${inr(sp)}/qtl</td>`;
+    retR.forEach(rp=>{
+      const m=calcFrom({...D,seed_price:sp,retail_price:rp}).profitMargin;
+      const cls=m>=18?'cg':m>=8?'ca':'cr';
+      const hl=(Math.abs(sp-D.seed_price)<1&&Math.abs(rp-D.retail_price)<1)?' hl':'';
+      html+=`<td class="${cls}${hl}">${m.toFixed(1)}%</td>`;
+    });html+='</tr>';
+  });html+='</tbody></table>';
+  $('pricingMatrix').innerHTML=html;
+
+  // MVP table
+  const targets=[10,15,18,22,25,30];
+  let mv=`<table class="tbl"><thead><tr><th>Target Margin</th><th>Min Retail Price</th><th>Max Seed Cost</th><th>Status</th></tr></thead><tbody>`;
+  targets.forEach(t=>{
+    const fR=R.oilLMonth*(D.retail_pct/100)||1;
+    const fixedRev=R.oilLMonth*(D.wholesale_pct/100)*D.wholesale_price+R.khalRevenue+R.oilLMonth*(D.online_pct/100)*(D.online_price||D.retail_price*1.1);
+    const targetRev=R.totalCostMonth/(1-t/100);
+    const minRet=(targetRev-fixedRev)/fR;
+    const maxSeed=((R.totalRevenue*(1-t/100))/R.seedKgMonth)*100;
+    const ok=R.profitMargin>=t;
+    mv+=`<tr class="${ok?'pr-row':''}"><td>${t}%</td><td class="mono">${inr(Math.max(0,minRet),0)}/L</td><td class="mono">${inr(Math.max(0,maxSeed),0)}/qtl</td><td>${ok?'<span class="badge badge-green">✅ Achieved</span>':'<span class="badge badge-red">Not yet</span>'}</td></tr>`;
+  });mv+='</tbody></table>';
+  $('mvpTable').innerHTML=mv;
+}
+
+/* ════════════════════════════════════════════
+   GROWTH PLAN
+════════════════════════════════════════════ */
+function renderGrowth(){
+  const monthly=R.netProfit;const reinv=Math.max(0,monthly*.5);
+  const mac=D.machine_budget||300000;
+  const months=Array.from({length:24},(_,i)=>i+1);
+  const savings=months.map(m=>reinv*m);
+  const breakM=reinv>0?Math.ceil(mac/reinv):999;
+  const profits=months.map(m=>{
+    if(m<breakM)return monthly;
+    const d2={...D,machine_cap:D.machine_cap*2,labour:D.labour*1.55,maintenance:D.maintenance*2,misc:D.misc+2000};
+    return calcFrom(d2).netProfit;
+  });
+  const c=C();const bc=baseChart();
+  dc('gs');charts.gs=new Chart($('cGS'),{type:'line',data:{labels:months.map(m=>`M${m}`),datasets:[
+    {label:'Savings (50% reinvest)',data:savings,borderColor:'#1fd47a',fill:true,backgroundColor:'rgba(31,212,122,.08)',tension:.3,pointRadius:0},
+    {label:`2nd Machine (${inr(mac)})`,data:months.map(()=>mac),borderColor:'#f04040',borderDash:[5,4],fill:false,pointRadius:0},
+  ]},options:{...bc,scales:{x:{grid:{color:c.grid},ticks:{color:c.text,font:{size:9}}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}},
+    plugins:{...bc.plugins,tooltip:{callbacks:{label:x=>` ${inr(x.raw)}`}}}}});
+  dc('gp');charts.gp=new Chart($('cGP'),{type:'line',data:{labels:months.map(m=>`M${m}`),datasets:[
+    {label:'Monthly Profit',data:profits,borderColor:'#f0a500',fill:true,backgroundColor:'rgba(240,165,0,.08)',tension:.3,pointRadius:3,pointBackgroundColor:'#f0a500'}
+  ]},options:{...bc,scales:{x:{grid:{color:c.grid},ticks:{color:c.text,font:{size:9}}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}},
+    plugins:{...bc.plugins,tooltip:{callbacks:{label:x=>` ${inr(x.raw)}/mo`}}}}});
+
+  const now=new Date();
+  const mo=m=>{const d=new Date(now);d.setMonth(d.getMonth()+m);return d.toLocaleString('en-IN',{month:'short',year:'numeric'});};
+  const retBump=calcFrom({...D,retail_pct:Math.min(100,D.retail_pct+15),retail_price:D.retail_price+12});
+  const items=[
+    {when:'Today',title:'Baseline Documented',body:`You run ${inr(R.totalRevenue)}/month revenue with ${R.profitMargin.toFixed(1)}% margin. This dashboard is your control room.`,chips:[`${inr(R.netProfit)}/mo profit`,`${R.profitMargin.toFixed(1)}% margin`,`${R.oilLMonth.toFixed(0)} L/mo output`],dot:'now'},
+    {when:`Now → ${mo(1)}`,title:'Push Retail: Zero-Cost Revenue Boost',body:`Moving just 15% volume from wholesale to retail at ₹${D.retail_price+12}/L adds ${inr(retBump.netProfit-R.netProfit)}/month with zero extra seed or labour. Target local households, kiranas, WhatsApp bulk orders.`,chips:[`Target: ${inr(retBump.netProfit)}/mo`,`+${inr(retBump.netProfit-R.netProfit)} extra`,'No investment needed'],dot:''},
+    {when:`${mo(1)} → ${mo(3)}`,title:'FSSAI License + Brand Identity',body:'FSSAI Basic Registration costs ₹100 and takes 7 days online. A branded "Kachi Ghani Sarson Tel" with FSSAI no. on label commands ₹230–260/L vs ₹185 unbranded. This is your highest-ROI ₹5,000 investment ever.',chips:['FSSAI Basic: ₹100 online','Label printing: ₹3–5K','Price jump: +₹30–40/L'],dot:''},
+    {when:`${mo(2)} → ${mo(4)}`,title:'Khal Direct to Farms',body:`You sell khal at ${inr(D.khal_price)}/kg to middlemen. Poultry/dairy farms around Mukerian and Hoshiarpur pay ₹25–28/kg direct. At ${R.khalKgMonth.toFixed(0)} kg/month that's ${inr((26-D.khal_price)*R.khalKgMonth)} extra with one phone call per week.`,chips:[`${inr((26-D.khal_price)*R.khalKgMonth)}/mo extra`,'No extra production','Build 3–5 farm relationships'],dot:''},
+    {when:`${mo(3)} → ${mo(6)}`,title:'Online Channel: Jio Mart + Health Stores',body:'Cold pressed mustard oil sells ₹260–310/L online. List on Jio Mart Local (free). Supply 2–3 health/ayurvedic stores in Hoshiarpur. Even 50 L/month online at ₹270 = '+inr(50*270)+' revenue from a channel that didn\'t exist.',chips:['Jio Mart Local: free listing','Health stores: Hoshiarpur belt','Target: 50–100 L/month online'],dot:''},
+    {when:`${mo(5)} → ${mo(8)}`,title:'Working Capital Discipline',body:`Build a ₹${inr(R.totalCostMonth*.5)} cash buffer (15 operating days). Negotiate 30-day seed credit from mandi supplier. Buy extra seed before October when prices rise from ${inr(D.seed_price)} toward ${inr(D.seed_peak)}/qtl.`,chips:[`Buffer: ${inr(R.totalCostMonth*.5)}`,`Buy before Oct price spike`,'30-day supplier credit target'],dot:''},
+    {when:breakM<24?`${mo(breakM)} (Month ${breakM})`:`Month ${breakM}+`,title:`Second Machine — ${inr(mac)} Investment`,body:breakM<24?`At 50% profit reinvestment, you can fund a second expeller in month ${breakM}. Doubling capacity with your existing market relationships is the highest-ROI move available to you. Operating cost rises only ~55%, but revenue can double.`:`Keep saving. At current profit of ${inr(monthly)}/month, reinvesting 50% takes ${breakM} months. Increase retail % and reduce seed cost to accelerate.`,chips:[breakM<24?`Ready by: ${mo(breakM)}`:'Accelerate by growing retail',`2x capacity, ~55% more cost`,`Profit could reach ${inr(calcFrom({...D,machine_cap:D.machine_cap*2,labour:D.labour*1.55}).netProfit)}/mo`],dot:''},
+    {when:`${mo(18)} → ${mo(24)}`,title:'Regional Wholesale Hub',body:'Supply cold-pressed mustard oil to kirana networks in Hoshiarpur, Dasuya, Talwara belt. Build a ₹25–30L/month revenue business. Approach D-Mart Phagwara. Explore co-packing for organic brands who need Punjab-sourced cold-pressed oil.',chips:['Target: ₹25–30L/mo revenue','D-Mart / regional chain talks','Co-packing opportunity'],dot:''},
+  ];
+  $('growthTl').innerHTML=items.map(i=>`<div class="tl-item">
+    <div class="tl-dot ${i.dot}"></div>
+    <div class="tl-when">${i.when}</div>
+    <div class="tl-title">${i.title}</div>
+    <div class="tl-body">${i.body}</div>
+    <div class="tl-chips">${i.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+  </div>`).join('');
+}
+
+/* ════════════════════════════════════════════
+   WORKING CAPITAL
+════════════════════════════════════════════ */
+function renderCapital(){
+  const r=R;
+  const seedStockVal=(D.seed_stock||0)*D.seed_price;
+  const seedDays=r.seedKgDay>0?(D.seed_stock*100)/r.seedKgDay:0;
+  const dailyCost=r.totalCostMonth/D.work_days;
+  const minBuf=dailyCost*15;
+  const wsRisk=r.wholesaleVol*D.wholesale_price;
+  const wcs=[
+    {l:'Seed Stock Value',v:inr(seedStockVal),s:`${D.seed_stock} qtl on hand`,color:seedDays>10?'var(--green)':seedDays>5?'var(--amber)':'var(--red)',pct:Math.min(100,(seedDays/20)*100)},
+    {l:'Seed Days Remaining',v:`${seedDays.toFixed(1)} days`,s:`At ${r.seedKgDay.toFixed(0)} kg/day`,color:seedDays>10?'var(--green)':seedDays>5?'var(--amber)':'var(--red)',pct:Math.min(100,(seedDays/20)*100)},
+    {l:'Recommended Buffer',v:inr(minBuf),s:'15 operating days cost',color:'var(--blue)',pct:70},
+    {l:'Daily Burn Rate',v:inr(dailyCost),s:'Total cost ÷ work days',color:'var(--t2)',pct:50},
+    {l:'Wholesale Receivables',v:inr(wsRisk),s:`Payment delay exposure/mo`,color:'var(--amber)',pct:Math.min(100,D.wholesale_pct)},
+    {l:'Fixed Obligations/Mo',v:inr(r.fixedMonthly),s:'Must pay even if stopped',color:'var(--red)',pct:Math.min(100,(r.fixedMonthly/r.totalCostMonth)*100)},
+  ];
+  $('wcGrid').innerHTML=wcs.map(w=>`<div class="wc-card">
+    <div class="wc-lbl">${w.l}</div>
+    <div class="wc-val" style="color:${w.color}">${w.v}</div>
+    <div class="wc-sub">${w.s}</div>
+    <div class="pbar"><div class="pfill" style="width:${w.pct}%;background:${w.color}"></div></div>
+  </div>`).join('');
+
+  const c=C();const bc=baseChart();
+  dc('cf');charts.cf=new Chart($('cCF'),{type:'bar',data:{
+    labels:['W1','W2','W3','W4'],
+    datasets:[
+      {label:'Cash In',data:[r.totalRevenue*.22,r.totalRevenue*.28,r.totalRevenue*.26,r.totalRevenue*.24],backgroundColor:'rgba(31,212,122,.7)',borderRadius:5,borderSkipped:false},
+      {label:'Cash Out',data:[r.totalCostMonth*.35,r.totalCostMonth*.25,r.totalCostMonth*.25,r.totalCostMonth*.15],backgroundColor:'rgba(240,64,64,.7)',borderRadius:5,borderSkipped:false},
+    ]
+  },options:{...bc,scales:{x:{grid:{color:c.grid},ticks:{color:c.text}},y:{grid:{color:c.grid},ticks:{color:c.text,callback:v=>inrK(v)}}}}});
+  dc('fv');charts.fv=new Chart($('cFV'),{type:'doughnut',data:{
+    labels:['Fixed','Variable'],
+    datasets:[{data:[r.fixedMonthly,r.totalCostMonth-r.fixedMonthly],backgroundColor:['#f04040','#f0a500'],borderColor:c.bg,borderWidth:2}]
+  },options:{...bc,cutout:'55%',plugins:{...bc.plugins,tooltip:{callbacks:{label:x=>` ${x.label}: ${inr(x.raw)} (${((x.raw/r.totalCostMonth)*100).toFixed(0)}%)`}}}}});
+
+  const risks=[
+    {ok:seedDays>=10,t:'Seed Stock Level',msg:seedDays>=10?`✅ ${seedDays.toFixed(1)} days of seed remaining — adequate`:`⚠️ Only ${seedDays.toFixed(1)} days left — reorder immediately before you stop production.`},
+    {ok:D.wholesale_pct<=55,t:'Payment Delay Risk',msg:D.wholesale_pct<=55?`✅ Wholesale at ${D.wholesale_pct}% — manageable cash cycle`:`⚠️ ${D.wholesale_pct}% wholesale = high delayed-payment exposure. Collect faster or shift to retail.`},
+    {ok:r.netProfit>r.fixedMonthly*.6,t:'Fixed Cost Safety Margin',msg:r.netProfit>r.fixedMonthly*.6?`✅ Profit covers fixed costs well — one slow month won't break you`:`⚠️ Profit barely covers fixed obligations. One slow month could create a cash crisis.`},
+    {ok:r.profitMargin>10,t:'Seed Price Shock Buffer',msg:r.profitMargin>10?`✅ ${r.profitMargin.toFixed(1)}% margin absorbs a ₹300/qtl seed spike before going red`:`⚠️ At ${r.profitMargin.toFixed(1)}% margin, a ₹200/qtl seed price rise wipes your profit completely.`},
+    {ok:D.attendance_pct>=90,t:'Staff Attendance',msg:D.attendance_pct>=90?`✅ ${D.attendance_pct}% attendance — minimal production loss`:`⚠️ At ${D.attendance_pct}% attendance you're losing ${((100-D.attendance_pct)/100*r.oilLMonth).toFixed(0)} litres/month. Hire a backup worker.`},
+    {ok:(D.loan_emi+D.wc_loan_int)<r.netProfit*.4,t:'Loan Burden',msg:(D.loan_emi+D.wc_loan_int)===0?'✅ No active loans — you keep all your profit':(D.loan_emi+D.wc_loan_int)<r.netProfit*.4?`✅ EMI of ${inr(D.loan_emi+D.wc_loan_int)}/mo is manageable at your profit level`:`⚠️ EMI of ${inr(D.loan_emi+D.wc_loan_int)}/mo is over 40% of profit — high pressure.`},
+  ];
+  $('cashRisks').innerHTML=`<div class="g2m2">${risks.map(ri=>`<div class="ins ${ri.ok?'opp':'warn'}">
+    <div class="ins-title">${ri.t}</div><div class="ins-body">${ri.msg}</div>
+  </div>`).join('')}</div>`;
+
+  $('loanImpact').innerHTML=`<div style="font-size:.8rem;color:var(--t2);line-height:1.7">
+    <div class="g2m2">
+      <div><strong style="color:var(--text)">Current EMI + Loan Interest</strong><br>${inr(D.loan_emi+D.wc_loan_int)}/month</div>
+      <div><strong style="color:var(--text)">Profit After Loans</strong><br><span style="color:${R.netProfit>=0?'var(--green)':'var(--red)'}">${inr(R.netProfit)}/month</span></div>
+      <div><strong style="color:var(--text)">Kisan Credit Card Rate</strong><br>~7% p.a. — best option for seed stock financing</div>
+      <div><strong style="color:var(--text)">MUDRA Loan Eligibility</strong><br>₹50K–10L at 8–10% for small food processors</div>
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════
+   MARKET INTEL
+════════════════════════════════════════════ */
+function renderMarket(){
+  const yp=D.retail_price;const cpl=R.costPerLitre;
+  const comps=[
+    {b:'Fortune Mustard Oil',type:'b',p:140,m:'~18%',ch:'Retail Chains',n:'Refined. Not cold pressed. Mass volume.'},
+    {b:'Dhara Mustard',type:'b',p:155,m:'~15%',ch:'Retail/Punjab',n:'Popular in Punjab. Refined.'},
+    {b:'Patanjali Kachi Ghani',type:'m',p:180,m:'~22%',ch:'Franchise/Retail',n:'Strong rural trust. Cold pressed claim.'},
+    {b:'P-Mark Mustard',type:'m',p:195,m:'~20%',ch:'North India',n:'Heritage brand. Cold pressed range.'},
+    {b:'Local Unbranded Oil',type:'b',p:165,m:'~10%',ch:'Mandi/Bulk',n:'No brand. Competes on price only.'},
+    {b:'YOUR Cold Pressed Oil',type:'p',p:yp,m:R.profitMargin.toFixed(1)+'%',ch:'Retail+Wholesale',n:'Locally made, fresh. THIS IS YOU.',isYou:true},
+    {b:'Organic Premium Brands',type:'p',p:295,m:'~30%',ch:'Online + Health Stores',n:'₹250–350/L health market. Growing fast.'},
+  ].sort((a,b)=>a.p-b.p);
+  const tmap={p:'tag-p',m:'tag-m',b:'tag-b'};
+  $('compTable').innerHTML=`<thead><tr><th>Brand</th><th>Segment</th><th>Retail Price</th><th>Margin</th><th>Channel</th><th>Note</th></tr></thead><tbody>`+
+    comps.map(c=>`<tr class="${c.isYou?'your-row':''}">
+      <td><strong>${c.isYou?'🌻 ':''} ${c.b}</strong></td>
+      <td><span class="tag ${tmap[c.type]}">${c.type==='p'?'PREMIUM':c.type==='m'?'MID':'BUDGET'}</span></td>
+      <td class="mono">${inr(c.p)}/L</td><td class="mono">${c.m}</td>
+      <td style="font-size:.75rem">${c.ch}</td>
+      <td style="font-size:.72rem;color:var(--t3)">${c.n}</td>
+    </tr>`).join('')+'</tbody>';
+
+  $('insightsGrid').innerHTML=[
+    {t:'opp',ic:'💡',ti:'Your Real Competitor Is Patanjali, Not Fortune',b:`Fortune at ₹140 is refined oil — a completely different product. Your cold pressed oil at ${inr(yp)}/L competes with Patanjali Kachi Ghani (₹180) and P-Mark (₹195). You can price ₹15–25 higher than them if you show "Made Today in Mukerian" — freshness is your unfair advantage.`,a:'Action: Add production date on label. "Pressed this week."'},
+    {t:'opp',ic:'🚀',ti:'Online Market = ₹270–310/L',b:`Your cost is ${inr(cpl,0)}/L. Online cold-pressed mustard oil sells for ₹260–310/L on Amazon, BigBasket, Jio Mart. Even 80L/month online adds ${inr(80*(270-yp))} more profit vs selling wholesale. No middleman. Direct to customer.`,a:'Action: Open Jio Mart Local store (free). Ship 500ml bottles with padding.'},
+    {t:'tip',ic:'🏷',ti:'FSSAI + Branding = ₹30 Extra Per Litre',b:`Right now you may be selling "oil in a bottle." FSSAI license (₹100, online, 7 days) + proper label transforms you to "Mukerian Gold Kachi Ghani — Stone Cold Pressed." That story alone adds ₹25–40/L premium. At current volume: ${inr(30*R.oilLMonth)}/month more revenue.`,a:'Action: Apply at foscos.fssai.gov.in — Basic Registration.'},
+    {t:'tip',ic:'🐓',ti:'Khal to Poultry Farms = Free Money',b:`You earn ${inr(D.khal_price)}/kg from khal. Poultry farms near Mukerian, Hoshiarpur, Batala pay ₹25–28/kg directly. At ${R.khalKgMonth.toFixed(0)} kg/month: ${inr((26-D.khal_price)*R.khalKgMonth)} extra with no production change. Just one WhatsApp message to 5 farms.`,a:'Action: Post in local poultry farmer WhatsApp groups this week.'},
+    {t:'info',ic:'🍽',ti:'Dhabas + Restaurants = Monthly Recurring Orders',b:`Highway dhabas on NH-354 (Pathankot highway) buy 15–30L tins every month. They want quality + reliability. Supply 10 dhabas at even wholesale price = ${inr(10*20*D.wholesale_price)}/month in guaranteed reorder business. This is your B2B backbone.`,a:'Action: Prepare a 2-page brochure. Visit 10 dhabas in 2 weekends.'},
+    {t:'warn',ic:'⚠️',ti:'Rabi Season Seed Price Spike Is Predictable',b:`Every October–January, mustard seed prices rise from ${inr(D.seed_price)}/qtl toward ${inr(D.seed_peak)}/qtl. That's a ${inr(D.seed_peak-D.seed_price)}/qtl spike. At ${(R.seedKgMonth/100).toFixed(0)} qtl/month, this costs ${inr((D.seed_peak-D.seed_price)*(R.seedKgMonth/100))} extra. Buy and store seed before September.`,a:'Action: Procure 2 months of seed stock before September 30 each year.'},
+  ].map(i=>`<div class="ins ${i.t}"><div class="ins-icon">${i.ic}</div><div class="ins-title">${i.ti}</div><div class="ins-body">${i.b}</div><div class="ins-action">${i.a}</div></div>`).join('');
+
+  $('slRP').textContent=D.retail_price;$('slWP').textContent=D.wholesale_price;$('slOP').textContent=D.online_price||Math.round(D.retail_price*1.15);
+  $('slR').value=D.retail_pct;$('slW').value=D.wholesale_pct;$('slO').value=D.online_pct;
+  mixSlider('r');
+}
+
+function mixSlider(changed){
+  let r=+$('slR').value,w=+$('slW').value,o=+$('slO').value;
+  const total=r+w+o;
+  if(changed==='r'){const rem=100-r;w=Math.round(w/(w+o||1)*rem);o=100-r-w;}
+  else if(changed==='w'){const rem=100-w;r=Math.round(r/(r+o||1)*rem);o=100-r-w;}
+  else{const rem=100-o;r=Math.round(r/(r+w||1)*rem);w=100-r-o;}
+  r=Math.max(0,r);w=Math.max(0,w);o=Math.max(0,o);
+  $('slR').value=r;$('slW').value=w;$('slO').value=o;
+  $('slRV').textContent=r+'%';$('slWV').textContent=w+'%';$('slOV').textContent=o+'%';
+  const td={...D,retail_pct:r,wholesale_pct:w,online_pct:o};
+  const r2=calcFrom(td);
+  $('mixResults').innerHTML=[
+    {l:'Monthly Revenue',v:inr(r2.totalRevenue)},
+    {l:'Net Profit/Mo',v:inr(r2.netProfit)},
+    {l:'Profit Margin',v:r2.profitMargin.toFixed(1)+'%'},
+    {l:'Profit/kg Seed',v:'₹'+r2.profitPerKgSeed.toFixed(2)},
+    {l:'vs Current',v:(r2.netProfit>=R.netProfit?'+':'')+inr(r2.netProfit-R.netProfit)},
+    {l:'Yearly',v:inr(r2.yearlyProfit)},
+  ].map(x=>`<div class="mix-res"><div class="ml">${x.l}</div><div class="mv">${x.v}</div></div>`).join('');
+}
+
+/* ════════════════════════════════════════════
+   P&L TABLE
+════════════════════════════════════════════ */
+function renderPL(){
+  const r=R;const pc=r.netProfit>=0?'pr-row':'ls-row';
+  const rows=[
+    {s:'PRODUCTION'},
+    {l:'Seed Consumed/Month',v:`${r.seedKgMonth.toFixed(0)} kg`,sub:`${r.effHrs.toFixed(1)} effective hrs/day at ${D.attendance_pct}% attendance`},
+    {l:'Oil Produced/Month',v:`${r.oilLMonth.toFixed(0)} L`,sub:`${r.oilLDay.toFixed(1)} L/day`},
+    {l:'Khal Generated/Month',v:`${r.khalKgMonth.toFixed(0)} kg`},
+    {l:'Blended Packaging Cost',v:inr(r.blendedPackaging,2)+'/L',sub:`500ml ${D.pack_500}% / 1L ${D.pack_1l}% / 5L ${D.pack_5l}%`},
+    {l:'Cost per Litre (total)',v:inr(r.costPerLitre,2)+'/L'},
+    {s:'VARIABLE COSTS'},
+    {l:'Mustard Seed',v:inr(r.seedCostMonth),sub:`${r.seedKgMonth.toFixed(0)} kg @ ${inr(D.seed_price)}/qtl`},
+    {l:'Electricity',v:inr(r.elecCostMonth),sub:`${r.effHrs.toFixed(1)} hrs/day × ${D.elec_units} kWh × ₹${D.elec_rate}`},
+    {l:'DG Backup',v:inr(r.dgCostMonth)},
+    {l:'Packaging (blended)',v:inr(r.packagingMonth)},
+    {s:'FIXED COSTS'},
+    {l:'Labour (workers)',v:inr(D.labour)},
+    {l:'Owner Salary',v:inr(D.owner_salary),sub:'Pay yourself — this is a real cost'},
+    {l:'Maintenance',v:inr(D.maintenance)},
+    {l:'Transport',v:inr(D.transport)},
+    {l:'Shop/Godown Rent',v:inr(D.rent)},
+    {l:'Water & Cleaning',v:inr(D.water)},
+    {l:'Miscellaneous',v:inr(D.misc)},
+    {l:'Loan EMI + Interest',v:inr(D.loan_emi+D.wc_loan_int)},
+    {t:'TOTAL MONTHLY COST',v:inr(r.totalCostMonth)},
+    {s:'REVENUE'},
+    {l:'Retail Oil Revenue',v:inr(r.retailVol*D.retail_price),sub:`${r.retailVol.toFixed(0)} L @ ₹${D.retail_price}/L`},
+    {l:'Wholesale Oil Revenue',v:inr(r.wholesaleVol*D.wholesale_price),sub:`${r.wholesaleVol.toFixed(0)} L @ ₹${D.wholesale_price}/L`},
+    {l:'Online Oil Revenue',v:inr(r.onlineVol*(D.online_price||D.retail_price*1.1)),sub:`${r.onlineVol.toFixed(0)} L @ ₹${D.online_price||Math.round(D.retail_price*1.1)}/L`},
+    {l:'Khal Revenue',v:inr(r.khalRevenue),sub:`${r.khalKgMonth.toFixed(0)} kg @ ₹${D.khal_price}/kg`},
+    {t:'TOTAL REVENUE',v:inr(r.totalRevenue)},
+    {s:'GST'},
+    {l:'GST on Oil Sales ('+D.gst_pct+'%)',v:inr(r.gstOnOil)},
+    {l:'GST on Khal ('+D.khal_gst+'%)',v:inr(r.gstOnKhal)},
+    {l:'Input GST Credit',v:'-'+inr(D.gst_credit)},
+    {l:'Net GST Payable',v:inr(Math.max(0,r.netGst))},
+    {s:'PROFIT & LOSS'},
+    {l:'Gross Profit',v:inr(r.grossProfit)},
+    {l:'NET PROFIT (Monthly)',v:inr(r.netProfit),cls:pc},
+    {l:'Owner Take-home',v:inr(r.netProfit+D.owner_salary),cls:pc,sub:'Net profit + owner salary'},
+    {l:'Profit Margin',v:r.profitMargin.toFixed(2)+'%',cls:pc},
+    {l:'Yearly Net Profit',v:inr(r.yearlyProfit),cls:pc},
+    {s:'BREAK-EVEN'},
+    {l:'Break-even Volume',v:`${r.beLitres.toFixed(0)} L/month`},
+    {l:'Break-even Days',v:`${r.beDays.toFixed(1)} working days`},
+    {l:'Profit per kg of Seed',v:'₹'+r.profitPerKgSeed.toFixed(2)+'/kg'},
+  ];
+  $('plTable').innerHTML=`<thead><tr><th>Item</th><th>Notes</th><th>Amount</th></tr></thead><tbody>`+
+    rows.map(row=>{
+      if(row.s)return`<tr class="sec-row"><td colspan="3">${row.s}</td></tr>`;
+      if(row.t)return`<tr class="tot-row"><td colspan="2">${row.t}</td><td>${row.v}</td></tr>`;
+      return`<tr class="${row.cls||''}"><td>${row.l}</td><td style="font-size:.7rem;color:var(--t3)">${row.sub||''}</td><td class="mono">${row.v}</td></tr>`;
+    }).join('')+'</tbody>';
+
+  const totalTakeHome=r.netProfit+D.owner_salary;
+  $('plSummaryCard').innerHTML=`
+    <div class="card-hd">💼 What You Actually Earn</div>
+    <div class="g2m2" style="gap:12px">
+      <div><div style="font-size:.72rem;color:var(--t3);margin-bottom:3px">Monthly Owner Take-home</div><div style="font-size:1.4rem;font-weight:800;color:${totalTakeHome>=0?'var(--green)':'var(--red)'}">${inr(totalTakeHome)}</div><div style="font-size:.7rem;color:var(--t3)">Net profit + ₹${inr(D.owner_salary)} salary</div></div>
+      <div><div style="font-size:.72rem;color:var(--t3);margin-bottom:3px">Yearly Take-home</div><div style="font-size:1.4rem;font-weight:800;color:var(--gold)">${inr(totalTakeHome*12)}</div></div>
+      <div><div style="font-size:.72rem;color:var(--t3);margin-bottom:3px">GST Liability / Month</div><div style="font-size:1.2rem;font-weight:700;color:var(--amber)">${inr(Math.max(0,r.netGst))}</div></div>
+      <div><div style="font-size:.72rem;color:var(--t3);margin-bottom:3px">Profit/kg Seed Processed</div><div style="font-size:1.2rem;font-weight:700;color:var(--gold)">₹${r.profitPerKgSeed.toFixed(2)}</div></div>
+    </div>`;
+}
+
+/* ════════════════════════════════════════════
+   NAV CONTROLS
+════════════════════════════════════════════ */
+function showStab(id,btn){
+  document.querySelectorAll('.sidebar-body .spanel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sidebar-tabs .stab').forEach(b=>b.classList.remove('on'));
+  $('sp-'+id).classList.add('on');btn.classList.add('on');
+}
+function showDTab(id,btn){
+  // Update drawer content by cloning sidebar panel
+  const panel=$('sp-'+id);
+  if(panel){$('drawer-body').innerHTML=panel.innerHTML;}
+  document.querySelectorAll('#drawerTabs .stab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function showRPage(id,btn){
+  document.querySelectorAll('.rpage').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.main-nav .rtab').forEach(b=>b.classList.remove('on'));
+  $('page-'+id).classList.add('on');btn.classList.add('on');
+}
+function showMPage(id,btn){
+  showRPage(id,{classList:{add:()=>{},remove:()=>{}}});// pass dummy btn
+  document.querySelectorAll('.rpage').forEach(p=>p.classList.remove('on'));
+  $('page-'+id).classList.add('on');
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+/* ════════════════════════════════════════════
+   MOBILE DRAWER
+════════════════════════════════════════════ */
+function openDrawer(){
+  // Sync drawer with sidebar content
+  const activePanelId=[...$('sidebar-body').querySelectorAll('.spanel')].find(p=>p.classList.contains('on'))?.id||'sp-production';
+  $('drawer-body').innerHTML=$( activePanelId).innerHTML;
+  // Hook inputs in drawer to calculate
+  $('drawer-body').querySelectorAll('input').forEach(inp=>{
+    const sid=inp.id;
+    inp.oninput=function(){
+      const orig=$(sid);if(orig){orig.value=this.value;}
+      calculate();
+    };
+  });
+  $('drawer-body').querySelectorAll('.calc-btn').forEach(b=>b.onclick=()=>{calculate();closeDrawer();});
+  $('drawer').classList.add('open');
+  $('drawerOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  $('drawer').classList.remove('open');
+  $('drawerOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+// Swipe to close drawer
+let touchStartY=0;
+document.addEventListener('touchstart',e=>{touchStartY=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if($('drawer').classList.contains('open')&&e.touches[0].clientY-touchStartY>60)closeDrawer();
+},{passive:true});
+
+/* ════════════════════════════════════════════
+   THEME
+════════════════════════════════════════════ */
+let isDark=true;
+function toggleTheme(){
+  isDark=!isDark;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  $('themeBtn').textContent=isDark?'☀':'🌙';
+  localStorage.setItem('sarson_theme',isDark?'dark':'light');
+  setTimeout(calculate,60);
+}
+
+/* ════════════════════════════════════════════
+   PERSIST SETTINGS
+════════════════════════════════════════════ */
+function saveToStorage(){
+  const d=getInputs();
+  localStorage.setItem('sarson_inputs',JSON.stringify(d));
+}
+function loadFromStorage(){
+  try{
+    const saved=localStorage.getItem('sarson_inputs');
+    if(saved){
+      const d=JSON.parse(saved);
+      Object.entries(d).forEach(([k,v])=>{const el=$(k);if(el)el.value=v;});
+    }
+    const theme=localStorage.getItem('sarson_theme')||'dark';
+    isDark=theme==='dark';
+    document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+    $('themeBtn').textContent=isDark?'☀':'🌙';
+  }catch(e){}
+}
+
+/* ════════════════════════════════════════════
+   SAVE / LOAD FILE
+════════════════════════════════════════════ */
+function saveData(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(getInputs(),null,2)],{type:'application/json'}));
+  a.download=`sarson_pro_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();toast('✅ Saved!','ok');
+}
+function loadData(){$('fileInput').click();}
+function handleLoad(e){
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      Object.entries(d).forEach(([k,v])=>{const el=$(k);if(el)el.value=v;});
+      calculate();toast('✅ Loaded!','ok');
+    }catch{toast('❌ Invalid file','err');}
+  };
+  reader.readAsText(f);e.target.value='';
+}
+
+function toast(msg,type=''){
+  const t=document.createElement('div');
+  t.className='toast '+type;t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2800);
+}
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+loadFromStorage();
+logData=JSON.parse(localStorage.getItem('sarson_log')||'[]');
+initDailyDate();
+calculate();
+renderDailyLog();
+</script>
+</body>
+</html>
